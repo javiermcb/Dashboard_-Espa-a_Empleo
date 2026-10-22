@@ -13,16 +13,17 @@ flowchart LR
   P -->|informes de calidad| C[(rama calidad)]
   P -->|si algo falla| I[Issues → correo]
   D --> A1[Dashboard 1] & A2[Dashboard 2] & A3[Dashboard 3] & A4[Dashboard 4]
-  CO[comun/<br>datos · gráficos · acceso] --- A1 & A2 & A3 & A4
+  CO[comun/<br>datos · gráficos] --- A1 & A2 & A3 & A4
 ```
 
 | Carpeta | Qué contiene |
 |---|---|
 | `pipeline/` | Descarga, modelo, control de calidad y publicación (idéntico a `Datos_INE`). Configuración en `pipeline/config/` |
-| `comun/` | Código compartido por todos los dashboards: lectura de datos (`datos.py`), gráficos, acceso por email, arranque (`base.py`) y páginas comunes (`paginas/`: estado de los datos, descargas, administración) |
+| `comun/` | Código compartido por todos los dashboards: lectura de datos (`datos.py`), gráficos, arranque (`base.py`) y páginas comunes (`paginas/`: estado de los datos, descargas) |
 | `dashboards/dashboard_1` … `dashboard_4` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). De momento solo una página de inicio por definir |
 | `tests/` | Abre todas las páginas de todos los dashboards con la muestra `resultados/dev_modelo` |
 | `resultados/dev_modelo/` | Muestra del modelo para pruebas y desarrollo local |
+| `_apartado/` | Código retirado y pendiente de borrar (acceso por email con registro): no se importa en ningún dashboard |
 | `ops/` | Script que despierta las apps de Streamlit Community Cloud |
 | `docs/` | Documentación heredada de `Datos_INE` (operación, tablas del modelo, catálogo de APIs, fuentes) |
 
@@ -33,7 +34,7 @@ flowchart LR
 | `pipeline_rrhh.yml` | días laborables 06:17 UTC, cambios en `pipeline/` | descarga, modelo, control de calidad y publicación en `datos-modelo` (solo desde `main`); avisa por issue si falla |
 | `pipeline_pruebas.yml` | cambios en `pipeline/` y PRs | pruebas sin red del pipeline |
 | `apps_pruebas.yml` | cambios en `dashboards/`, `comun/` | abre todas las páginas de todos los dashboards |
-| `mantener_apps_activas.yml` | cada 4 horas | visita las URLs `APP_URL_1`…`APP_URL_4` (variables del repositorio) |
+| `mantener_apps_activas.yml` | cada 4 horas | abre con un navegador y despierta si duerme; visita las URLs `APP_URL_1`…`APP_URL_4` (variables del repositorio) |
 
 ## Añadir un dashboard o una página
 
@@ -61,12 +62,9 @@ RRHH_DATOS = "https://raw.githubusercontent.com/javiermcb/dashboard_-espa-a_empl
 RRHH_DATOS_TOKEN = "github_pat_..."   # fine-grained, solo este repo, Contents: Read-only (repo privado)
 ```
 
-El acceso con registro (`comun/acceso.py`) usa además los secretos `RRHH_LOG_*`, `RRHH_ADMIN_*` y `RRHH_HASH_CLAVE`
-descritos en ese fichero. Sin ellos, entra cualquier email y no se guarda nada. Para un dashboard sin acceso:
-`acceso=False` en su `app.py`.
+Los dashboards son públicos: sin login ni registro de visitas.
 
 ## Pendiente de decidir
 
 - Qué responde cada dashboard (nombre, público, páginas, tablas).
-- Si todos comparten el registro de accesos (`Datos_INE_registro`) o cada uno el suyo.
 - Si el pipeline sigue también en `Datos_INE` o pasa a ejecutarse solo aquí.

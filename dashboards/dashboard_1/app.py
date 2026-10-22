@@ -13,7 +13,6 @@ AQUI = Path(__file__).resolve().parent
 base.arrancar(
     titulo="Dashboard 1",
     icono="📊",
-    acceso=True,
     menu={
         "Dashboard 1": [
             st.Page(str(AQUI / "paginas" / "inicio.py"), title="Inicio", icon=":material/home:", default=True),

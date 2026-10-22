@@ -11,12 +11,11 @@ from streamlit.testing.v1 import AppTest
 RAIZ = Path(__file__).resolve().parent.parent
 os.environ.setdefault("RRHH_DATOS", str(RAIZ / "resultados" / "dev_modelo"))
 DASHBOARDS = sorted(p.name for p in (RAIZ / "dashboards").glob("dashboard_*") if (p / "app.py").exists())
-COMUNES = ["estado.py", "datos_descarga.py", "admin.py"]
+COMUNES = ["estado.py", "datos_descarga.py"]
 
 
 def _abrir(dashboard):
     at = AppTest.from_file(str(RAIZ / "dashboards" / dashboard / "app.py"), default_timeout=180)
-    at.session_state["usuario"] = {"email": "prueba@ejemplo.com", "sesion": "test", "admin": True}
     return at.run()
 
 

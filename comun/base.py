@@ -1,7 +1,7 @@
 """
-base.py — Arranque común de los dashboards: página, acceso, menú, barra lateral con la fuente de los datos y pie de periodos.
+base.py — Arranque común de los dashboards: página, menú, barra lateral con la fuente de los datos y pie de periodos.
 
-Cada dashboards/<nombre>/app.py solo declara su título y su menú y llama a arrancar(). Los datos, los gráficos y el acceso
+Cada dashboards/<nombre>/app.py solo declara su título y su menú y llama a arrancar(). Los datos y los gráficos
 son los de comun/; lo único propio de cada dashboard son sus páginas (dashboards/<nombre>/paginas/).
 """
 from pathlib import Path
@@ -24,11 +24,10 @@ def comun(nombre, titulo, icono):
     return st.Page(str(PAGINAS_COMUNES / f"{nombre}.py"), title=titulo, icon=icono, url_path=nombre)
 
 
-def arrancar(titulo, icono, menu, acceso=True, mapas=False):
+def arrancar(titulo, icono, menu, mapas=False):
     """
     titulo  nombre del dashboard (pestaña del navegador y barra lateral)
     menu    {sección: [st.Page, ...]}; la primera página con default=True es la de entrada
-    acceso  True: email autorizado antes de ver nada (comun/acceso.py; sin secretos de registro entra cualquier email)
     mapas   True: selector «Geográfico / Mosaico» de los mapas de comunidades en la barra lateral
     """
     st.set_page_config(page_title=titulo, page_icon=icono, layout="wide")
@@ -36,18 +35,9 @@ def arrancar(titulo, icono, menu, acceso=True, mapas=False):
     from comun import recarga
     recarga.comprobar()  # tras publicar código nuevo, recarga los módulos comunes (Streamlit Cloud guarda la versión antigua)
 
-    from comun import acceso as acc, datos, relato
-
-    if acceso:
-        acc.TITULO = titulo
-        if not acc.identificar():
-            st.stop()
-    else:
-        st.session_state.setdefault("usuario", {"email": "", "sesion": "", "admin": False})
+    from comun import datos, relato
 
     menu = dict(menu)
-    if st.session_state["usuario"].get("admin"):
-        menu["Administración"] = [comun("admin", "Administración", ":material/admin_panel_settings:")]
     nav = st.navigation(menu, expanded=True)
 
     with st.sidebar:
@@ -60,8 +50,6 @@ def arrancar(titulo, icono, menu, acceso=True, mapas=False):
             st.caption(f"Tablas no disponibles en esta carga: {', '.join(faltan)}")
         st.caption(AVISO_FUENTES)
         st.caption(AVISO_PERSONAS)
-        if acceso and st.button("Cerrar sesión", icon=":material/logout:"):
-            acc.cerrar_sesion()
         if mapas:
             st.radio("Mapas de comunidades", ["Geográfico", "Mosaico"], horizontal=True, key="vista_mapa",
                      help="Mosaico: una casilla por comunidad, mismo tamaño para todas (se comparan mejor las pequeñas).")
