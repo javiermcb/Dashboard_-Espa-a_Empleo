@@ -74,12 +74,12 @@ CREATE OR REPLACE VIEW mart_ocupados_sector AS
 SELECT fecha, anyo, periodo, territorio_id, actividad AS sector, valor AS miles_ocupados, tabla_id
 FROM fact_ine WHERE tabla_id = '65354' AND valor IS NOT NULL;
 
--- EPA por CCAA: tasas de empleo y paro por sexo y edad (anual)
+-- EPA por CCAA: tasas de actividad, empleo y paro por sexo y edad (anual)
 CREATE OR REPLACE VIEW mart_tasas_epa AS
 SELECT anyo, fecha, territorio_id, sexo, edad,
-       CASE tabla_id WHEN '66031' THEN 'Tasa de empleo' ELSE 'Tasa de paro' END AS indicador,
+       CASE tabla_id WHEN '66023' THEN 'Tasa de actividad' WHEN '66031' THEN 'Tasa de empleo' ELSE 'Tasa de paro' END AS indicador,
        valor AS tasa, tabla_id
-FROM fact_ine WHERE tabla_id IN ('66031', '66055') AND valor IS NOT NULL;
+FROM fact_ine WHERE tabla_id IN ('66023', '66031', '66055') AND valor IS NOT NULL;
 
 -- EFPA: flujos entre trimestres (miles de personas)
 CREATE OR REPLACE VIEW mart_flujos AS

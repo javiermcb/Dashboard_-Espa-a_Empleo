@@ -62,7 +62,7 @@ mart_it_despido;(tabla);;ETCL trimestral: percepciones por día de incapacidad t
 mart_vacantes;(tabla);;ETCL trimestral: puestos vacantes por CCAA
 mart_poblacion_actividad;(tabla);;EPA trimestral por provincia: activos, ocupados, parados, inactivos (miles) por sexo
 mart_ocupados_sector;(tabla);;EPA trimestral por provincia: ocupados por gran sector (miles)
-mart_tasas_epa;(tabla);;EPA anual por CCAA: tasas de empleo y paro por sexo y edad
+mart_tasas_epa;(tabla);;EPA anual por CCAA: tasas de actividad, empleo y paro por sexo y edad
 mart_flujos;(tabla);;EFPA trimestral por CCAA: personas (miles) según situación en el trimestre actual y en el anterior
 mart_neet;(tabla);;Jóvenes que ni estudian ni trabajan (%, anual): por CCAA, sexo y nacionalidad (15-29) y por sexo (15-24)
 mart_precios;(tabla);;IPC mensual (variación mensual, anual y acumulada) e IPT anual (índice y tasa) por CCAA u ocupación
