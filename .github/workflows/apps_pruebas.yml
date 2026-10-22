@@ -1,0 +1,40 @@
+name: Pruebas de los dashboards
+
+# Abre cada página de cada dashboard con la muestra del modelo y falla si alguna da error,
+# para enterarse en GitHub antes de que el fallo llegue a la app publicada.
+on:
+  push:
+    paths:
+      - "dashboards/**"
+      - "comun/**"
+      - "tests/**"
+      - "requirements.txt"
+      - "resultados/dev_modelo/**"
+      - ".github/workflows/apps_pruebas.yml"
+  pull_request:
+    paths:
+      - "dashboards/**"
+      - "comun/**"
+      - "tests/**"
+      - "requirements.txt"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paginas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - name: Dependencias
+        run: pip install -r requirements.txt pytest
+      - name: Probar todas las páginas de todos los dashboards
+        run: python -m pytest tests -q

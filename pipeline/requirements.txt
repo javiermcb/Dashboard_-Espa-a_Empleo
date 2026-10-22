@@ -1,0 +1,5 @@
+# Versiones exactas del pipeline (GitHub Actions). Para actualizar: cambiar aquí y lanzar el pipeline a mano.
+duckdb==1.5.6
+openpyxl==3.1.5
+xlrd==2.0.2
+cryptography==50.0.2

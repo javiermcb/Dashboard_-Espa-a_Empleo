@@ -1,0 +1,100 @@
+// Medidas DAX para el informe RRHH 360. Crear cada una con "Nueva medida" en la tabla indicada.
+// Los valores de texto de los filtros (componente, concepto, situacion, indicador...) son los que publica el pipeline
+// (ver modelo/diccionario.csv y resultados/pipeline/catalogo_series.csv).
+//
+// IMPORTANTE — TOTALES Y DESGLOSES CONVIVEN EN LAS TABLAS: cada tabla trae a la vez el total y su desglose
+// (territorio N00 + CCAA/provincias, "Ambos sexos" + Hombres/Mujeres, sector total + sectores...). Sumar sin filtrar
+// duplica. En cada página o visual: filtra dim_territorio[nivel] (Nacional, CCAA, Provincia o Municipio) y deja un
+// solo valor de cada dimensión que no se esté desglosando. Las medidas de la EPA usan "Ambos sexos" si no se filtra el sexo.
+
+// ======================== 1. BENCHMARK SALARIAL ========================
+// [mart_salarios_ees]
+Salario EES medio = CALCULATE ( SUM ( mart_salarios_ees[euros] ), mart_salarios_ees[estadistico] = "Media" )
+Salario EES mediana = CALCULATE ( SUM ( mart_salarios_ees[euros] ), mart_salarios_ees[estadistico] = "Mediana" )
+Salario EES P10 = CALCULATE ( SUM ( mart_salarios_ees[euros] ), mart_salarios_ees[estadistico] = "Percentil 10" )
+Salario EES P90 = CALCULATE ( SUM ( mart_salarios_ees[euros] ), mart_salarios_ees[estadistico] = "Percentil 90" )
+Brecha EES mujeres vs hombres % =
+VAR H = CALCULATE ( [Salario EES medio], mart_salarios_ees[sexo] = "Hombres" )
+VAR M = CALCULATE ( [Salario EES medio], mart_salarios_ees[sexo] = "Mujeres" )
+RETURN DIVIDE ( H - M, H )
+
+// [mart_deciles_epa]  (usar con un único desglose y jornada en el contexto)
+Salario medio mensual decil = AVERAGE ( mart_deciles_epa[salario_medio_mensual] )
+
+// ======================== 2. COSTE LABORAL Y ABSENTISMO ========================
+// [mart_coste_laboral]
+Coste laboral total por trabajador =
+CALCULATE ( SUM ( mart_coste_laboral[euros] ),
+    mart_coste_laboral[componente] = "Coste laboral total", mart_coste_laboral[base] = "Por trabajador y mes" )
+Coste laboral total por hora =
+CALCULATE ( SUM ( mart_coste_laboral[euros] ),
+    mart_coste_laboral[componente] = "Coste laboral total por hora", mart_coste_laboral[base] = "Por hora efectiva" )
+Coste laboral por trabajador interanual % =
+VAR Actual = [Coste laboral total por trabajador]
+VAR Anterior = CALCULATE ( [Coste laboral total por trabajador], DATEADD ( dim_tiempo[fecha], -1, YEAR ) )
+RETURN DIVIDE ( Actual - Anterior, Anterior )
+
+// [mart_tiempo_trabajo]  (proxy de absentismo: incluye vacaciones, festivos, IT y otras ausencias retribuidas)
+Horas pactadas = CALCULATE ( SUM ( mart_tiempo_trabajo[horas_trabajador_mes] ), mart_tiempo_trabajo[concepto] = "Horas pactadas" )
+Horas no trabajadas = CALCULATE ( SUM ( mart_tiempo_trabajo[horas_trabajador_mes] ), mart_tiempo_trabajo[concepto] = "Horas no trabajadas" )
+% horas no trabajadas sobre pactadas = DIVIDE ( [Horas no trabajadas], [Horas pactadas] )
+
+// [mart_it_despido]
+Percepciones por día de IT = CALCULATE ( SUM ( mart_it_despido[euros] ), mart_it_despido[concepto] = "Percepciones por día de IT" )
+Coste indemnización por despido = CALCULATE ( SUM ( mart_it_despido[euros] ), mart_it_despido[concepto] = "Coste indemnización por trabajador despedido" )
+
+// [fact_accidentes]
+Índice de incidencia = SUM ( fact_accidentes[indice_incidencia] )
+Accidentes en jornada = SUM ( fact_accidentes[accidentes_jornada] )
+
+// ======================== 3. MERCADO DE TALENTO ========================
+// [mart_poblacion_actividad]  (miles de personas)
+Parados EPA (miles) =
+IF ( ISFILTERED ( mart_poblacion_actividad[sexo] ),
+    CALCULATE ( SUM ( mart_poblacion_actividad[miles_personas] ), mart_poblacion_actividad[situacion] = "Parados" ),
+    CALCULATE ( SUM ( mart_poblacion_actividad[miles_personas] ), mart_poblacion_actividad[situacion] = "Parados",
+                mart_poblacion_actividad[sexo] = "Ambos sexos" ) )
+Activos EPA (miles) =
+IF ( ISFILTERED ( mart_poblacion_actividad[sexo] ),
+    CALCULATE ( SUM ( mart_poblacion_actividad[miles_personas] ), mart_poblacion_actividad[situacion] = "Activos" ),
+    CALCULATE ( SUM ( mart_poblacion_actividad[miles_personas] ), mart_poblacion_actividad[situacion] = "Activos",
+                mart_poblacion_actividad[sexo] = "Ambos sexos" ) )
+Tasa de paro EPA calculada = DIVIDE ( [Parados EPA (miles)], [Activos EPA (miles)] )
+
+// [mart_vacantes]
+Vacantes = SUM ( mart_vacantes[vacantes] )
+
+// [fact_sepe_paro_municipio] / [fact_sepe_contratos_municipio]
+Paro registrado = SUM ( fact_sepe_paro_municipio[total_paro_registrado] )
+Contratos registrados = SUM ( fact_sepe_contratos_municipio[total_contratos] )
+// Nota: el nombre exacto de las columnas del SEPE sale de su cabecera (ver fact_sepe_*.csv); ajustar si el SEPE las cambia.
+
+// [fact_cpd_actividad]
+CPD = CALCULATE ( SUM ( fact_cpd_actividad[cpd] ), fact_cpd_actividad[seccion_cnae] = "TOTAL" )
+CPD interanual % =
+VAR Actual = [CPD]
+VAR Anterior = CALCULATE ( [CPD], DATEADD ( dim_tiempo[fecha], -1, YEAR ) )
+RETURN DIVIDE ( Actual - Anterior, Anterior )
+
+// ======================== 4. REVISIÓN SALARIAL ========================
+// [mart_precios]
+IPC interanual = CALCULATE ( SUM ( mart_precios[valor] ), mart_precios[indice] = "IPC", mart_precios[indicador] = "Variación anual" )
+// [fact_convenios]  (último acumulado registrado)
+Subida pactada convenios % =
+VAR UltimoAnyo = MAX ( fact_convenios[anyo_efectos] )
+VAR UltimoMes = CALCULATE ( MAX ( fact_convenios[mes_registro] ), fact_convenios[anyo_efectos] = UltimoAnyo,
+                            fact_convenios[tipo_dato] = "Registrados hasta el mes" )
+RETURN CALCULATE ( SUM ( fact_convenios[variacion_salarial_pactada_pct] ), fact_convenios[anyo_efectos] = UltimoAnyo,
+                   fact_convenios[mes_registro] = UltimoMes, fact_convenios[tipo_dato] = "Registrados hasta el mes" )
+
+// ======================== 5. IGUALDAD ========================
+// [mart_brecha_genero]
+Brecha salarial de género % = AVERAGE ( mart_brecha_genero[brecha_pct] )
+
+// ======================== 6. CONTEXTO ========================
+// [mart_empresas]
+Empresas = CALCULATE ( SUM ( mart_empresas[empresas] ), mart_empresas[estrato_asalariados] <> "Total" )
+
+// ======================== ALERTAS ========================
+// [alertas]
+Nº avisos = CALCULATE ( COUNTROWS ( alertas ), alertas[nivel] = "aviso" )

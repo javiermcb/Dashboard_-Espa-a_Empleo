@@ -1,0 +1,17 @@
+[theme]
+# Textos en azul marino rgb(0, 20, 90) y hojas en blanco
+base = "light"
+primaryColor = "#00145A"
+textColor = "#00145A"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F2F4FA"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
+
+[client]
+toolbarMode = "viewer"

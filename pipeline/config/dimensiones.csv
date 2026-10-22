@@ -1,0 +1,13 @@
+dimension;regex_variable;nota
+territorio;^(Totales Territoriales|Total Nacional|Comunidades y Ciudades Autónomas|Comunidades Autónomas|Provincias|Total CCAA|Total Provincias)$;se convierte a territorio_id (N00, Cxx, Pxx)
+sexo;^Sexo;
+jornada;^Tipo de jornada;
+tamano_empresa;Estrato de asalariados|personas que trabajan en el establecimiento|[Tt]amaño;
+estadistico;Percentil|Decil|Cuartil|Estadístico;media, mediana, percentiles, deciles
+situacion;^Relación con la actividad;ocupados / parados / inactivos (va antes de 'actividad' para no confundirla con el CNAE)
+edad;^(?!Antig).*edad;«Antigüedad en el empleo» no es edad (va a detalle)
+actividad;actividad|CNAE|Sectores|Secciones|Divisiones|Rama|sector económico;
+ocupacion;ocupaci|CNO;
+nacionalidad;nacionalidad;
+formacion;formaci|estudios|educaci;
+medida;^(Tipo de dato|Tipo de coste|Concepto|Componentes del coste|Medida|Tipo de ganancia|Unidades|Índices y Tasas|Tiempo de trabajo);lo que mide la serie

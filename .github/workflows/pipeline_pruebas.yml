@@ -1,0 +1,35 @@
+name: Pruebas del pipeline
+
+# Pruebas sin red de la lectura del INE, el control de calidad antes de publicar y los avisos.
+# Se ejecutan en cada cambio del pipeline y en las PRs (también las de Dependabot), antes de fusionar.
+on:
+  push:
+    paths:
+      - "pipeline/**"
+      - "comun/datos.py"
+      - ".github/workflows/pipeline_pruebas.yml"
+  pull_request:
+    paths:
+      - "pipeline/**"
+      - "comun/datos.py"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pipeline/requirements.txt
+      - name: Dependencias
+        run: pip install -r pipeline/requirements.txt pytest
+      - name: Pruebas
+        run: python -m pytest pipeline/tests -q
