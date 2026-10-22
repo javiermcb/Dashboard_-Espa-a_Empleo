@@ -12,15 +12,15 @@ flowchart LR
   P -->|Parquet, si supera el control de calidad| D[(rama datos-modelo)]
   P -->|informes de calidad| C[(rama calidad)]
   P -->|si algo falla| I[Issues → correo]
-  D --> A1[Dashboard 1] & A2[Dashboard 2] & A3[Dashboard 3] & A4[Dashboard 4]
-  CO[comun/<br>datos · gráficos] --- A1 & A2 & A3 & A4
+  D --> A1[Dashboard 1] & A2[Dashboard 2] & A3[Dashboard 3]
+  CO[comun/<br>datos · gráficos] --- A1 & A2 & A3
 ```
 
 | Carpeta | Qué contiene |
 |---|---|
 | `pipeline/` | Descarga, modelo, control de calidad y publicación (idéntico a `Datos_INE`). Configuración en `pipeline/config/` |
 | `comun/` | Código compartido por todos los dashboards: lectura de datos (`datos.py`), gráficos, arranque (`base.py`) y páginas comunes (`paginas/`: estado de los datos, descargas) |
-| `dashboards/dashboard_1` … `dashboard_4` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). De momento solo una página de inicio por definir |
+| `dashboards/dashboard_1` … `dashboard_3` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). El 1 (jóvenes NEET) está hecho en lo que cubren los datos; el 2 (empleo, actividad y sectores) y el 3 (FUNDAE) están por hacer |
 | `tests/` | Abre todas las páginas de todos los dashboards con la muestra `resultados/dev_modelo` |
 | `resultados/dev_modelo/` | Muestra del modelo para pruebas y desarrollo local |
 | `_apartado/` | Código retirado y pendiente de borrar (acceso por email con registro): no se importa en ningún dashboard |
@@ -34,7 +34,7 @@ flowchart LR
 | `pipeline_rrhh.yml` | días laborables 06:17 UTC, cambios en `pipeline/` | descarga, modelo, control de calidad y publicación en `datos-modelo` (solo desde `main`); avisa por issue si falla |
 | `pipeline_pruebas.yml` | cambios en `pipeline/` y PRs | pruebas sin red del pipeline |
 | `apps_pruebas.yml` | cambios en `dashboards/`, `comun/` | abre todas las páginas de todos los dashboards |
-| `mantener_apps_activas.yml` | cada 4 horas | abre con un navegador y despierta si duerme; visita las URLs `APP_URL_1`…`APP_URL_4` (variables del repositorio) |
+| `mantener_apps_activas.yml` | cada 4 horas | abre con un navegador y despierta si duerme; visita las URLs `APP_URL_1`…`APP_URL_3` (variables del repositorio) |
 
 ## Añadir un dashboard o una página
 
@@ -66,5 +66,6 @@ Los dashboards son públicos: sin login ni registro de visitas.
 
 ## Pendiente de decidir
 
-- Qué responde cada dashboard (nombre, público, páginas, tablas).
+- Dashboard 1: nivel educativo y urbano/rural de los NEET, y cifras 16-29 (ver `docs/dashboard_1_fuentes.md`).
+- Dashboards 2 y 3: revisión de fuentes y construcción.
 - Si el pipeline sigue también en `Datos_INE` o pasa a ejecutarse solo aquí.
