@@ -20,7 +20,7 @@ flowchart LR
 |---|---|
 | `pipeline/` | Descarga, modelo, control de calidad y publicación (idéntico a `Datos_INE`). Configuración en `pipeline/config/` |
 | `comun/` | Código compartido por todos los dashboards: lectura de datos (`datos.py`), gráficos, arranque (`base.py`) y páginas comunes (`paginas/`: estado de los datos, descargas) |
-| `dashboards/dashboard_1` … `dashboard_3` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). El 1 (jóvenes NEET) está hecho en lo que cubren los datos; el 2 (empleo, actividad y sectores) y el 3 (FUNDAE) están por hacer |
+| `dashboards/dashboard_1` … `dashboard_3` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). El 1 (jóvenes NEET), el 2 (empleo, actividad y sectores) y el 3 (FUNDAE) están hechos en lo que cubren los datos |
 | `tests/` | Abre todas las páginas de todos los dashboards con la muestra `resultados/dev_modelo` |
 | `resultados/dev_modelo/` | Muestra del modelo para pruebas y desarrollo local |
 | `_apartado/` | Código retirado y pendiente de borrar (acceso por email con registro): no se importa en ningún dashboard |
@@ -67,5 +67,6 @@ Los dashboards son públicos: sin login ni registro de visitas.
 ## Pendiente de decidir
 
 - Dashboard 1: nivel educativo y urbano/rural de los NEET, y cifras 16-29 (ver `docs/dashboard_1_fuentes.md`).
-- Dashboards 2 y 3: revisión de fuentes y construcción.
+- Dashboard 2: UE-27, sectores con potencial, competencias y tipo de contrato por edad.
+- Dashboard 3: sin crédito asignado/disponible (FUNDAE solo publica el «dispuesto»).
 - Si el pipeline sigue también en `Datos_INE` o pasa a ejecutarse solo aquí.
