@@ -31,12 +31,18 @@ Flujo de los datos: `webs oficiales → carga diaria → rama datos-modelo → l
 - Los cuatro PRs están fusionados en `main`: pipeline, capa común, y los tres dashboards.
 - Los dashboards son públicos: no tienen acceso con email ni registro de visitas (el código antiguo de acceso está
   apartado en `_apartado/acceso/`).
-- La carga completa se probó en una rama y salió en verde: 46 tablas, incluidas ERE/ERTE y FUNDAE completos.
-- **Falta**: que la carga publique por primera vez desde `main`, crear las apps en Streamlit y configurar los avisos.
+- La carga diaria corre en `main` y **ya ha publicado** la rama `datos-modelo` (23/10/2026, 07:00 UTC): 46 tablas, con
+  ERE/ERTE y 16 de las 18 series de FUNDAE (faltan la 07 y la 02, que los dashboards no usan).
+- La cuota de almacenamiento de Actions está resuelta (sección 3).
+- **Falta**: crear las apps en Streamlit y configurar los avisos (secciones 4 a 6).
 
 ---
 
-## 2. Comprobar que la carga diaria publica los datos (primera vez)
+## 2. Comprobar que la carga diaria publica los datos
+
+> **Estado a 23/10/2026: hecho.** La primera carga en `main` falló por un timeout transitorio del Ministerio de Trabajo
+> (sin copia anterior, el control de calidad exige todas las tablas) y la siguiente, con la caché ya guardada, publicó.
+> Esta sección sirve para repetir la comprobación o diagnosticar una carga futura.
 
 La carga empezó sola al fusionar los PRs. Hay que confirmar que termina bien y que crea la rama `datos-modelo`.
 
@@ -66,30 +72,18 @@ pipeline RRHH» (y te llega por correo). Se cierra sola cuando una carga termina
 
 ## 3. La cuota de almacenamiento de Actions (artefactos)
 
-**Qué pasa**: cada carga guarda una copia de seguridad (un «artefacto») de unos 49 MB. La cuenta tiene una cuota
-de almacenamiento de Actions y está llena por los artefactos de `Datos_INE`. Mientras esté llena, el paso del artefacto
-sale en rojo, pero **ya no bloquea** la publicación (cambio hecho en este repo y en `Datos_INE`).
+> **Estado a 23/10/2026: resuelto.** Se borraron 51 de los 56 artefactos de `Datos_INE` (quedan 5, 246 MB: los del 12 al
+> 16/10), la retención es de **3 días** en los dos repositorios y el paso del artefacto **no bloquea** la publicación.
 
-**Cómo liberar espacio (borrar artefactos)** — el listado completo está en `artefactos_Datos_INE.md`:
+**Qué pasaba**: cada carga guarda una copia de seguridad (un «artefacto») de unos 49 MB. Con 30 días de retención y una
+carga por cada push de desarrollo, se acumularon 56 (1,86 GB) y la cuota de la cuenta se llenó. El paso fallaba y, al
+estar antes del control de calidad, se saltaba la publicación: `Datos_INE` no publicó nada desde el 16/10.
 
-*Opción A, desde la web:*
-1. Repositorio `Datos_INE` → **Actions** → abre una ejecución de «Pipeline RRHH».
-2. Baja hasta la sección **Artifacts**.
-3. Pulsa el icono de la papelera junto a `modelo-rrhh` y confirma.
-4. Repite con las ejecuciones antiguas.
-
-*Opción B, con la herramienta `gh` (más rápido para muchos):*
-```
-gh api -X DELETE repos/javiermcb/Datos_INE/actions/artifacts/<ID>
-```
-donde `<ID>` es el número de la columna «ID» del listado.
-
-**Después**: GitHub recalcula el uso cada **6 a 12 horas**, así que el espacio no se libera al instante. Para
-comprobarlo, mira el uso de almacenamiento de Actions en los ajustes de facturación de tu cuenta de GitHub (los nombres de los
-menús cambian con el tiempo).
-
-**Para que no vuelva a llenarse**: la retención de los artefactos se ha bajado de 30 a 3 días (en este repo y en
-`Datos_INE`).
+**Si vuelve a aparecer** el aviso `Artifact storage quota has been hit`:
+1. Lista los artefactos: `gh api "repos/javiermcb/<repo>/actions/artifacts?per_page=100" --jq '.artifacts[] | [.id,.name,.created_at] | @tsv'`.
+2. Borra los que no necesites: `gh api -X DELETE repos/javiermcb/<repo>/actions/artifacts/<ID>`
+   (o en la web: **Actions** → la ejecución → sección **Artifacts** → papelera).
+3. GitHub recalcula el uso cada **6 a 12 horas**, así que el espacio no se libera al instante.
 
 ---
 
@@ -260,17 +254,23 @@ Después, pide a Claude que continúe con los paneles pendientes:
 
 ## 9. La app original (`Datos_INE`, `deep-rrhh-stats`)
 
-- Su carga diaria llevaba **sin publicar desde el 16/10** por la cuota (mismo fallo). El PR de `Datos_INE` que lo
-  corrige hace el paso del artefacto no bloqueante.
+- Su carga diaria llevaba **sin publicar desde el 16/10** por la cuota (mismo fallo). El PR #19 de `Datos_INE` (ya
+  fusionado) hace el paso del artefacto no bloqueante y baja la retención a 3 días. **Aún no se ha visto una carga
+  programada posterior**: comprueba la del próximo día laborable.
 - **No tienes que cambiar nada en Streamlit** de esa app: sus secretos siguen valiendo.
 - Para comprobarlo: **Actions** de `Datos_INE` → «Pipeline RRHH» → la ejecución de `main` debe terminar en verde, y
   la rama `datos-modelo` de `Datos_INE` debe tener `metadatos.json` con fecha de hoy.
-- Mientras no se libere la cuota (sección 3) el paso del artefacto saldrá en rojo en el log, pero la carga publica.
 
 ---
 
 ## 10. Limpiezas pendientes (cuando quieras)
 
+- **Borrar ramas ya fusionadas** (no se pudo hacer desde la sesión de Claude: GitHub devolvió 403). En el repositorio →
+  pestaña **Branches** → papelera junto a cada una, o por terminal `git push origin --delete <rama>`:
+  - `Dashboard_-Espa-a_Empleo`: `claude/calidad-primera-vez`, `claude/dashboard-1-fuentes`, `claude/dashboard-2`,
+    `claude/dashboard-3`, `claude/dashboards-base`, `claude/guia-y-retencion`, `claude/limpieza-auditoria`
+    (cuando se fusione). Conserva `datos-modelo` (son los datos) y `main`.
+  - `Datos_INE`: `claude/artefacto-no-bloqueante` (fusionada). Las demás ramas de ese repo son tuyas: no las toco.
 - Borrar `_apartado/acceso/` (código de acceso con email que ya no se usa) cuando confirmes que no hace falta.
 - Revisar y fusionar las propuestas automáticas de Dependabot (actualizaciones mensuales de librerías).
 - Decidir si el pipeline sigue también en `Datos_INE` o solo aquí.

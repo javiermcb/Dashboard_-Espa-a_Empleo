@@ -1,5 +1,11 @@
 # Entrega y explotación de los datos RRHH 360
 
+> **Documento heredado de `Datos_INE`.** Describe el proyecto anterior: las menciones a la app `streamlit_app/`, al
+> registro de accesos, al repositorio público `datos-rrhh-publicos` y al artefacto con `rrhh.duckdb` (30 días) **no
+> aplican a este repositorio**. Las tablas, fuentes y el procedimiento general siguen siendo válidos. Para el estado
+> actual, ver `README.md` y `docs/guia_puesta_en_marcha.md`.
+
+
 **Fecha:** 4 de octubre de 2026 · Complementa a [proyecto_rrhh360.md](proyecto_rrhh360.md) (arquitectura) y [catalogo_apis.md](catalogo_apis.md) (fuentes).
 
 ## 1. Qué se entrega y dónde

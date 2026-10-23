@@ -11,8 +11,8 @@ import streamlit as st
 RAIZ = Path(__file__).resolve().parent.parent
 PAGINAS_COMUNES = RAIZ / "comun" / "paginas"
 
-AVISO_FUENTES = ("Elaboración propia con datos extraídos del sitio web del INE (www.ine.es), del SEPE, de la Seguridad Social "
-                 "y del Ministerio de Trabajo y Economía Social. Los indicadores calculados (cocientes, acumulados, "
+AVISO_FUENTES = ("Elaboración propia con datos extraídos del sitio web del INE (www.ine.es), del SEPE, de la Seguridad Social, "
+                 "del Ministerio de Trabajo y Economía Social y de FUNDAE. Los indicadores calculados (cocientes, acumulados, "
                  "aproximaciones) son elaboración propia, no cifras oficiales. Estos organismos no participan en esta "
                  "herramienta ni la respaldan. Periodo y fecha de cada fuente: «Estado de los datos».")
 AVISO_PERSONAS = ("Datos agregados de territorios y sectores: describen colectivos, no personas. No deben aplicarse a un "
