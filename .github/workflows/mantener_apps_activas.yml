@@ -1,0 +1,67 @@
+name: Mantener las apps activas
+
+# Streamlit Community Cloud duerme las apps sin visitas. Cada 4 horas se abre cada dashboard con un navegador sin pantalla
+# y, si estaba dormido, se despierta. URLs: variables del repositorio APP_URL_1 … APP_URL_4 (las que no existan se saltan).
+on:
+  schedule:
+    - cron: "23 */4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: mantener-app
+  cancel-in-progress: true
+
+jobs:
+  visitar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Navegador
+        run: |
+          pip install playwright==1.63.0
+          python -m playwright install --with-deps chromium
+      - name: Abrir los dashboards (y despertarlos si duermen)
+        env:
+          APP_URL_1: ${{ vars.APP_URL_1 }}
+          APP_URL_2: ${{ vars.APP_URL_2 }}
+          APP_URL_3: ${{ vars.APP_URL_3 }}
+          APP_URL_4: ${{ vars.APP_URL_4 }}
+        run: |
+          fallo=0; rm -f diagnostico_app.txt
+          for v in APP_URL_1 APP_URL_2 APP_URL_3 APP_URL_4; do
+            url="${!v}"
+            [ -n "$url" ] || { echo "$v sin definir: se salta"; continue; }
+            python ops/mantener_activa.py "$url" || fallo=1
+          done
+          exit $fallo
+      - name: Avisar si la app no responde
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          gh label create app-caida --force --color d73a4a > /dev/null
+          n=$(gh issue list --label app-caida --state open --json number --jq '.[0].number')
+          diag=$(cat diagnostico_app.txt 2>/dev/null || echo "sin diagnóstico (el paso falló antes de abrir la app)")
+          texto="Algún dashboard no ha respondido a la visita automática ($(date -u +'%Y-%m-%d %H:%M') UTC).
+
+          **Dónde está el fallo:** $diag
+
+          Los datos se vigilan aparte: si la carga diaria falla, llega otro aviso (issue «Incidencias de carga del pipeline RRHH»). Detalle: $url"
+          if [ -n "$n" ]; then gh issue comment "$n" --body "$texto"; else gh issue create --title "Un dashboard no responde" --label app-caida --body "$texto"; fi
+      - name: Cerrar el aviso si la app vuelve a responder
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --label app-caida --state open --json number --jq '.[].number' 2>/dev/null || true); do
+            gh issue close "$n" --comment "Resuelto: los dashboards vuelven a responder."
+          done

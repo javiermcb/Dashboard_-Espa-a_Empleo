@@ -1,0 +1,74 @@
+territorio_id;nivel;codigo_ine;nombre;ccaa_id;ccaa_nombre
+N00;Nacional;00;Total Nacional;;
+C01;CCAA;01;Andalucía;C01;Andalucía
+C02;CCAA;02;Aragón;C02;Aragón
+C03;CCAA;03;Asturias, Principado de;C03;Asturias, Principado de
+C04;CCAA;04;Balears, Illes;C04;Balears, Illes
+C05;CCAA;05;Canarias;C05;Canarias
+C06;CCAA;06;Cantabria;C06;Cantabria
+C07;CCAA;07;Castilla y León;C07;Castilla y León
+C08;CCAA;08;Castilla - La Mancha;C08;Castilla - La Mancha
+C09;CCAA;09;Cataluña;C09;Cataluña
+C10;CCAA;10;Comunitat Valenciana;C10;Comunitat Valenciana
+C11;CCAA;11;Extremadura;C11;Extremadura
+C12;CCAA;12;Galicia;C12;Galicia
+C13;CCAA;13;Madrid, Comunidad de;C13;Madrid, Comunidad de
+C14;CCAA;14;Murcia, Región de;C14;Murcia, Región de
+C15;CCAA;15;Navarra, Comunidad Foral de;C15;Navarra, Comunidad Foral de
+C16;CCAA;16;País Vasco;C16;País Vasco
+C17;CCAA;17;Rioja, La;C17;Rioja, La
+C18;CCAA;18;Ceuta;C18;Ceuta
+C19;CCAA;19;Melilla;C19;Melilla
+C1819;CCAA;18-19;Ceuta y Melilla;C1819;Ceuta y Melilla
+P01;Provincia;01;Araba/Álava;C16;País Vasco
+P02;Provincia;02;Albacete;C08;Castilla - La Mancha
+P03;Provincia;03;Alicante/Alacant;C10;Comunitat Valenciana
+P04;Provincia;04;Almería;C01;Andalucía
+P05;Provincia;05;Ávila;C07;Castilla y León
+P06;Provincia;06;Badajoz;C11;Extremadura
+P07;Provincia;07;Balears, Illes;C04;Balears, Illes
+P08;Provincia;08;Barcelona;C09;Cataluña
+P09;Provincia;09;Burgos;C07;Castilla y León
+P10;Provincia;10;Cáceres;C11;Extremadura
+P11;Provincia;11;Cádiz;C01;Andalucía
+P12;Provincia;12;Castellón/Castelló;C10;Comunitat Valenciana
+P13;Provincia;13;Ciudad Real;C08;Castilla - La Mancha
+P14;Provincia;14;Córdoba;C01;Andalucía
+P15;Provincia;15;Coruña, A;C12;Galicia
+P16;Provincia;16;Cuenca;C08;Castilla - La Mancha
+P17;Provincia;17;Girona;C09;Cataluña
+P18;Provincia;18;Granada;C01;Andalucía
+P19;Provincia;19;Guadalajara;C08;Castilla - La Mancha
+P20;Provincia;20;Gipuzkoa;C16;País Vasco
+P21;Provincia;21;Huelva;C01;Andalucía
+P22;Provincia;22;Huesca;C02;Aragón
+P23;Provincia;23;Jaén;C01;Andalucía
+P24;Provincia;24;León;C07;Castilla y León
+P25;Provincia;25;Lleida;C09;Cataluña
+P26;Provincia;26;Rioja, La;C17;Rioja, La
+P27;Provincia;27;Lugo;C12;Galicia
+P28;Provincia;28;Madrid;C13;Madrid, Comunidad de
+P29;Provincia;29;Málaga;C01;Andalucía
+P30;Provincia;30;Murcia;C14;Murcia, Región de
+P31;Provincia;31;Navarra;C15;Navarra, Comunidad Foral de
+P32;Provincia;32;Ourense;C12;Galicia
+P33;Provincia;33;Asturias;C03;Asturias, Principado de
+P34;Provincia;34;Palencia;C07;Castilla y León
+P35;Provincia;35;Palmas, Las;C05;Canarias
+P36;Provincia;36;Pontevedra;C12;Galicia
+P37;Provincia;37;Salamanca;C07;Castilla y León
+P38;Provincia;38;Santa Cruz de Tenerife;C05;Canarias
+P39;Provincia;39;Cantabria;C06;Cantabria
+P40;Provincia;40;Segovia;C07;Castilla y León
+P41;Provincia;41;Sevilla;C01;Andalucía
+P42;Provincia;42;Soria;C07;Castilla y León
+P43;Provincia;43;Tarragona;C09;Cataluña
+P44;Provincia;44;Teruel;C02;Aragón
+P45;Provincia;45;Toledo;C08;Castilla - La Mancha
+P46;Provincia;46;Valencia/València;C10;Comunitat Valenciana
+P47;Provincia;47;Valladolid;C07;Castilla y León
+P48;Provincia;48;Bizkaia;C16;País Vasco
+P49;Provincia;49;Zamora;C07;Castilla y León
+P50;Provincia;50;Zaragoza;C02;Aragón
+P51;Provincia;51;Ceuta;C18;Ceuta
+P52;Provincia;52;Melilla;C19;Melilla

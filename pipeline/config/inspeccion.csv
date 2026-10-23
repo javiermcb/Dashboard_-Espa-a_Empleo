@@ -1,0 +1,13 @@
+id;fuente;descripcion;url;hoja_completa
+ss_afil_prov_cnae09_reg;Seguridad Social PX-Web;Afiliados medios por provincia, sección CNAE 09 y régimen;https://w6.seg-social.es/PXWeb/sq/e7afe15e-d110-4584-907c-b25235dd3f42;
+ss_afil_ultdia_prov_cnae;Seguridad Social PX-Web;Afiliados último día del mes por provincia y sección de actividad;https://w6.seg-social.es/PXWeb/sq/d921596c-f52d-478b-94b8-0998230648a6;
+ss_afil_rg_prov_contrato;Seguridad Social PX-Web;Afiliados medios RG por sexo, tipo de contrato y jornada, provincia;https://w6.seg-social.es/PXWeb/sq/adef39b2-bd54-47f5-a387-e08d372c0825;
+ss_afil_ccaa_cnae25_reg;Seguridad Social PX-Web;Afiliados medios por CCAA, sección CNAE 25 y régimen;https://w6.seg-social.es/PXWeb/sq/b97adb6b-47a9-439b-ae2d-f6693ff5cd12;
+sepe_contratos_muni_2026;SEPE datos abiertos;Contratos registrados por municipio 2026;https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/Contratos_por_municipios_2026_csv.csv;
+sepe_paro_muni_2026;SEPE datos abiertos;Paro registrado por municipio 2026;https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/Paro_por_municipios_2026_csv.csv;
+sepe_contratos_ae;SEPE datos abiertos;Contratos registrados por actividad económica (202604);https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/Contratos_registrados_por_AE_202604_csv.csv;
+mites_ett;Ministerio de Trabajo;Empresas de Trabajo Temporal (CPD) julio 2026;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx;ETT-E2
+mites_cct;Ministerio de Trabajo;Convenios colectivos agosto 2026;https://www.mites.gob.es/estadisticas/cct/cct26agoav/CCT_08_2026.xls;
+mites_atr;Ministerio de Trabajo;Accidentes de trabajo julio 2026;https://www.mites.gob.es/estadisticas/eat/eat26_07/ATR_07_2026.xlsx;
+mites_emp;Ministerio de Trabajo;Empresas inscritas en la Seguridad Social agosto 2026;https://www.mites.gob.es/estadisticas/Emp/Emp26-Ago/EMP_8_2026.xlsx;
+mites_reg;Ministerio de Trabajo;Regulación de empleo julio 2026;https://www.mites.gob.es/estadisticas/reg/reg26jul/reg_07_2026.xlsx;

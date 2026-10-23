@@ -1,0 +1,491 @@
+{
+ "generado": "2026-10-05 12:33 UTC",
+ "ficheros": {
+  "dim_tabla": {
+   "filas": 45,
+   "bytes_parquet": 6423
+  },
+  "dim_territorio": {
+   "filas": 8208,
+   "bytes_parquet": 102659
+  },
+  "dim_tiempo": {
+   "filas": 24106,
+   "bytes_parquet": 68352
+  },
+  "fact_accidentes": {
+   "filas": 63,
+   "bytes_parquet": 4665
+  },
+  "fact_accidentes_detalle": {
+   "filas": 2774,
+   "bytes_parquet": 17767
+  },
+  "fact_convenios": {
+   "filas": 33,
+   "bytes_parquet": 3197
+  },
+  "fact_convenios_detalle": {
+   "filas": 1444,
+   "bytes_parquet": 24410
+  },
+  "fact_cpd_actividad": {
+   "filas": 399,
+   "bytes_parquet": 3622
+  },
+  "fact_ett_actividad": {
+   "filas": 184,
+   "bytes_parquet": 6948
+  },
+  "fact_ett_mensual": {
+   "filas": 725,
+   "bytes_parquet": 4583
+  },
+  "fact_ett_resumen": {
+   "filas": 72,
+   "bytes_parquet": 4548
+  },
+  "fact_ett_territorio": {
+   "filas": 126,
+   "bytes_parquet": 5738
+  },
+  "fact_incapacidad_temporal": {
+   "filas": 144,
+   "bytes_parquet": 10698
+  },
+  "fact_ine": {
+   "filas": 705547,
+   "bytes_parquet": 1953830
+  },
+  "fact_regulacion_empleo": {
+   "filas": 19072,
+   "bytes_parquet": 30277
+  },
+  "fact_sepe_contratos_municipio": {
+   "filas": 740102,
+   "bytes_parquet": 7334923
+  },
+  "fact_sepe_paro_municipio": {
+   "filas": 740102,
+   "bytes_parquet": 9505788
+  },
+  "fact_ss_afiliacion": {
+   "filas": 1710540,
+   "bytes_parquet": 6059516
+  },
+  "marts/mart_brecha_genero": {
+   "filas": 119,
+   "bytes_parquet": 2181
+  },
+  "marts/mart_coste_actividad": {
+   "filas": 16872,
+   "bytes_parquet": 62078
+  },
+  "marts/mart_coste_laboral": {
+   "filas": 58608,
+   "bytes_parquet": 177856
+  },
+  "marts/mart_deciles_epa": {
+   "filas": 17795,
+   "bytes_parquet": 51758
+  },
+  "marts/mart_empresas": {
+   "filas": 4134,
+   "bytes_parquet": 10749
+  },
+  "marts/mart_epa_ett": {
+   "filas": 4554,
+   "bytes_parquet": 14991
+  },
+  "marts/mart_flujos": {
+   "filas": 31572,
+   "bytes_parquet": 85604
+  },
+  "marts/mart_horas_extra": {
+   "filas": 26624,
+   "bytes_parquet": 72596
+  },
+  "marts/mart_it_despido": {
+   "filas": 3256,
+   "bytes_parquet": 15661
+  },
+  "marts/mart_limites_deciles": {
+   "filas": 190,
+   "bytes_parquet": 2758
+  },
+  "marts/mart_ocupados_ccaa": {
+   "filas": 97794,
+   "bytes_parquet": 217200
+  },
+  "marts/mart_ocupados_sector": {
+   "filas": 19498,
+   "bytes_parquet": 49722
+  },
+  "marts/mart_poblacion_actividad": {
+   "filas": 93272,
+   "bytes_parquet": 222035
+  },
+  "marts/mart_precios": {
+   "filas": 36719,
+   "bytes_parquet": 54744
+  },
+  "marts/mart_salarios_eaes": {
+   "filas": 5508,
+   "bytes_parquet": 25840
+  },
+  "marts/mart_salarios_ees": {
+   "filas": 5862,
+   "bytes_parquet": 29352
+  },
+  "marts/mart_salarios_ees_detalle": {
+   "filas": 1823,
+   "bytes_parquet": 10958
+  },
+  "marts/mart_tasas_epa": {
+   "filas": 16774,
+   "bytes_parquet": 52386
+  },
+  "marts/mart_teletrabajo": {
+   "filas": 5914,
+   "bytes_parquet": 9511
+  },
+  "marts/mart_temporalidad_motivo": {
+   "filas": 1642,
+   "bytes_parquet": 6841
+  },
+  "marts/mart_tiempo_trabajo": {
+   "filas": 79920,
+   "bytes_parquet": 115541
+  },
+  "marts/mart_tiempo_trabajo_actividad": {
+   "filas": 29526,
+   "bytes_parquet": 49662
+  },
+  "marts/mart_vacantes": {
+   "filas": 936,
+   "bytes_parquet": 4062
+  },
+  "marts/mart_vacantes_actividad": {
+   "filas": 855,
+   "bytes_parquet": 5151
+  }
+ },
+ "incidencias_carga": [],
+ "tablas_ine": [
+  {
+   "tabla_id": "28191",
+   "punto": "Benchmark salarial",
+   "tema": "EAES: medias y percentiles por sexo y CCAA",
+   "datos": 5508,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "36846",
+   "punto": "Benchmark salarial",
+   "tema": "EES 2022: salario por sexo y gran grupo de ocupación (CNO-11)",
+   "datos": 2958,
+   "ultimo_periodo": "2022-01-01"
+  },
+  {
+   "tabla_id": "36858",
+   "punto": "Benchmark salarial",
+   "tema": "EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato",
+   "datos": 572,
+   "ultimo_periodo": "2022-01-01"
+  },
+  {
+   "tabla_id": "36861",
+   "punto": "Benchmark salarial",
+   "tema": "EES 2022: salario medio por CCAA, sexo, sector y antigüedad",
+   "datos": 1251,
+   "ultimo_periodo": "2022-01-01"
+  },
+  {
+   "tabla_id": "66238",
+   "punto": "Benchmark salarial",
+   "tema": "EPA decil: salarios medios por jornada, sexo y decil",
+   "datos": 1829,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "66241",
+   "punto": "Benchmark salarial",
+   "tema": "EPA decil: salarios medios por jornada, CCAA y decil",
+   "datos": 11645,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "66244",
+   "punto": "Benchmark salarial",
+   "tema": "EPA decil: salarios medios por jornada, ocupación y decil",
+   "datos": 4321,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "66252",
+   "punto": "Benchmark salarial",
+   "tema": "EPA decil: salarios medios y límite inferior de cada decil",
+   "datos": 361,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "70688",
+   "punto": "Benchmark salarial",
+   "tema": "EES 2018: salario por sexo y gran grupo de ocupación (CNO-11)",
+   "datos": 2904,
+   "ultimo_periodo": "2018-01-01"
+  },
+  {
+   "tabla_id": "39374",
+   "punto": "Contexto de mercado",
+   "tema": "DIRCE: empresas por provincia y estrato de asalariados",
+   "datos": 4134,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "6032",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: coste laboral por trabajador y componente, por sección CNAE",
+   "datos": 16872,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6042",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: tiempo de trabajo por trabajador y mes, tipo de jornada y sector",
+   "datos": 6216,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6043",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: tiempo de trabajo por sección CNAE (incluye horas no trabajadas por IT y por vacaciones)",
+   "datos": 29526,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6056",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: percepciones por día de IT y coste de despido",
+   "datos": 3256,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6061",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: coste laboral por trabajador, CCAA y sector",
+   "datos": 37296,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6062",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: coste laboral por hora efectiva, CCAA y sector",
+   "datos": 21312,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6063",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: tiempo de trabajo por trabajador y mes, CCAA",
+   "datos": 79920,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "6064",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: vacantes por CCAA",
+   "datos": 936,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "65212",
+   "punto": "Coste laboral y absentismo",
+   "tema": "EPA: asalariados que hacen horas extra (pagadas o no), por sexo y sección CNAE",
+   "datos": 26624,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "65776",
+   "punto": "Coste laboral y absentismo",
+   "tema": "EPA: teletrabajo (días en el domicilio), por sexo y CCAA (porcentaje)",
+   "datos": 5914,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "79659",
+   "punto": "Coste laboral y absentismo",
+   "tema": "ETCL: tiempo de trabajo por trabajador y mes por CCAA, tipo de jornada y sector (tabla nueva: se comprueba si trae horas no trabajadas por IT)",
+   "datos": 79920,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "10888",
+   "punto": "Igualdad y diversidad",
+   "tema": "MYH: brecha salarial de género por edad",
+   "datos": 89,
+   "ultimo_periodo": "2023-01-01"
+  },
+  {
+   "tabla_id": "10891",
+   "punto": "Igualdad y diversidad",
+   "tema": "MYH: brecha salarial de género por tipo de jornada",
+   "datos": 30,
+   "ultimo_periodo": "2023-01-01"
+  },
+  {
+   "tabla_id": "6048",
+   "punto": "Mercado de talento",
+   "tema": "ETCL: vacantes por sección CNAE",
+   "datos": 855,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "65304",
+   "punto": "Mercado de talento",
+   "tema": "EPA: ocupados por CCAA, sexo, edad y sector",
+   "datos": 97794,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "65345",
+   "punto": "Mercado de talento",
+   "tema": "EPA: población por relación con la actividad, sexo y provincia",
+   "datos": 93272,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "65354",
+   "punto": "Mercado de talento",
+   "tema": "EPA: ocupados por sector y provincia",
+   "datos": 19498,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "65805",
+   "punto": "Mercado de talento",
+   "tema": "EPA: asalariados contratados a través de ETT, por sexo y CCAA (personas)",
+   "datos": 4554,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "65809",
+   "punto": "Mercado de talento",
+   "tema": "EPA: asalariados temporales por motivo de la temporalidad, sexo y CCAA",
+   "datos": 1642,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66031",
+   "punto": "Mercado de talento",
+   "tema": "EPA: tasa de empleo por sexo, edad y CCAA",
+   "datos": 8375,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66055",
+   "punto": "Mercado de talento",
+   "tema": "EPA: tasa de paro por sexo, edad y CCAA",
+   "datos": 8399,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66266",
+   "punto": "Mercado de talento",
+   "tema": "EFPA: flujos entre empleo, paro e inactividad por CCAA",
+   "datos": 31572,
+   "ultimo_periodo": "2026-04-01"
+  },
+  {
+   "tabla_id": "37624",
+   "punto": "Revisión salarial",
+   "tema": "IPT: índices por ocupación",
+   "datos": 297,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "37630",
+   "punto": "Revisión salarial",
+   "tema": "IPT: índices por CCAA",
+   "datos": 594,
+   "ultimo_periodo": "2024-01-01"
+  },
+  {
+   "tabla_id": "76134",
+   "punto": "Revisión salarial",
+   "tema": "IPC: tasa de variación del índice general nacional",
+   "datos": 2341,
+   "ultimo_periodo": "2026-09-01"
+  },
+  {
+   "tabla_id": "76140",
+   "punto": "Revisión salarial",
+   "tema": "IPC: tasa de variación del índice general por CCAA",
+   "datos": 33487,
+   "ultimo_periodo": "2026-09-01"
+  },
+  {
+   "tabla_id": "49508",
+   "punto": null,
+   "tema": "ODS 8.6.1: jóvenes de 15 a 24 años que ni estudian ni trabajan, por sexo (%)",
+   "datos": 18,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "59513",
+   "punto": null,
+   "tema": "Jóvenes de 15 a 29 años que ni estudian ni trabajan, por sexo (%)",
+   "datos": 33,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "59514",
+   "punto": null,
+   "tema": "Jóvenes de 15 a 29 años que ni estudian ni trabajan, por nacionalidad (%)",
+   "datos": 33,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "62285",
+   "punto": null,
+   "tema": "Jóvenes de 15 a 29 años que ni estudian ni trabajan, por CCAA (%)",
+   "datos": 220,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66023",
+   "punto": null,
+   "tema": "EPA media anual: tasa de actividad por edad, sexo y CCAA",
+   "datos": 8400,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66028",
+   "punto": null,
+   "tema": "EPA media anual: tasa de actividad por nacionalidad, sexo y CCAA",
+   "datos": 5943,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66036",
+   "punto": null,
+   "tema": "EPA media anual: tasa de empleo por nacionalidad, sexo y CCAA",
+   "datos": 5922,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66057",
+   "punto": null,
+   "tema": "EPA media anual: tasa de paro por nacionalidad, sexo y CCAA",
+   "datos": 5906,
+   "ultimo_periodo": "2025-01-01"
+  },
+  {
+   "tabla_id": "66061",
+   "punto": null,
+   "tema": "EPA media anual: parados por tiempo de búsqueda de empleo, sexo y CCAA (% del total de cada comunidad)",
+   "datos": 9595,
+   "ultimo_periodo": "2025-01-01"
+  }
+ ]
+}

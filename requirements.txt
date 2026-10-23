@@ -1,0 +1,7 @@
+# Versiones exactas con las que se prueba la app (tests/ y workflow app_pruebas.yml). Para actualizar:
+# cambiar aquí, ejecutar «python -m pytest tests -q» y subir; GitHub vuelve a probar todas las páginas.
+streamlit==1.65.0
+altair==6.3.0
+duckdb==1.5.6
+pandas==3.0.6
+pyarrow==25.0.1

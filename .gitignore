@@ -1,0 +1,6 @@
+__pycache__/
+.pytest_cache/
+.streamlit/secrets.toml
+# pipeline: los datos se regeneran en GitHub Actions y se publican en la rama datos-modelo
+datos/
+diagnostico_app.txt

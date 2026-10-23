@@ -1,0 +1,94 @@
+tabla;columna;tipo;descripcion
+fact_ine;tabla_id;texto;Código de la tabla del INE (DATOS_TABLA). Relación con dim_tabla
+fact_ine;serie_cod;texto;Código de la serie del INE dentro de la tabla
+fact_ine;serie_nombre;texto;Nombre completo de la serie según el INE
+fact_ine;fecha;fecha;Primer día del periodo (año, trimestre o mes). Relación con dim_tiempo
+fact_ine;anyo;entero;Año del dato
+fact_ine;periodo;texto;Periodo según el INE (A = anual, T1..T4 = trimestre, M01..M12 = mes, vacío = dato puntual)
+fact_ine;periodicidad;texto;Anual, Trimestral, Mensual o Puntual (encuestas como la EES)
+fact_ine;territorio_id;texto;N00 = España, Cxx = comunidad autónoma, Pxx = provincia (códigos INE). Relación con dim_territorio
+fact_ine;territorio_implicito;booleano;Verdadero si la tabla no tiene variable territorial y se asume dato nacional
+fact_ine;medida;texto;Qué mide la serie (p. ej. Tasa de paro, Coste laboral total, Horas pactadas)
+fact_ine;estadistico;texto;Media, mediana, percentil o decil cuando la tabla los distingue
+fact_ine;situacion;texto;Relación con la actividad: ocupados, parados, activos, inactivos
+fact_ine;sexo;texto;Ambos sexos, Hombres, Mujeres
+fact_ine;edad;texto;Grupo de edad según la tabla
+fact_ine;jornada;texto;Tipo de jornada (completa, parcial, ambas)
+fact_ine;tamano_empresa;texto;Estrato de asalariados o tamaño del establecimiento
+fact_ine;actividad;texto;Sector, sección o rama de actividad (CNAE) según la tabla
+fact_ine;actividad_codigo;texto;Código CNAE cuando el INE lo proporciona
+fact_ine;ocupacion;texto;Grupo de ocupación (CNO-11) según la tabla
+fact_ine;ocupacion_codigo;texto;Código CNO cuando el INE lo proporciona
+fact_ine;nacionalidad;texto;Nacionalidad según la tabla
+fact_ine;formacion;texto;Nivel de formación según la tabla
+fact_ine;detalle;texto;Resto de variables de la tabla que no encajan en una dimensión común (Variable: valor | ...)
+fact_ine;unidad;texto;Unidad del valor (Euros, Tasas, Personas, Horas, Índice...)
+fact_ine;escala;texto;Escala del valor (p. ej. Miles)
+fact_ine;tipo_dato;texto;Definitivo, Provisional o Avance según el INE
+fact_ine;valor;decimal;Valor numérico. Vacío si el INE no lo publica o es secreto
+fact_ine;secreto;booleano;Verdadero si el INE marca el dato como secreto estadístico
+dim_tabla;tabla_id;texto;Código de la tabla del INE
+dim_tabla;punto;texto;Punto de RRHH (1 a 6)
+dim_tabla;punto_nombre;texto;Benchmark salarial, Coste laboral y absentismo, Mercado de talento, Revisión salarial, Igualdad y diversidad, Contexto de mercado
+dim_tabla;tema;texto;Descripción corta de la tabla
+dim_tabla;nota;texto;Observaciones de carga (duplicados retirados, ediciones...)
+dim_tabla;operacion_cod;texto;Código de la operación estadística del INE (EPA, ETCL, EES...)
+dim_tabla;operacion;texto;Nombre de la operación estadística
+dim_tabla;tabla_nombre;texto;Nombre oficial de la tabla en el INE
+dim_tabla;organismo;texto;Organismo que publica el dato
+dim_tabla;url_api;texto;URL de la API JSON de la tabla
+dim_tabla;estado_carga;texto;OK o ERROR en la última carga
+dim_tabla;fecha_min;fecha;Primer periodo cargado
+dim_tabla;fecha_max;fecha;Último periodo cargado
+dim_territorio;territorio_id;texto;N00, Cxx o Pxx
+dim_territorio;nivel;texto;Nacional, CCAA o Provincia
+dim_territorio;codigo_ine;texto;Código INE de la comunidad autónoma o provincia
+dim_territorio;nombre;texto;Nombre oficial
+dim_territorio;ccaa_id;texto;Comunidad autónoma a la que pertenece (para jerarquías)
+dim_territorio;ccaa_nombre;texto;Nombre de la comunidad autónoma
+dim_tiempo;fecha;fecha;Día
+dim_tiempo;anyo;entero;Año
+dim_tiempo;trimestre;entero;Trimestre (1 a 4)
+dim_tiempo;mes;entero;Mes (1 a 12)
+dim_tiempo;anyo_mes;texto;AAAA-MM
+dim_tiempo;anyo_trimestre;texto;AAAA-Tn
+mart_salarios_ees;(tabla);;EES 2018 y 2022: ganancia anual en euros por sexo, gran grupo de ocupación (CNO-11) y territorio (estadístico: Media, Mediana, Percentil 10/90, Cuartiles)
+mart_salarios_eaes;(tabla);;EAES anual: ganancia en euros por sexo y CCAA (estadístico: Media, Mediana, percentiles)
+mart_deciles_epa;(tabla);;EPA: salario medio mensual por decil, con desglose por sexo, CCAA u ocupación y tipo de jornada
+mart_limites_deciles;(tabla);;EPA: límite inferior y media de cada decil del salario bruto mensual (nacional)
+mart_coste_laboral;(tabla);;ETCL trimestral: coste laboral en euros por componente, por trabajador y mes o por hora efectiva, CCAA y sector
+mart_tiempo_trabajo;(tabla);;ETCL trimestral: horas por trabajador y mes (pactadas, pagadas, efectivas, extras, no trabajadas), CCAA, sector y jornada
+mart_it_despido;(tabla);;ETCL trimestral: percepciones por día de incapacidad temporal y coste de indemnización por despido, por actividad
+mart_vacantes;(tabla);;ETCL trimestral: puestos vacantes por CCAA
+mart_poblacion_actividad;(tabla);;EPA trimestral por provincia: activos, ocupados, parados, inactivos (miles) por sexo
+mart_ocupados_sector;(tabla);;EPA trimestral por provincia: ocupados por gran sector (miles)
+mart_tasas_epa;(tabla);;EPA anual por CCAA: tasas de empleo y paro por sexo y edad
+mart_flujos;(tabla);;EFPA trimestral por CCAA: personas (miles) según situación en el trimestre actual y en el anterior
+mart_precios;(tabla);;IPC mensual (variación mensual, anual y acumulada) e IPT anual (índice y tasa) por CCAA u ocupación
+mart_brecha_genero;(tabla);;Brecha salarial de género no ajustada (% por hora) por edad o jornada
+mart_empresas;(tabla);;DIRCE anual: empresas por provincia y estrato de asalariados
+fact_sepe_paro_municipio;(tabla);;SEPE: paro registrado por municipio y mes (total, sexo x tramo de edad, sector y sin empleo anterior). Valores '<5' ocultos por secreto: vacíos y contados en n_secretos
+fact_sepe_demandantes_municipio;(tabla);;SEPE: demandantes de empleo por municipio y mes (total, sexo x tramo de edad, sector y sin empleo anterior). Incluye a los parados registrados y a otros demandantes (ocupados que buscan otro empleo, etc.). Valores '<5' ocultos por secreto
+fact_sepe_contratos_municipio;(tabla);;SEPE: contratos registrados por municipio y mes (total, iniciales indefinidos/temporales y convertidos por sexo, sector)
+fact_ss_afiliacion;(tabla);;Seguridad Social (PX-Web): afiliados por provincia o CCAA y mes. consulta indica el desglose: régimen y sección CNAE, o modalidad de contrato y sexo
+fact_cpd_actividad;(tabla);;Ministerio de Trabajo (ETT-E2): contratos de puesta a disposición por mes y sección CNAE (TOTAL = todas · el Ministerio agrupa P y V y T y U)
+fact_convenios;(tabla);;Ministerio de Trabajo (CCT-2.1): convenios con efectos económicos: número, empresas, trabajadores, variación salarial pactada y revisada (%), jornada media. tipo_dato distingue año completo, provisional y acumulado registrado hasta un mes
+fact_accidentes;(tabla);;Ministerio de Trabajo (ATR-I1.1): accidentes de trabajo en jornada, mortales, afiliados e índice de incidencia por CCAA y provincia, acumulado desde enero hasta periodo_hasta
+dim_territorio;provincia_id;texto;Provincia del territorio (municipios y provincias). Para jerarquía Nacional > CCAA > Provincia > Municipio
+fact_ett_mensual;(tabla);;Ministerio de Trabajo (ETT-E1, E3, E4): serie mensual y anual en formato largo (indicador, categoria, valor): CPD por modalidad (obra o servicio, circunstancias, fijos discontinuos, sustitución…), cesiones, número de ETT, trabajadores contratados por ETT por sexo, nacionalidad y edad, contratos de trabajo de las ETT por tipo
+fact_ett_territorio;(tabla);;Ministerio de Trabajo (ETT-1): cesiones y CPD por modalidad por CCAA y provincia, del mes y acumulado del año (tipo_periodo). Las CCAA uniprovinciales llevan provincia_id
+fact_ett_actividad;(tabla);;Ministerio de Trabajo (ETT-2): CPD por modalidad por sector y división CNAE a 2 dígitos, del mes y acumulado del año
+fact_ett_resumen;(tabla);;Ministerio de Trabajo (ETT-R1 a R4): acumulado del año por sección, CCAA, perfil del trabajador y afiliados a ETT, con la variación oficial frente al mismo periodo del año anterior
+fact_convenios_detalle;(tabla);;Ministerio de Trabajo (CCT-2.3, 2.5, 2.6, 2.7, 2.8): convenios por actividad, CCAA y provincia, ámbito, tramo de jornada y cláusula de garantía salarial, con trabajadores, variación salarial y jornada media. Año en curso y cierres de diciembre de años anteriores
+fact_accidentes_detalle;(tabla);;Ministerio de Trabajo (ATR): formato largo (cuadro, codigo, nombre, sexo, territorio_id, medida, valor): gravedad, provincia, actividad, ocupación, sexo y edad, índices de incidencia y variación oficial interanual
+fact_regulacion_empleo;(tabla);;Ministerio de Trabajo (REG): trabajadores afectados por despido colectivo, suspensión de contrato (ERTE) o reducción de jornada, por sexo, actividad, territorio, causa y tamaño de empresa. Un fichero por mes (últimos 13)
+fact_incapacidad_temporal;(tabla);;Seguridad Social (estadística de IT del sistema): por CCAA y provincia, duración media de las bajas finalizadas, incidencia media mensual y prevalencia por mil trabajadores protegidos, procesos iniciados, finalizados y en vigor
+mart_tiempo_trabajo_actividad;(tabla);;ETCL (INE 6043): horas por trabajador y mes por sección CNAE: pactadas, pagadas, efectivas, extras, no trabajadas, no trabajadas por IT y por vacaciones y fiestas
+mart_coste_actividad;(tabla);;ETCL (INE 6032): coste laboral por trabajador y mes por sección CNAE y componente (salarial, cotizaciones, despido…)
+mart_vacantes_actividad;(tabla);;ETCL (INE 6048): vacantes por sección CNAE
+mart_epa_ett;(tabla);;EPA (INE 65805): asalariados según hayan sido contratados a través de una ETT, por sexo y CCAA (miles)
+mart_temporalidad_motivo;(tabla);;EPA (INE 65809): asalariados temporales por motivo de la temporalidad, sexo y CCAA (miles)
+mart_horas_extra;(tabla);;EPA (INE 65212): asalariados según hagan horas extra pagadas o no pagadas, por sexo y sección CNAE (miles)
+mart_ocupados_ccaa;(tabla);;EPA (INE 65304): ocupados por CCAA, sexo, edad y sector (miles)
+mart_teletrabajo;(tabla);;EPA (INE 65776): % de ocupados según los días que trabajan desde su domicilio, por sexo y CCAA
+mart_salarios_ees_detalle;(tabla);;EES 2022 (INE 36858 y 36861): salario medio bruto anual por CCAA, sexo y sector según tipo de contrato o antigüedad

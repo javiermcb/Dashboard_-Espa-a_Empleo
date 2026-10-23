@@ -1,0 +1,178 @@
+name: Pipeline RRHH
+
+# Descarga las tablas configuradas, construye el modelo, lo pasa por el control de calidad y lo publica para la app.
+# Solo la rama main publica y avisa; en otras ramas es un ensayo.
+on:
+  workflow_dispatch:
+    inputs:
+      probar_notificacion:
+        description: "Enviar un aviso de prueba a la issue de alertas (para comprobar que llegan los correos)"
+        type: boolean
+        default: false
+      caida_max:
+        description: "Caída de filas máxima permitida por tabla antes de no publicar (0.5 = 50 %). Subir solo si la caída es legítima."
+        type: string
+        default: "0.5"
+  schedule:
+    - cron: "17 6 * * 1-5"   # días laborables, 06:17 UTC
+  push:
+    branches: ["main", "claude/**"]
+    paths:
+      - "pipeline/**"
+      - ".github/workflows/pipeline_rrhh.yml"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: pipeline-rrhh
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Dependencias
+        run: pip install -r pipeline/requirements.txt
+      - name: Recuperar la última carga buena (caché)
+        # si una fuente falla hoy, ine.py y fuentes.py reutilizan su última versión buena en vez de dejar la tabla vacía
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            datos/raw/ine
+            datos/raw/mites
+            datos/normalizado
+            datos/estado_cargas.json
+          key: datos-rrhh-${{ github.run_id }}
+          restore-keys: datos-rrhh-
+      - name: Informes de la carga anterior (rama calidad)
+        # alertas.py y notificar.py comparan con la carga anterior para avisar solo de lo nuevo
+        run: |
+          git fetch -q --depth 1 origin calidad && git checkout -q FETCH_HEAD -- resultados/pipeline || echo "::warning::sin informes previos"
+      - name: Ingesta INE
+        run: python pipeline/ine.py
+      - name: Fuentes fase 2 (SEPE, Seguridad Social, Ministerio de Trabajo)
+        # si una fuente falla, el modelo se construye igual con el resto (ver datos/qa/fuentes_carga.csv);
+        # si una web va muy lenta, a los 35 minutos se corta y el modelo usa la última carga buena (caché)
+        timeout-minutes: 35
+        continue-on-error: true
+        run: python pipeline/fuentes.py || echo "::warning::fuentes.py terminó con error"
+      - name: Guardar la carga para la próxima ejecución (caché)
+        if: always()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            datos/raw/ine
+            datos/raw/mites
+            datos/normalizado
+            datos/estado_cargas.json
+          key: datos-rrhh-${{ github.run_id }}
+      - name: Modelo
+        run: python pipeline/modelo.py
+      - name: Alertas y novedades
+        run: python pipeline/alertas.py || echo "::warning::alertas.py terminó con error"
+      - name: Datos del informe de muestra (prototipo visual)
+        run: python pipeline/visual_datos.py || echo "::warning::visual_datos.py terminó con error"
+      - name: Notificar (issues de GitHub, que llegan por correo)
+        # solo lo nuevo frente a la carga anterior: fallos de carga, avisos nuevos y datos nuevos
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python pipeline/notificar.py
+          if [ "${{ inputs.probar_notificacion }}" = "true" ]; then
+            printf '### Aviso de prueba\n\nSi recibes esto por correo, las notificaciones del pipeline RRHH funcionan.\n\nEjecución: %s/%s/actions/runs/%s' \
+              "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" > datos/qa/notificacion_alertas.md
+          fi
+          publicar() {  # etiqueta, título, fichero, color: comenta en la issue abierta con esa etiqueta o crea una nueva
+            [ -f "$3" ] || return 0
+            gh label create "$1" --force --color "$4" > /dev/null
+            n=$(gh issue list --label "$1" --state open --json number --jq '.[0].number')
+            if [ -n "$n" ]; then gh issue comment "$n" --body-file "$3"; else gh issue create --title "$2" --label "$1" --body-file "$3"; fi
+          }
+          publicar pipeline-fallo "Incidencias de carga del pipeline RRHH" datos/qa/notificacion_fallos.md d73a4a
+          publicar alertas "Alertas RRHH 360" datos/qa/notificacion_alertas.md 0e8a16
+          # carga sin ningún fallo de fuente: se cierra sola la issue de incidencias (si estaba abierta)
+          if ! grep -q '^carga;' datos/qa/alertas.csv 2>/dev/null; then
+            for n in $(gh issue list --label pipeline-fallo --state open --json number --jq '.[].number' 2>/dev/null || true); do
+              gh issue close "$n" --comment "Resuelto: la carga de hoy ha terminado sin fallos ($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
+            done
+          fi
+      - name: Preparar publicación (README, diccionario, metadatos)
+        run: python pipeline/publicacion.py --repo "${{ vars.RRHH_PUBLICO_REPO || 'USUARIO/REPOSITORIO' }}"
+      - name: Guardar la publicación como artefacto (30 días)
+        # copia de seguridad: si la cuota de almacenamiento de GitHub está llena, no debe impedir la publicación
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: modelo-rrhh
+          path: datos/publicar/
+          retention-days: 30
+      - name: Control de calidad antes de publicar
+        # si falla (falta una tabla de la app, una tabla vacía o que pierde más de la mitad de sus filas), no se publica:
+        # la app sigue con la última carga buena y el paso «Avisar si la carga se ha roto» abre la incidencia
+        id: control
+        env:
+          CAIDA_MAX: ${{ inputs.caida_max || '0.5' }}
+        run: |
+          git fetch -q --depth 1 origin datos-modelo && git show FETCH_HEAD:modelo/metadatos.json > datos/qa/metadatos_previos.json \
+            || { rm -f datos/qa/metadatos_previos.json; echo "::warning::sin carga publicada con la que comparar"; }
+          python pipeline/control_publicacion.py --caida-max "$CAIDA_MAX"
+      - name: Publicar los datos de la app en la rama datos-modelo
+        # Rama huérfana con un único commit (se reescribe en cada carga, así no crece el historial): Parquet, alertas, metadatos e informes de calidad.
+        # La app Streamlit los lee con RRHH_DATOS = https://raw.githubusercontent.com/<este repo>/datos-modelo/modelo/
+        if: github.ref == 'refs/heads/main'
+        run: |
+          rm -rf /tmp/app && mkdir -p /tmp/app/modelo
+          cd datos/publicar/modelo
+          cp --parents $(find . -name '*.parquet') /tmp/app/modelo/
+          cp metadatos.json diccionario.csv /tmp/app/modelo/ 2>/dev/null || true
+          cp alertas.csv /tmp/app/modelo/ 2>/dev/null || true
+          cd "$GITHUB_WORKSPACE"
+          # informes de calidad para la página «Estado de los datos» de la app
+          cp datos/qa/fuentes_carga.csv datos/qa/ine_carga.csv datos/qa/resumen_fuentes.csv /tmp/app/modelo/ 2>/dev/null || true
+          cd /tmp/app
+          git init -q -b datos-modelo
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Datos de la app (run ${{ github.run_id }})"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:datos-modelo
+      - name: Guardar el informe de calidad (rama calidad, nunca en main)
+        # también cuando el control de calidad no se supera, para poder ver por qué
+        if: github.ref == 'refs/heads/main' && (success() || steps.control.outcome == 'failure')
+        run: |
+          mkdir -p /tmp/qa
+          cp datos/qa/*.csv datos/qa/*.md /tmp/qa/ 2>/dev/null || cp datos/qa/*.csv /tmp/qa/
+          cp datos/modelo/dim_tabla.csv /tmp/qa/
+          cp datos/visual/datos_visual.json /tmp/qa/ 2>/dev/null || true
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          rm -rf /tmp/cal && git clone -q --depth 5 --branch calidad "$url" /tmp/cal
+          mkdir -p /tmp/cal/resultados/pipeline && cp /tmp/qa/* /tmp/cal/resultados/pipeline/
+          cd /tmp/cal
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || { git commit -q -m "Informe de calidad (run ${{ github.run_id }})"; git push -q origin HEAD:calidad; }
+      - name: Avisar si la carga se ha roto
+        # si un paso falla antes de «Notificar», no se abre ninguna issue: este paso avisa igualmente (llega por correo)
+        if: failure() && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          if [ "${{ steps.control.outcome }}" = "failure" ]; then
+            { cat datos/qa/control_publicacion.md; printf '\nEjecución: %s\n' "$url"; } > /tmp/fallo.md
+          else
+            printf '### La carga del pipeline RRHH se ha interrumpido\n\nLa app sigue mostrando los datos de la última carga correcta.\n\nEjecución: %s\n' "$url" > /tmp/fallo.md
+          fi
+          gh label create pipeline-fallo --force --color d73a4a > /dev/null
+          n=$(gh issue list --label pipeline-fallo --state open --json number --jq '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --body-file /tmp/fallo.md; else gh issue create --title "Incidencias de carga del pipeline RRHH" --label pipeline-fallo --body-file /tmp/fallo.md; fi
