@@ -154,7 +154,9 @@ jobs:
           cp datos/modelo/dim_tabla.csv /tmp/qa/
           cp datos/visual/datos_visual.json /tmp/qa/ 2>/dev/null || true
           url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
-          rm -rf /tmp/cal && git clone -q --depth 5 --branch calidad "$url" /tmp/cal
+          rm -rf /tmp/cal
+          # la primera vez la rama calidad no existe: se crea (huérfana), igual que la rama de exploración
+          git clone -q --depth 5 --branch calidad "$url" /tmp/cal || { mkdir -p /tmp/cal && git -C /tmp/cal init -q -b calidad && git -C /tmp/cal remote add origin "$url"; }
           mkdir -p /tmp/cal/resultados/pipeline && cp /tmp/qa/* /tmp/cal/resultados/pipeline/
           cd /tmp/cal
           git config user.name "github-actions[bot]"
