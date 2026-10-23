@@ -1,5 +1,11 @@
 # Operación · qué hacer cuando algo falla
 
+> **Documento heredado de `Datos_INE`.** Describe el proyecto anterior: las menciones a la app `streamlit_app/`, al
+> registro de accesos, al repositorio público `datos-rrhh-publicos` y al artefacto con `rrhh.duckdb` (30 días) **no
+> aplican a este repositorio**. Las tablas, fuentes y el procedimiento general siguen siendo válidos. Para el estado
+> actual, ver `README.md` y `docs/guia_puesta_en_marcha.md`.
+
+
 | Síntoma | Causa probable | Qué hacer |
 |---|---|---|
 | Correo / issue **«Incidencias de carga»** con «La carga se ha interrumpido» | Un paso del pipeline ha fallado (código o configuración) | Abrir el enlace de la ejecución, ver el paso en rojo. La app sigue con los datos de la última carga buena. Corregir y lanzar *Actions → Pipeline RRHH → Run workflow*. La issue se cierra sola con la siguiente carga sin fallos. |

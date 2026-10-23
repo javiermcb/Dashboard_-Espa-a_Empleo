@@ -1,0 +1,164 @@
+# Auditoría crítica del proceso (23/10/2026)
+
+Revisión de todo lo hecho para llevar la lógica de `Datos_INE` a un repositorio con una carga común y tres dashboards.
+Cada hallazgo indica **evidencia**, **estado** y **qué hacer**. Lo que no se pudo comprobar está en la sección 5 y no se
+da por bueno.
+
+## 1. Resumen
+
+| Área | Valoración | En una línea |
+|---|---|---|
+| Carga de datos | Funciona, con arranque en frío frágil | Publica 46 tablas desde `main`; la primera carga falló por un timeout y un defecto mío |
+| Dashboards | Funcionan con lo que hay | Paneles con datos reales; 5 paneles sin fuente (2 del Dashboard 1, 3 del 2) y uno solo parcial |
+| Eficiencia | **Mal** | Pipeline duplicado en dos repos; cada app descarga 43 tablas para usar 2 o 3 |
+| Pruebas | Insuficientes | Detectan que una página no falla, no que la cifra sea correcta |
+| Seguridad y privacidad | Aceptable, con una decisión abierta | Sin secretos en el código; repo privado o público sin decidir |
+| Documentación | Mejorable | Parte heredada desfasada (marcada ya como tal) |
+
+## 2. Lo que está bien (con evidencia)
+
+- **La carga completa publica**: run 12 en `main` (23/10, 07:00 UTC) publicó `datos-modelo` con 46 tablas; ERE/ERTE cargó
+  19.060 filas y FUNDAE 7.302 (16 de 18 series).
+- **El control de calidad funciona como diseñado**: la primera carga no publicó porque faltaban 4 tablas exigidas; no
+  llegó nada incompleto a los dashboards.
+- **Las acciones están fijadas por SHA** y el workflow declara permisos explícitos (`contents` e `issues` en escritura,
+  necesarios para publicar `datos-modelo` y abrir avisos).
+- **Sin secretos en el código**: búsqueda de patrones habituales (tokens `github_pat_`/`ghp_`, claves AWS, claves privadas,
+  contraseñas) sin resultados en los ficheros actuales.
+- **Las cifras mostradas son reales**, no las de las maquetas (que eran ejemplos): NEET 11,5 % en 2025, actividad
+  16-24 del 37,6 %, 6,76 M de participantes FUNDAE.
+- **Se respeta el secreto estadístico**: el SEPE oculta valores `<5` y el pipeline los deja vacíos.
+
+## 3. Hallazgos
+
+### Alta
+
+**H1 · Pipeline duplicado en dos repositorios** — *abierto*
+- Evidencia: `Datos_INE` y este repo ejecutan cada día laborable la misma carga contra las mismas webs. Una carga completa
+  dura entre 15 y 29 minutos (medido: 26, 15, 29 y 18).
+- Riesgo: el doble de minutos de Actions y de carga sobre las webs oficiales; los dos conjuntos de datos pueden diverger;
+  dos sitios que mantener cuando una web cambia de formato.
+- Hacer: decidir cuál es el repositorio de la carga. Lo coherente es que sea este y que la app original lea de aquí, o
+  desactivar la programación en uno de los dos.
+
+**H2 · `Datos_INE` sin publicar desde el 16/10** — *corregido, sin verificar*
+- Evidencia: la carga del 22/10 falla en «Guardar la publicación como artefacto» y se salta el control y la publicación
+  (comprobado en sus pasos). Las del 19, 20 y 21/10 también terminan en fallo; no se revisó la causa de cada una, pero
+  coincide con la cuota llena.
+- Corregido: paso no bloqueante y retención de 3 días (PR #19 de `Datos_INE`), y borrado de 51 de 56 artefactos.
+- Falta: **ver una carga programada posterior** terminar en verde. Aún no ha ocurrido.
+
+**H3 · Tres defectos míos en el traslado, hallados por la carga real, no por las pruebas** — *corregidos*
+- Faltaba `catalogo_fuentes.py`: `fuentes.py` no arrancaba y no se cargaban SEPE, Seguridad Social, Ministerio ni FUNDAE.
+- El paso del informe de calidad suponía que la rama `calidad` existía (PR #11).
+- `datos.py` importaba `calculos_informe` con el nombre antiguo (código sin uso, ya eliminado).
+- Causa común: se declaró «hecho» tras pruebas locales sobre una muestra. La prueba que habría evitado los dos primeros
+  era ejecutar la carga completa antes de fusionar, y eso solo se hizo después de abrir los PR.
+- Hacer: antes de dar por bueno un traslado de pipeline, una carga completa en una rama y la lista de «cosas que solo
+  existen en producción» (ramas, secretos, caché, ficheros fuera de la carpeta copiada).
+
+**H4 · Cada app descarga 43 tablas para usar 2 o 3** — *abierto*
+- Evidencia: `comun/datos.py` carga `TABLAS` + `OPCIONALES` (43) al arrancar. Dashboard 1 usa `mart_neet`, Dashboard 2
+  `mart_tasas_epa` y Dashboard 3 `fact_fundae`, más `dim_territorio`. Solo 5 tablas del SEPE, la Seguridad Social y
+  el INE pesan unos **36 MB**.
+- Riesgo: arranques en frío lentos y más memoria en el plan gratuito de Streamlit (límites **sin comprobar**), y más
+  descargas desde GitHub cada 6 horas por app (la caché dura 6 h).
+- Hacer: que cada dashboard declare sus tablas y `datos.py` descargue solo esas. El control de calidad del pipeline
+  sigue exigiendo la lista completa.
+
+### Media
+
+**H5 · Arranque en frío frágil** — *mitigado*
+- Evidencia: el timeout de `www.mites.gob.es` en 4 tablas bloqueó la primera publicación. La siguiente carga, con la
+  caché de la anterior, publicó.
+- Hacer: asumir que la primera carga en cualquier repositorio nuevo puede necesitar un reintento (está en la guía).
+
+**H6 · Edad distinta de la pedida y paneles sin fuente** — *abierto, documentado en pantalla*
+- Dashboard 1: NEET en **15-29** (la definición del INE), no 16-29. Con las tablas actuales no se puede construir 16-29.
+- Dashboard 2: tablas EPA por grupos 16-19, 20-24 y «menores de 25» (16-24); no hay 16-29.
+- Paneles sin fuente: nivel educativo y urbano/rural (D1); UE-27, sectores, competencias y tipo de contrato (D2).
+  Las fuentes candidatas (Eurostat, Cedefop, Injuve) se localizaron **solo por búsqueda web**: no se descargó ni verificó
+  ninguna, porque el entorno bloquea esos dominios.
+
+**H7 · Posible año incompleto en FUNDAE** — *sin verificar*
+- Los KPIs de 2025 comparan con 2024 (horas −6,6 %). No se ha comprobado si 2025 es un año cerrado o provisional; si
+  fuera parcial, esa variación sería un artefacto. Además, «participantes» es lo que cuenta FUNDAE y puede incluir a la
+  misma persona más de una vez: no es «personas distintas».
+- Hacer: confirmarlo en la metodología de FUNDAE antes de difundir esas cifras.
+
+**H8 · Atribución de fuentes incompleta** — *corregido en este PR*
+- El aviso lateral citaba INE, SEPE, Seguridad Social y Ministerio, pero **no FUNDAE**, que es la fuente del Dashboard 3.
+  Ahora lo incluye.
+- Pendiente: cada dashboard debería citar solo sus fuentes. Hoy el pie de página lista el periodo de 14 fuentes en los
+  tres, aunque cada uno usa una o dos.
+
+**H9 · Pruebas que no verifican cifras** — *abierto*
+- Las pruebas abren cada página y comprueban que no hay excepción; el CI no comprueba que un porcentaje sea correcto,
+  que un mapa pinte las comunidades correctas ni que la publicación funcione de extremo a extremo.
+- Lo que sí hay: pruebas de `mart_neet` (las 20 unidades territoriales se resuelven) y de `mart_tasas_epa`, y desde este
+  PR una que importa todos los módulos comunes (habría detectado el import roto de H3).
+- Hacer: 2 o 3 pruebas de cifras de referencia (p. ej. el total nacional de NEET frente al dato oficial) y una carga de
+  ensayo mensual.
+
+**H10 · Seguridad y privacidad: decisión abierta** — *abierto*
+- Repositorio privado o público sin decidir. Si se hace público, el historial de commits y el correo con el que se
+  firmaron quedan visibles. La búsqueda de secretos cubrió los **ficheros actuales**, no todo el historial.
+- Los dashboards son públicos y sin acceso: es lo pedido. Los datos son agregados por territorio y sector.
+- Revisar: `catalogo_fuentes.py` completa la cadena TLS del Ministerio descargando un certificado intermedio por HTTP
+  desde `cert.fnmt.es`. No se ha revisado en profundidad; conviene confirmar que la cadena se valida contra raíces de
+  confianza.
+
+### Baja
+
+**H11 · Ruido operativo** — *parcialmente corregido*
+- Cada push a `claude/**` que toca `pipeline/` o el workflow lanza una carga completa de ensayo (hasta 29 min), y cada
+  fusión en `main` con esos cambios otra. Cuatro fusiones así generaron cuatro cargas; dos se cancelaron por la cola.
+- El mensaje «La carga del pipeline RRHH se ha interrumpido… la app sigue mostrando la última carga correcta» se emitió
+  en una carga que **sí había publicado** (el fallo era del paso posterior). Corregido con el PR #11.
+- Hacer: limitar el ensayo en ramas a ejecución manual o a cambios en `pipeline/`.
+
+**H12 · Documentación heredada desfasada** — *marcada*
+- `explotacion.md`, `operacion.md`, `catalogo_apis.md` e `inventario_fuentes_laborales_no_ine.md` describen el proyecto
+  anterior (app `streamlit_app/`, registro de accesos, repo público, `rrhh.duckdb` en el artefacto). Llevan ahora un aviso.
+  `rrhh.duckdb` probablemente ya no va en el artefacto (por el código de `publicacion.py`), pero no se pudo comprobar.
+
+**H13 · Ramas, PR y dependencias** — *abierto*
+- Seis ramas `claude/*` ya fusionadas siguen en el repositorio (el borrado dio 403 desde la sesión).
+- Tres PR de Dependabot abiertos (`streamlit 1.66.0`, `pyarrow 26.0.0`, `upload-artifact 7.0.2`), sin revisar. El de
+  Streamlit afecta a las tres apps: probar antes de fusionar.
+- El PR #1 conserva en su descripción «cuatro dashboards», anterior a la decisión de dejar tres.
+
+**H14 · `exploracion_dev.yml` depende del artefacto** — *abierto, en `Datos_INE`*
+- Descarga el modelo del último artefacto de la última carga correcta de cualquier rama. Con el paso del artefacto no
+  bloqueante, una carga puede salir verde sin artefacto y ese workflow fallaría.
+
+**H15 · Marca y accesibilidad** — *abierto*
+- Los títulos siguen siendo «Dashboard 1/2/3»; las maquetas son «Foundation Lab | Dashboard N». Sin logo ni nombre final.
+- Solo se revisó la vista de escritorio. No se ha comprobado el móvil ni la accesibilidad (contraste, lectores).
+
+## 4. Proceso
+
+- **PR apilados**: funcionaron, pero obligaron a redirigir cada PR a `main` tras fusionar el anterior. Para trabajo
+  futuro conviene una sola rama o PR pequeños sobre `main`.
+- **Limpieza de artefactos**: se pidió criterio; se aplicó uno explícito (último de cada uno de los 5 días recientes de
+  `main`) y se verificó el resultado consultando a GitHub.
+- **Dos incidencias propias de comunicación**: conté la carga como «verde» tras una prueba en rama antes de que `main`
+  hubiera publicado, y di por hecho que los PR estaban «listos» antes de la carga completa. Ambos casos están en H3.
+
+## 5. Lo que no se pudo comprobar
+
+- Acceso a INE, ILOSTAT, Eurostat, Injuve, datos.gob.es y Banco Mundial: bloqueado por la red del entorno.
+- Contenido de los artefactos (la descarga está bloqueada), por tanto si `rrhh.duckdb` está dentro.
+- Límites de memoria y de apps del plan gratuito de Streamlit Community Cloud, y si admite repositorios privados.
+- Si una carga programada de `Datos_INE` publica tras el arreglo.
+- Cómo se ven y se comportan las apps ya desplegadas: **aún no hay ninguna desplegada**.
+- Si FUNDAE 2025 es un año cerrado (H7).
+
+## 6. Plan de acción priorizado
+
+1. **Esta semana**: decidir H1 (un solo repositorio para la carga) y H10 (público o privado); ver una carga programada
+   verde en `Datos_INE` (H2); crear las 3 apps (guía, sección 5).
+2. **Antes de difundir**: confirmar H7 (año de FUNDAE) y completar la atribución por dashboard (H8).
+3. **Mejora de eficiencia**: tablas por dashboard (H4), ensayo de ramas solo manual (H11), pruebas de cifras (H9).
+4. **Cuando haya acceso de red**: localizar y cargar las fuentes de los paneles pendientes (H6).
+5. **Limpieza**: borrar ramas fusionadas y revisar Dependabot (H13); título y marca definitivos (H15).

@@ -7,7 +7,7 @@ import hashlib, importlib, sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
-ORDEN = ["comun.datos", "comun.graficos", "comun.calculos_informe", "comun.relato"]
+ORDEN = ["comun.datos", "comun.graficos", "comun.relato"]
 _huella = None  # huella del código cargado; vive mientras el servidor no se reinicie
 
 

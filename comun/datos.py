@@ -202,28 +202,6 @@ def _q(sql, params, firma):
         return pd.DataFrame()
 
 
-def informe():
-    """Bloques, ficha por provincia y conclusiones (mismas reglas que el informe estático: calculos_informe.py)."""
-    return _informe(clave())
-
-
-@st.cache_data(ttl=TTL, show_spinner="Calculando la ficha y las conclusiones…")
-def _informe(firma):
-    import calculos_informe as ci
-    con, _, _ = conexion()
-    out = {}
-    for nombre, sql in ci.BLOQUES.items():
-        try:
-            out[nombre] = ci.filas(con, sql)
-        except Exception as e:
-            out[nombre] = {"error": f"{type(e).__name__}: {e}"[:200]}
-    if hay("alertas"):
-        out["alertas"] = q("SELECT * FROM alertas WHERE tipo <> 'error'").to_dict("records")
-    out["ficha"] = ci.ficha_provincias(out)
-    out["conclusiones"] = ci.conclusiones(out, out["ficha"])
-    return out
-
-
 def territorios():
     return q("SELECT territorio_id, nivel, nombre, ccaa_id, ccaa_nombre FROM dim_territorio WHERE nivel IN ('Nacional','CCAA','Provincia')")
 

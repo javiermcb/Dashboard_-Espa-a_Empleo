@@ -1,5 +1,11 @@
 # Fuentes laborales fuera del INE: afiliación, paro, contratos, CPD, accidentes y convenios
 
+> **Documento heredado de `Datos_INE`.** Describe el proyecto anterior: las menciones a la app `streamlit_app/`, al
+> registro de accesos, al repositorio público `datos-rrhh-publicos` y al artefacto con `rrhh.duckdb` (30 días) **no
+> aplican a este repositorio**. Las tablas, fuentes y el procedimiento general siguen siendo válidos. Para el estado
+> actual, ver `README.md` y `docs/guia_puesta_en_marcha.md`.
+
+
 **Fecha:** 3 de octubre de 2026
 **Complementa a:** [investigacion_ine_rrhh360.md](investigacion_ine_rrhh360.md) · **Códigos y URLs para conectarse:** [catalogo_apis.md](catalogo_apis.md)
 
