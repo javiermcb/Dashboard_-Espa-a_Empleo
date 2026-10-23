@@ -1,7 +1,7 @@
 name: Mantener las apps activas
 
 # Streamlit Community Cloud duerme las apps sin visitas. Cada 4 horas se abre cada dashboard con un navegador sin pantalla
-# y, si estaba dormido, se despierta. URLs: variables del repositorio APP_URL_1 … APP_URL_4 (las que no existan se saltan).
+# y, si estaba dormido, se despierta. URLs: variables del repositorio APP_URL_1 … APP_URL_3 (las que no existan se saltan).
 on:
   schedule:
     - cron: "23 */4 * * *"
@@ -33,10 +33,9 @@ jobs:
           APP_URL_1: ${{ vars.APP_URL_1 }}
           APP_URL_2: ${{ vars.APP_URL_2 }}
           APP_URL_3: ${{ vars.APP_URL_3 }}
-          APP_URL_4: ${{ vars.APP_URL_4 }}
         run: |
           fallo=0; rm -f diagnostico_app.txt
-          for v in APP_URL_1 APP_URL_2 APP_URL_3 APP_URL_4; do
+          for v in APP_URL_1 APP_URL_2 APP_URL_3; do
             url="${!v}"
             [ -n "$url" ] || { echo "$v sin definir: se salta"; continue; }
             python ops/mantener_activa.py "$url" || fallo=1

@@ -32,7 +32,7 @@ TABLAS = [  # (nombre, ruta relativa)
     "mart_tiempo_trabajo_actividad", "mart_it_despido", "mart_vacantes", "mart_vacantes_actividad", "mart_poblacion_actividad",
     "mart_ocupados_sector", "mart_tasas_epa", "mart_flujos", "mart_precios", "mart_brecha_genero", "mart_empresas",
     "mart_epa_ett", "mart_temporalidad_motivo", "mart_horas_extra", "mart_ocupados_ccaa", "mart_teletrabajo",
-    "mart_salarios_ees_detalle")]
+    "mart_salarios_ees_detalle", "mart_neet")]
 # tablas que la app usa si están, pero cuya falta no impide publicar la carga (control_publicacion.py solo exige TABLAS):
 # FUNDAE depende de un visor web que falla a menudo y sus series se van completando en cargas sucesivas
 OPCIONALES = ["fact_fundae"]
@@ -271,6 +271,7 @@ _PERIODOS = [
     ("IPC (INE)", "SELECT max(fecha) FROM mart_precios WHERE indice = 'IPC'", "M"),
     ("Sociedades (INE)", "SELECT max(fecha) FROM fact_ine WHERE tabla_id = '13913'", "M"),
     ("PIB regional (INE)", "SELECT max(fecha) FROM fact_ine WHERE tabla_id = '80109'", "A"),
+    ("NEET (INE)", "SELECT max(fecha) FROM mart_neet", "A"),
     ("Salarios EES (INE)", "SELECT max(fecha) FROM mart_salarios_ees_detalle", "A"),
     ("Paro y contratos (SEPE)", "SELECT max(fecha) FROM fact_sepe_paro_municipio", "M"),
     ("Afiliación (Seg. Social)", "SELECT max(fecha) FROM fact_ss_afiliacion", "M"),

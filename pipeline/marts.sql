@@ -169,3 +169,18 @@ SELECT anyo, fecha, territorio_id, sexo, coalesce(actividad, 'Total') AS sector,
        coalesce(det(detalle, 'Tipo de contrato'), det(detalle, 'Antigüedad en el empleo')) AS categoria,
        valor AS euros_anuales, tabla_id
 FROM fact_ine WHERE tabla_id IN ('36858', '36861') AND valor IS NOT NULL;
+
+-- 8. JÓVENES NEET (ni estudian ni trabajan), anual, % ---------------------------------------------------------
+-- 62285 por CCAA, 59513 por sexo y 59514 por nacionalidad (15-29 años), 49508 por sexo (15-24, indicador ODS 8.6.1.1).
+-- La tabla 62285 trae la CCAA solo en el nombre de la serie: se resuelve por nombre contra dim_territorio.
+CREATE OR REPLACE MACRO sin_acentos(x) AS regexp_replace(lower(strip_accents(x)), '[^a-z]', '', 'g');
+CREATE OR REPLACE VIEW mart_neet AS
+SELECT f.anyo, f.fecha,
+       CASE WHEN f.tabla_id = '62285' THEN t.territorio_id ELSE 'N00' END AS territorio_id,
+       CASE f.tabla_id WHEN '62285' THEN 'Comunidad autónoma' WHEN '59514' THEN 'Nacionalidad' ELSE 'Sexo' END AS desglose,
+       CASE WHEN f.tabla_id = '62285' THEN 'Total' ELSE f.serie_nombre END AS categoria,
+       CASE f.tabla_id WHEN '49508' THEN '15-24' ELSE '15-29' END AS grupo_edad,
+       f.valor AS porcentaje, f.tabla_id
+FROM fact_ine f
+LEFT JOIN dim_territorio t ON f.tabla_id = '62285' AND t.nivel IN ('Nacional', 'CCAA') AND sin_acentos(t.nombre) = sin_acentos(f.serie_nombre)
+WHERE f.tabla_id IN ('62285', '59513', '59514', '49508') AND f.valor IS NOT NULL;
