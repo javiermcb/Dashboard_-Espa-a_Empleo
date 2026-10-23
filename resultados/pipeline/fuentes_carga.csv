@@ -1,0 +1,21 @@
+tabla;estado;filas;desde;hasta;detalle;tiempo
+sepe_paro_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_paro_registrado, paro_hombre_edad_25, paro_hombre_edad_25_45, paro_hombre_edad_45, paro_mujer_edad_25, paro_mujer_edad_25_45, paro_mujer_edad_45, paro_agricultura, paro_industria, paro_construccion, paro_servicios, paro_sin_empleo_anterior";33s
+sepe_contratos_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_contratos, contratos_iniciales_indefinidos_hombres, contratos_iniciales_temporales_hombres, contratos_convertidos_en_indefinidos_hombres, contratos_iniciales_indefinidos_mujeres, contratos_iniciales_temporales_mujeres, contratos_convertidos_en_indefinidos_mujeres, contratos_agricultura, contratos_industria, contratos_construccion, contratos_servicios";27s
+sepe_demandantes_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_dtes_empleo, dtes_empleo_hombre_edad_25, dtes_empleo_hombre_edad_25_45, dtes_empleo_hombre_edad_45, dtes_empleo_mujer_edad_25, dtes_empleo_mujer_edad_25_45, dtes_empleo_mujer_edad_45, dtes_empleoagricultura, dtes_empleo_industria, dtes_empleo_construccion, dtes_empleo_servicios, dtes_empleo_sin_empleo_anterior";29s
+ss_afiliacion:afil_medios_prov_cnae09_regimen;OK;713592;200901;202512;66 columnas, nivel Provincia;15s
+ss_afiliacion:afil_ultimo_dia_prov_cnae;OK;713592;200901;202512;66 columnas, nivel Provincia;15s
+ss_afiliacion:afil_medios_rg_prov_contrato_sexo;OK;270936;200901;202609;24 columnas, nivel Provincia;15s
+ss_afiliacion:afil_medios_ccaa_cnae25_regimen;OK;12420;202601;202609;69 columnas, nivel CCAA;15s
+ss_incapacidad_temporal;OK;144;2025-12;2026-07;2025: Publicación+IT+cierre+Sistema+2025.xlsx · 2026: Publicacion_IT_SISTEMA_2026_Julio.xlsx;8s
+ss_it_detalle;OK;29709;2025-00;2026-07;duración, incidencia y prevalencia por mes, régimen, contingencia, sexo y provincia;0s
+mites_cpd_actividad;OK;399;2025-01-01;2026-07-01;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx · 20 secciones (A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P y V, Q, R, S, T y U) · máxima diferencia entre el total y la suma de secciones: 0.00% (no clasificados);3s
+mites_convenios;OK;34;2013;2026;https://www.mites.gob.es/estadisticas/cct/cct26sepav/CCT_09_2026.xls;2s
+mites_accidentes;OK;63;2026-01;2026-08;https://www.mites.gob.es/estadisticas/eat/eat26_08/ATR_08_2026.xlsx;2s
+mites_ett_mensual;OK;725;2016-01-01;2026-07-01;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx;0s
+mites_ett_territorio;OK;126;2026-07-01;2026-07-01;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx;0s
+mites_ett_actividad;OK;184;2026-07-01;2026-07-01;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx;0s
+mites_ett_resumen;OK;72;2026-06-01;2026-07-01;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx;0s
+mites_convenios_detalle;OK;1444;2023;2026;https://www.mites.gob.es/estadisticas/cct/cct26sepav/CCT_09_2026.xls;0s
+mites_accidentes_detalle;OK;2774;2026-01-01;2026-08-01;https://www.mites.gob.es/estadisticas/eat/eat26_08/ATR_08_2026.xlsx;0s
+mites_regulacion_empleo;OK;19060;2025-11-01;2026-08-01;10 meses;39s
+fundae_formacion;OK;8182;2004;2025;18 series actualizadas hoy, 0 de cargas anteriores;131s
