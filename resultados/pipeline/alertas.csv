@@ -1,4 +1,7 @@
 tipo;indicador;territorio;periodo;valor;referencia;mensaje;nivel
+novedad;fact_sepe_contratos_municipio;;2026-01-01;;;Nuevo periodo 2026-01-01 (antes: 2026-09-01);novedad
+novedad;fact_sepe_paro_municipio;;2026-01-01;;;Nuevo periodo 2026-01-01 (antes: 2026-09-01);novedad
+carga;sepe_demandantes_municipio;;;;;No actualizada en esta carga: ValueError: SEPE Dtes_empleo 2020: columnas distintas a las de años anteriores: [] · se usa la última carga buena (2026-10-23 07:18 UTC);aviso
 indicador;Convenios vs IPC;N00;convenios 2026 hasta mes 9 · IPC 2026-09-01;3.05;4.9;Subida pactada 3,05 % frente a IPC interanual 4,90 % (-1,85 puntos);aviso
 indicador;Coste laboral por trabajador (interanual) vs IPC;N00;2026-04-01;4.04;3.2;Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %);info
 indicador;Paro EPA: subida interanual;P04 Almería;2026-04-01;22.76;51.4;"Almería: 63,1 mil parados, +22,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
