@@ -12,7 +12,7 @@ da por bueno.
 | Dashboards | Funcionan con lo que hay | Paneles con datos reales; 5 paneles sin fuente (2 del Dashboard 1, 3 del 2) y uno solo parcial |
 | Eficiencia | **Mal** | Pipeline duplicado en dos repos; cada app descarga 43 tablas para usar 2 o 3 |
 | Pruebas | Insuficientes | Detectan que una página no falla, no que la cifra sea correcta |
-| Seguridad y privacidad | Aceptable, con una decisión abierta | Sin secretos en el código; repo privado o público sin decidir |
+| Seguridad y privacidad | Aceptable | Sin secretos en el código ni en el historial; repositorio público desde el 26/10 |
 | Documentación | Mejorable | Parte heredada desfasada (marcada ya como tal) |
 
 ## 2. Lo que está bien (con evidencia)
@@ -33,13 +33,14 @@ da por bueno.
 
 ### Alta
 
-**H1 · Pipeline duplicado en dos repositorios** — *abierto*
+**H1 · Pipeline duplicado en dos repositorios** — *aceptado (decisión del 26/10/2026)*
 - Evidencia: `Datos_INE` y este repo ejecutan cada día laborable la misma carga contra las mismas webs. Una carga completa
   dura entre 15 y 29 minutos (medido: 26, 15, 29 y 18).
 - Riesgo: el doble de minutos de Actions y de carga sobre las webs oficiales; los dos conjuntos de datos pueden diverger;
   dos sitios que mantener cuando una web cambia de formato.
-- Hacer: decidir cuál es el repositorio de la carga. Lo coherente es que sea este y que la app original lea de aquí, o
-  desactivar la programación en uno de los dos.
+- Decisión: `Datos_INE` y este repositorio son **proyectos distintos** y conviven, cada uno con su carga. Se acepta el
+  coste duplicado. Si en el futuro se unifican, la opción coherente sería que este repo haga la carga y la app original
+  lea de aquí.
 
 **H2 · `Datos_INE` sin publicar desde el 16/10** — *corregido, sin verificar*
 - Evidencia: la carga del 22/10 falla en «Guardar la publicación como artefacto» y se salta el control y la publicación
@@ -100,9 +101,10 @@ da por bueno.
 - Hacer: 2 o 3 pruebas de cifras de referencia (p. ej. el total nacional de NEET frente al dato oficial) y una carga de
   ensayo mensual.
 
-**H10 · Seguridad y privacidad: decisión abierta** — *abierto*
-- Repositorio privado o público sin decidir. Si se hace público, el historial de commits y el correo con el que se
-  firmaron quedan visibles. La búsqueda de secretos cubrió los **ficheros actuales**, no todo el historial.
+**H10 · Seguridad y privacidad** — *resuelto en lo principal*
+- Repositorio **público desde el 26/10/2026**. Antes de publicarlo se buscaron credenciales en **todo el historial**
+  (27 commits, 13 ramas) y en los ficheros: sin coincidencias, ni ficheros sensibles versionados. El correo personal con
+  el que se firmaron los commits es visible.
 - Los dashboards son públicos y sin acceso: es lo pedido. Los datos son agregados por territorio y sector.
 - Revisar: `catalogo_fuentes.py` completa la cadena TLS del Ministerio descargando un certificado intermedio por HTTP
   desde `cert.fnmt.es`. No se ha revisado en profundidad; conviene confirmar que la cadena se valida contra raíces de
@@ -151,13 +153,14 @@ da por bueno.
 - Contenido de los artefactos (la descarga está bloqueada), por tanto si `rrhh.duckdb` está dentro.
 - Límites de memoria y de apps del plan gratuito de Streamlit Community Cloud, y si admite repositorios privados.
 - Si una carga programada de `Datos_INE` publica tras el arreglo.
-- Cómo se ven y se comportan las apps ya desplegadas: **aún no hay ninguna desplegada**.
+- Cómo se ven las apps desplegadas: están publicadas desde el 26/10 y un robot comprobó que responden sin errores de
+  código, pero **no se han verificado cifras ni gráficos** desde aquí (la red del entorno bloquea `*.streamlit.app`).
 - Si FUNDAE 2025 es un año cerrado (H7).
 
 ## 6. Plan de acción priorizado
 
-1. **Esta semana**: decidir H1 (un solo repositorio para la carga) y H10 (público o privado); ver una carga programada
-   verde en `Datos_INE` (H2); crear las 3 apps (guía, sección 5).
+1. **Hecho el 26/10**: repositorio público (H10), las 3 apps creadas y vigiladas cada 4 horas, y decidido que las dos
+   cargas conviven (H1). **Falta**: ver una carga programada verde en `Datos_INE` con el artefacto ya subiéndose (H2).
 2. **Antes de difundir**: confirmar H7 (año de FUNDAE) y completar la atribución por dashboard (H8).
 3. **Mejora de eficiencia**: tablas por dashboard (H4), ensayo de ramas solo manual (H11), pruebas de cifras (H9).
 4. **Cuando haya acceso de red**: localizar y cargar las fuentes de los paneles pendientes (H6).

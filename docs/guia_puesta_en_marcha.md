@@ -273,7 +273,7 @@ Después, pide a Claude que continúe con los paneles pendientes:
   - `Datos_INE`: `claude/artefacto-no-bloqueante` (fusionada). Las demás ramas de ese repo son tuyas: no las toco.
 - Borrar `_apartado/acceso/` (código de acceso con email que ya no se usa) cuando confirmes que no hace falta.
 - Revisar y fusionar las propuestas automáticas de Dependabot (actualizaciones mensuales de librerías).
-- Decidir si el pipeline sigue también en `Datos_INE` o solo aquí.
+- *Decidido (26/10/2026)*: `Datos_INE` y este repositorio son proyectos distintos y mantienen cada uno su propia carga.
 
 ---
 
