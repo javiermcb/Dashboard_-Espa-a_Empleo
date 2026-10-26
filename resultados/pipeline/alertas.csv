@@ -1,4 +1,5 @@
 tipo;indicador;territorio;periodo;valor;referencia;mensaje;nivel
+carga;mites_regulacion_empleo;;;;;No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-26 14:49 UTC);aviso
 indicador;Convenios vs IPC;N00;convenios 2026 hasta mes 9 · IPC 2026-09-01;3.05;4.9;Subida pactada 3,05 % frente a IPC interanual 4,90 % (-1,85 puntos);aviso
 indicador;Coste laboral por trabajador (interanual) vs IPC;N00;2026-04-01;4.04;3.2;Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %);info
 indicador;Paro EPA: subida interanual;P04 Almería;2026-04-01;22.76;51.4;"Almería: 63,1 mil parados, +22,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
