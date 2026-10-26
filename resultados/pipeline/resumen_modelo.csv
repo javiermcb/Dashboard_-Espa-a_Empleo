@@ -1,15 +1,15 @@
 tabla_id;tema;datos;series;fecha_min;fecha_max;periodicidad;niveles_territorio;pct_valor_nulo;hay_territorio_sin_resolver
 10888;MYH: brecha salarial de género por edad;90;6;2009-01-01;2023-01-01;Anual;N;1.1;false
 10891;MYH: brecha salarial de género por tipo de jornada;30;2;2009-01-01;2023-01-01;Anual;N;0.0;false
-13913;Sociedades mercantiles constituidas por CCAA y provincia;37088;160;1995-01-01;2026-08-01;Mensual;N,C;0.0;false
-13915;Sociedades mercantiles disueltas por CCAA y provincia;18544;80;1995-01-01;2026-08-01;Mensual;N,C;0.0;false
-28191;EAES: medias y percentiles por sexo y CCAA;5508;324;2008-01-01;2024-01-01;Anual;C,N;0.0;false
-36846;EES 2022: salario por sexo y gran grupo de ocupación (CNO-11);3762;3762;2022-01-01;2022-01-01;Puntual;C,N;21.4;false
-36858;EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato;684;684;2022-01-01;2022-01-01;Puntual;N,C;16.4;false
-36861;EES 2022: salario medio por CCAA, sexo, sector y antigüedad;1596;1596;2022-01-01;2022-01-01;Puntual;N,C;21.6;false
+13913;Sociedades mercantiles constituidas por CCAA y provincia;37088;160;1995-01-01;2026-08-01;Mensual;C,N;0.0;false
+13915;Sociedades mercantiles disueltas por CCAA y provincia;18544;80;1995-01-01;2026-08-01;Mensual;C,N;0.0;false
+28191;EAES: medias y percentiles por sexo y CCAA;5508;324;2008-01-01;2024-01-01;Anual;N,C;0.0;false
+36846;EES 2022: salario por sexo y gran grupo de ocupación (CNO-11);3762;3762;2022-01-01;2022-01-01;Puntual;N,C;21.4;false
+36858;EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato;684;684;2022-01-01;2022-01-01;Puntual;C,N;16.4;false
+36861;EES 2022: salario medio por CCAA, sexo, sector y antigüedad;1596;1596;2022-01-01;2022-01-01;Puntual;C,N;21.6;false
 37624;IPT: índices por ocupación;306;18;2008-01-01;2024-01-01;Anual;N;2.9;false
-37630;IPT: índices por CCAA;612;36;2008-01-01;2024-01-01;Anual;C,N;2.9;false
-39374;DIRCE: empresas por provincia y estrato de asalariados;4134;689;2020-01-01;2025-01-01;Anual;N,P;0.0;false
+37630;IPT: índices por CCAA;612;36;2008-01-01;2024-01-01;Anual;N,C;2.9;false
+39374;DIRCE: empresas por provincia y estrato de asalariados;4134;689;2020-01-01;2025-01-01;Anual;P,N;0.0;false
 49508;ODS 8.6.1: jóvenes de 15 a 24 años que ni estudian ni trabajan, por sexo (%);18;0;2020-01-01;2025-01-01;Anual;;0.0;true
 59513;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por sexo (%);33;0;2015-01-01;2025-01-01;Anual;;0.0;true
 59514;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por nacionalidad (%);33;0;2015-01-01;2025-01-01;Anual;;0.0;true
@@ -18,41 +18,41 @@ tabla_id;tema;datos;series;fecha_min;fecha_max;periodicidad;niveles_territorio;p
 6043;ETCL: tiempo de trabajo por sección CNAE (incluye horas no trabajadas por IT y por vacaciones);29526;399;2008-01-01;2026-04-01;Trimestral;N;0.0;false
 6048;ETCL: vacantes por sección CNAE;988;19;2013-07-01;2026-04-01;Trimestral;N;13.5;false
 6056;ETCL: percepciones por día de IT y coste de despido;3256;44;2008-01-01;2026-04-01;Trimestral;N;0.0;false
-6061;ETCL: coste laboral por trabajador, CCAA y sector;37296;504;2008-01-01;2026-04-01;Trimestral;N,C;0.0;false
-6062;ETCL: coste laboral por hora efectiva, CCAA y sector;21312;288;2008-01-01;2026-04-01;Trimestral;N,C;0.0;false
-6063;ETCL: tiempo de trabajo por trabajador y mes, CCAA;79920;1080;2008-01-01;2026-04-01;Trimestral;N,C;0.0;false
-6064;ETCL: vacantes por CCAA;936;18;2013-07-01;2026-04-01;Trimestral;C,N;0.0;false
+6061;ETCL: coste laboral por trabajador, CCAA y sector;37296;504;2008-01-01;2026-04-01;Trimestral;C,N;0.0;false
+6062;ETCL: coste laboral por hora efectiva, CCAA y sector;21312;288;2008-01-01;2026-04-01;Trimestral;C,N;0.0;false
+6063;ETCL: tiempo de trabajo por trabajador y mes, CCAA;79920;1080;2008-01-01;2026-04-01;Trimestral;C,N;0.0;false
+6064;ETCL: vacantes por CCAA;936;18;2013-07-01;2026-04-01;Trimestral;N,C;0.0;false
 62285;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por CCAA (%);220;0;2015-01-01;2025-01-01;Anual;;0.0;true
 65135;EPA: ocupados por grupo de edad, sexo y ocupación;26598;429;2011-01-01;2026-04-01;Trimestral;N;3.4;false
 65212;EPA: asalariados que hacen horas extra (pagadas o no), por sexo y sección CNAE;29304;396;2008-01-01;2026-04-01;Trimestral;N;9.1;false
-65304;EPA: ocupados por CCAA, sexo, edad y sector;111000;1500;2008-01-01;2026-04-01;Trimestral;N,C;11.9;false
-65309;EPA: ocupados por nacionalidad, sexo y CCAA;29400;300;2002-01-01;2026-04-01;Trimestral;N,C;0.4;false
-65343;EPA: inactivos por clase principal de inactividad (estudiante, jubilado, labores del hogar…), sexo y CCAA;41160;420;2002-01-01;2026-04-01;Trimestral;N,C;0.2;false
-65345;EPA: población por relación con la actividad, sexo y provincia;93492;954;2002-01-01;2026-04-01;Trimestral;P,N;0.2;false
-65354;EPA: ocupados por sector y provincia;19610;265;2008-01-01;2026-04-01;Trimestral;P,N;0.6;false
-65776;EPA: teletrabajo (días en el domicilio), por sexo y CCAA (porcentaje);6000;300;2006-01-01;2025-01-01;Anual;C,N;1.4;false
-65805;EPA: asalariados contratados a través de ETT, por sexo y CCAA (personas);4800;240;2006-01-01;2025-01-01;Anual;N,C;5.1;false
-65809;EPA: asalariados temporales por motivo de la temporalidad, sexo y CCAA;1800;360;2021-01-01;2025-01-01;Anual;C,N;8.8;false
-66023;EPA media anual: tasa de actividad por edad, sexo y CCAA;8400;420;2006-01-01;2025-01-01;Anual;N,C;0.0;false
-66028;EPA media anual: tasa de actividad por nacionalidad, sexo y CCAA;6000;300;2006-01-01;2025-01-01;Anual;C,N;1.0;false
-66031;EPA: tasa de empleo por sexo, edad y CCAA;8400;420;2006-01-01;2025-01-01;Anual;C,N;0.3;false
-66036;EPA media anual: tasa de empleo por nacionalidad, sexo y CCAA;6000;300;2006-01-01;2025-01-01;Anual;C,N;1.3;false
-66055;EPA: tasa de paro por sexo, edad y CCAA;8400;420;2006-01-01;2025-01-01;Anual;C,N;0.0;false
-66057;EPA media anual: tasa de paro por nacionalidad, sexo y CCAA;6000;300;2006-01-01;2025-01-01;Anual;C,N;1.6;false
-66061;EPA media anual: parados por tiempo de búsqueda de empleo, sexo y CCAA (% del total de cada comunidad);9600;480;2006-01-01;2025-01-01;Anual;N,C;0.1;false
+65304;EPA: ocupados por CCAA, sexo, edad y sector;111000;1500;2008-01-01;2026-04-01;Trimestral;C,N;11.9;false
+65309;EPA: ocupados por nacionalidad, sexo y CCAA;29400;300;2002-01-01;2026-04-01;Trimestral;C,N;0.4;false
+65343;EPA: inactivos por clase principal de inactividad (estudiante, jubilado, labores del hogar…), sexo y CCAA;41160;420;2002-01-01;2026-04-01;Trimestral;C,N;0.2;false
+65345;EPA: población por relación con la actividad, sexo y provincia;93492;954;2002-01-01;2026-04-01;Trimestral;N,P;0.2;false
+65354;EPA: ocupados por sector y provincia;19610;265;2008-01-01;2026-04-01;Trimestral;N,P;0.6;false
+65776;EPA: teletrabajo (días en el domicilio), por sexo y CCAA (porcentaje);6000;300;2006-01-01;2025-01-01;Anual;N,C;1.4;false
+65805;EPA: asalariados contratados a través de ETT, por sexo y CCAA (personas);4800;240;2006-01-01;2025-01-01;Anual;C,N;5.1;false
+65809;EPA: asalariados temporales por motivo de la temporalidad, sexo y CCAA;1800;360;2021-01-01;2025-01-01;Anual;N,C;8.8;false
+66023;EPA media anual: tasa de actividad por edad, sexo y CCAA;8400;420;2006-01-01;2025-01-01;Anual;C,N;0.0;false
+66028;EPA media anual: tasa de actividad por nacionalidad, sexo y CCAA;6000;300;2006-01-01;2025-01-01;Anual;N,C;1.0;false
+66031;EPA: tasa de empleo por sexo, edad y CCAA;8400;420;2006-01-01;2025-01-01;Anual;N,C;0.3;false
+66036;EPA media anual: tasa de empleo por nacionalidad, sexo y CCAA;6000;300;2006-01-01;2025-01-01;Anual;N,C;1.3;false
+66055;EPA: tasa de paro por sexo, edad y CCAA;8400;420;2006-01-01;2025-01-01;Anual;N,C;0.0;false
+66057;EPA media anual: tasa de paro por nacionalidad, sexo y CCAA;6000;300;2006-01-01;2025-01-01;Anual;N,C;1.6;false
+66061;EPA media anual: parados por tiempo de búsqueda de empleo, sexo y CCAA (% del total de cada comunidad);9600;480;2006-01-01;2025-01-01;Anual;C,N;0.1;false
 66238;EPA decil: salarios medios por jornada, sexo y decil;1881;99;2006-01-01;2024-01-01;Anual;N;2.8;false
-66241;EPA decil: salarios medios por jornada, CCAA y decil;12540;660;2006-01-01;2024-01-01;Anual;C,N;7.1;false
+66241;EPA decil: salarios medios por jornada, CCAA y decil;12540;660;2006-01-01;2024-01-01;Anual;N,C;7.1;false
 66244;EPA decil: salarios medios por jornada, ocupación y decil;5082;363;2011-01-01;2024-01-01;Anual;N;15.0;false
 66252;EPA decil: salarios medios y límite inferior de cada decil;380;20;2006-01-01;2024-01-01;Anual;N;5.0;false
-66266;EFPA: flujos entre empleo, paro e inactividad por CCAA;34000;400;2005-04-01;2026-04-01;Trimestral;N,C;7.1;false
-67567;EPA: tasa de paro por nivel de formación y CCAA;398;80;2021-01-01;2025-01-01;Anual;N,C;0.0;false
-70688;EES 2018: salario por sexo y gran grupo de ocupación (CNO-11);3762;3762;2018-01-01;2018-01-01;Puntual;C,N;22.8;false
+66266;EFPA: flujos entre empleo, paro e inactividad por CCAA;34000;400;2005-04-01;2026-04-01;Trimestral;C,N;7.1;false
+67567;EPA: tasa de paro por nivel de formación y CCAA;398;80;2021-01-01;2025-01-01;Anual;C,N;0.0;false
+70688;EES 2018: salario por sexo y gran grupo de ocupación (CNO-11);3762;3762;2018-01-01;2018-01-01;Puntual;N,C;22.8;false
 76134;IPC: tasa de variación del índice general nacional;2342;3;1970-02-01;2026-09-01;Mensual;N;0.0;false
-76140;IPC: tasa de variación del índice general por CCAA;33545;60;1978-01-01;2026-09-01;Mensual;C,N;0.0;false
+76140;IPC: tasa de variación del índice general por CCAA;33545;60;1978-01-01;2026-09-01;Mensual;N,C;0.0;false
 79285;EPA: ocupados por nacionalidad, sexo y sector;240;120;2026-01-01;2026-04-01;Trimestral;N;0.0;false
 79304;EPA: ocupados subempleados por situación profesional, sexo y sector;120;60;2026-01-01;2026-04-01;Trimestral;N;21.7;false
-79659;ETCL: tiempo de trabajo por trabajador y mes por CCAA, tipo de jornada y sector (tabla nueva: se comprueba si trae horas no trabajadas por IT);79920;1080;2008-01-01;2026-04-01;Trimestral;C,N;0.0;false
-80109;Contabilidad Regional: PIB a precios corrientes por CCAA y provincia;4799;192;2000-01-01;2025-01-01;Anual;C,P,N;0.0;false
-81998;Contabilidad Regional: remuneración de los asalariados por CCAA;546;21;2000-01-01;2025-01-01;Anual;C,N;0.0;false
-82000;Contabilidad Regional: empleo total (personas) por CCAA y provincia;1621;64;2000-01-01;2025-01-01;Anual;N,C,P;0.0;false
-82001;Contabilidad Regional: empleo asalariado (personas) por CCAA y provincia;1621;64;2000-01-01;2025-01-01;Anual;C,P,N;0.0;false
+79659;ETCL: tiempo de trabajo por trabajador y mes por CCAA, tipo de jornada y sector (tabla nueva: se comprueba si trae horas no trabajadas por IT);79920;1080;2008-01-01;2026-04-01;Trimestral;N,C;0.0;false
+80109;Contabilidad Regional: PIB a precios corrientes por CCAA y provincia;4799;192;2000-01-01;2025-01-01;Anual;N,C,P;0.0;false
+81998;Contabilidad Regional: remuneración de los asalariados por CCAA;546;21;2000-01-01;2025-01-01;Anual;N,C;0.0;false
+82000;Contabilidad Regional: empleo total (personas) por CCAA y provincia;1621;64;2000-01-01;2025-01-01;Anual;C,P,N;0.0;false
+82001;Contabilidad Regional: empleo asalariado (personas) por CCAA y provincia;1621;64;2000-01-01;2025-01-01;Anual;N,C,P;0.0;false
