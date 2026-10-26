@@ -73,4 +73,5 @@ Los dashboards son públicos: sin login ni registro de visitas.
 - Dashboard 1: nivel educativo y urbano/rural de los NEET, y cifras 16-29 (ver `docs/dashboard_1_fuentes.md`).
 - Dashboard 2: UE-27, sectores con potencial, competencias y tipo de contrato por edad.
 - Dashboard 3: sin crédito asignado/disponible (FUNDAE solo publica el «dispuesto»).
-- Si el pipeline sigue también en `Datos_INE` o pasa a ejecutarse solo aquí.
+
+Decidido (26/10/2026): `Datos_INE` y este repositorio son proyectos distintos y mantienen cada uno su propia carga diaria.
