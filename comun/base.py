@@ -31,11 +31,12 @@ def comun(nombre, titulo, icono):
     return st.Page(str(PAGINAS_COMUNES / f"{nombre}.py"), title=titulo, icon=icono, url_path=nombre)
 
 
-def arrancar(titulo, icono, menu, mapas=False, pantalla_completa=False):
+def arrancar(titulo, icono, menu, mapas=False, pantalla_completa=False, tablas=None):
     """
     titulo  nombre del dashboard (pestaña del navegador y barra lateral)
     menu    {sección: [st.Page, ...]}; la primera página con default=True es la de entrada
     mapas   True: selector «Geográfico / Mosaico» de los mapas de comunidades en la barra lateral
+    tablas  nombres de las tablas del modelo que usa el dashboard (sin ruta): solo se descargan y abren esas (None: todas)
     pantalla_completa   True: deja el botón «Fullscreen» de gráficos y tablas (por defecto se oculta)
     """
     st.set_page_config(page_title=titulo, page_icon=icono, layout="wide")
@@ -46,6 +47,7 @@ def arrancar(titulo, icono, menu, mapas=False, pantalla_completa=False):
     recarga.comprobar()  # tras publicar código nuevo, recarga los módulos comunes (Streamlit Cloud guarda la versión antigua)
 
     from comun import datos, relato
+    datos.usar(tablas)
 
     menu = dict(menu)
     nav = st.navigation(menu, expanded=True)
