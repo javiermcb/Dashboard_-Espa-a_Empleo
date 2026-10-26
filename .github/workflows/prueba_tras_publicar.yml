@@ -1,0 +1,58 @@
+name: Prueba tras publicar los datos
+
+# Cada vez que la carga diaria publica datos nuevos en la rama datos-modelo (solo desde main), abre cada página de cada
+# dashboard con ESOS datos publicados (como hacen las apps desplegadas) y falla si alguna lanza un error. Si falla, abre una
+# issue con la etiqueta prueba-publicacion; la cierra cuando vuelve a pasar. Las pruebas de siempre (apps_pruebas.yml) usan
+# una muestra: esta comprueba los datos reales. A mano: «Run workflow».
+on:
+  workflow_run:
+    workflows: ["Pipeline RRHH"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: prueba-tras-publicar
+  cancel-in-progress: true
+
+jobs:
+  prueba:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install -r requirements.txt pytest
+      - name: Esperar a que raw.githubusercontent.com sirva los datos recién publicados
+        run: sleep 90
+      - name: Abrir los dashboards con los datos publicados
+        env:
+          RRHH_DATOS: https://raw.githubusercontent.com/${{ github.repository }}/datos-modelo/modelo/
+        run: python -m pytest tests -q
+      - name: Avisar si algún dashboard falla con los datos publicados
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          gh label create prueba-publicacion --force --color d93f0b > /dev/null
+          n=$(gh issue list --label prueba-publicacion --state open --json number --jq '.[0].number')
+          texto="Algún dashboard falla al abrirse con los datos publicados hoy ($(date -u +'%Y-%m-%d %H:%M') UTC). Los datos ya están publicados y las apps desplegadas los leen: revisar el detalle de la prueba. $url"
+          if [ -n "$n" ]; then gh issue comment "$n" --body "$texto"; else gh issue create --title "Un dashboard falla con los datos publicados" --label prueba-publicacion --body "$texto"; fi
+      - name: Cerrar el aviso si vuelve a pasar
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --label prueba-publicacion --state open --json number --jq '.[].number' 2>/dev/null || true); do
+            gh issue close "$n" --comment "Resuelto: los dashboards se abren bien con los datos publicados."
+          done
