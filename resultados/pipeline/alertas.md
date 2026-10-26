@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-10-26 13:29 UTC
+# Alertas RRHH 360 · 2026-10-26 14:49 UTC
 
 ## Avisos
 
@@ -11,11 +11,6 @@
 - **Paro EPA: subida interanual** · Almería: 63,1 mil parados, +22,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Zaragoza: 45,6 mil parados, +18,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Bizkaia: 47,4 mil parados, +15,0 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-
-## Datos nuevos
-
-- **fact_sepe_contratos_municipio** · Nuevo periodo 2026-09-01 (antes: 2026-01-01)
-- **fact_sepe_paro_municipio** · Nuevo periodo 2026-09-01 (antes: 2026-01-01)
 
 ## Seguimiento
 
