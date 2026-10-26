@@ -58,14 +58,16 @@ da por bueno.
 - Hacer: antes de dar por bueno un traslado de pipeline, una carga completa en una rama y la lista de «cosas que solo
   existen en producción» (ramas, secretos, caché, ficheros fuera de la carpeta copiada).
 
-**H4 · Cada app descarga 43 tablas para usar 2 o 3** — *abierto*
+**H4 · Cada app descarga 43 tablas para usar 2 o 3** — *corregido el 26/10/2026 (PR #18)*
 - Evidencia: `comun/datos.py` carga `TABLAS` + `OPCIONALES` (43) al arrancar. Dashboard 1 usa `mart_neet`, Dashboard 2
   `mart_tasas_epa` y Dashboard 3 `fact_fundae`, más `dim_territorio`. Solo 5 tablas del SEPE, la Seguridad Social y
   el INE pesan unos **36 MB**.
 - Riesgo: arranques en frío lentos y más memoria en el plan gratuito de Streamlit (límites **sin comprobar**), y más
   descargas desde GitHub cada 6 horas por app (la caché dura 6 h).
-- Hacer: que cada dashboard declare sus tablas y `datos.py` descargue solo esas. El control de calidad del pipeline
-  sigue exigiendo la lista completa.
+- Hecho: cada dashboard declara sus tablas en `arrancar(..., tablas=[...])` y `datos.py` descarga y abre solo esas. El
+  control de calidad del pipeline sigue exigiendo la lista completa. Con los datos publicados, el Dashboard 1 abre
+  `dim_territorio` y `mart_neet` (unos 0,1 MB) más las alertas, sin tablas «no disponibles». **Sin verificar** el
+  efecto en el arranque en frío y la memoria de las apps desplegadas.
 
 ### Media
 
@@ -124,19 +126,35 @@ da por bueno.
   anterior (app `streamlit_app/`, registro de accesos, repo público, `rrhh.duckdb` en el artefacto). Llevan ahora un aviso.
   `rrhh.duckdb` probablemente ya no va en el artefacto (por el código de `publicacion.py`), pero no se pudo comprobar.
 
-**H13 · Ramas, PR y dependencias** — *abierto*
+**H13 · Ramas, PR y dependencias** — *parcialmente corregido*
 - Seis ramas `claude/*` ya fusionadas siguen en el repositorio (el borrado dio 403 desde la sesión).
-- Tres PR de Dependabot abiertos (`streamlit 1.66.0`, `pyarrow 26.0.0`, `upload-artifact 7.0.2`), sin revisar. El de
-  Streamlit afecta a las tres apps: probar antes de fusionar.
+- Dependabot resuelto el 26/10: `upload-artifact 7.0.2` fusionado (#5); Streamlit 1.66.1 subido con el PR #17 (el de
+  Dependabot, #6, se cerró solo); `pyarrow 26.0.0` subido con el PR #21 (#7 cerrado). pandas 3.1.0 subido en el PR #24.
+  Sin adoptar: DuckDB 2.0.0 (versión mayor; el SQL ya es compatible, falta una carga completa con ella) y Playwright
+  1.64.1 (hoy 1.63.0; no se puede probar contra las apps desde el entorno).
 - El PR #1 conserva en su descripción «cuatro dashboards», anterior a la decisión de dejar tres.
 
 **H14 · `exploracion_dev.yml` depende del artefacto** — *abierto, en `Datos_INE`*
 - Descarga el modelo del último artefacto de la última carga correcta de cualquier rama. Con el paso del artefacto no
   bloqueante, una carga puede salir verde sin artefacto y ese workflow fallaría.
 
-**H15 · Marca y accesibilidad** — *abierto*
+**H15 · Marca y accesibilidad** — *abierto; la marca se deja para más adelante por decisión del 26/10/2026*
 - Los títulos siguen siendo «Dashboard 1/2/3»; las maquetas son «Foundation Lab | Dashboard N». Sin logo ni nombre final.
 - Solo se revisó la vista de escritorio. No se ha comprobado el móvil ni la accesibilidad (contraste, lectores).
+
+**H16 · Tablas mensuales de SEPE cortadas sin que el control lo detectara** — *control corregido; origen sin corregir*
+- Evidencia: en la carga publicada del 26/10, `fact_sepe_paro_municipio` y `fact_sepe_contratos_municipio` tenían solo un
+  mes de 2026 (11 y 7 filas, cuando cada mes trae ~8.000), mientras que `fact_sepe_demandantes_municipio` llegaba a
+  septiembre. La pérdida no llegaba al 50 % que exigía el control.
+- Hecho (PR #16): el control rechaza una carga si una tabla mensual de SEPE pierde más de un 5 % de filas o si el último
+  periodo de una tabla con fecha retrocede.
+- Falta: leer cada año del CSV de SEPE con copia de la última versión buena (hoy un CSV anual cortado deja la tabla
+  cortada). Ninguno de los tres dashboards usa estas tablas.
+
+**H17 · Vigilancia de datos viejos y de dashboards rotos tras publicar** — *añadido el 26/10/2026 (PR #23 y #24)*
+- Job `frescura` (issue `datos-viejos` si la carga publicada supera 96 h) y workflow `prueba_tras_publicar.yml` (issue
+  `prueba-publicacion` si una página falla con los datos publicados). Probados en local; **su primera ejecución real en
+  GitHub está pendiente de verificar**.
 
 ## 4. Proceso
 
@@ -162,6 +180,6 @@ da por bueno.
 1. **Hecho el 26/10**: repositorio público (H10), las 3 apps creadas y vigiladas cada 4 horas, y decidido que las dos
    cargas conviven (H1). **Falta**: ver una carga programada verde en `Datos_INE` con el artefacto ya subiéndose (H2).
 2. **Antes de difundir**: confirmar H7 (año de FUNDAE) y completar la atribución por dashboard (H8).
-3. **Mejora de eficiencia**: tablas por dashboard (H4), ensayo de ramas solo manual (H11), pruebas de cifras (H9).
+3. **Mejora de eficiencia**: ensayo de ramas solo manual (H11), pruebas de cifras (H9), lector de SEPE con copia buena por año (H16). *Hecho: tablas por dashboard (H4).*
 4. **Cuando haya acceso de red**: localizar y cargar las fuentes de los paneles pendientes (H6).
-5. **Limpieza**: borrar ramas fusionadas y revisar Dependabot (H13); título y marca definitivos (H15).
+5. **Limpieza**: borrar ramas fusionadas (H13; Dependabot ya resuelto); título y marca definitivos (H15, aplazado).
