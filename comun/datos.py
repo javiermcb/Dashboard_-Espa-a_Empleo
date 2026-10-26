@@ -38,7 +38,18 @@ TABLAS = [  # (nombre, ruta relativa)
 OPCIONALES = ["fact_fundae"]
 # las cachés (conexión y consultas) llevan en la clave esta firma y la versión de la carga publicada (clave()): al añadir
 # una tabla o publicarse una carga nueva, la app la lee en vez de seguir con la conexión antigua hasta que caduque la caché
-FIRMA = "|".join(TABLAS + OPCIONALES)
+_ACTIVAS = None  # nombres de las tablas que carga este dashboard (None: todas); lo fija usar()
+
+
+def usar(tablas):
+    """Limita la carga a estas tablas (nombres sin ruta, p. ej. «mart_neet»): cada dashboard descarga y abre solo las suyas."""
+    global _ACTIVAS
+    _ACTIVAS = None if tablas is None else frozenset(tablas)
+
+
+def _rutas():
+    """Tablas (con ruta relativa) que lee este dashboard."""
+    return [r for r in TABLAS + OPCIONALES if _ACTIVAS is None or r.split("/")[-1] in _ACTIVAS]
 
 
 def _ajuste(nombre):
@@ -127,8 +138,8 @@ def version():
 
 
 def clave():
-    """Clave de las cachés: tablas que lee la app + carga publicada."""
-    return FIRMA + "|" + version()
+    """Clave de las cachés: tablas que lee este dashboard + carga publicada."""
+    return "|".join(_rutas()) + "|" + version()
 
 
 def conexion():
@@ -149,15 +160,15 @@ def _limpiar_cache(ver):
 @st.cache_resource(ttl=TTL, show_spinner="Cargando los datos…")
 def _conexion(firma):  # sin «_» delante: Streamlit no usa en la clave los argumentos que empiezan por «_»
     base = origen()
-    ver = firma.rsplit("|", 1)[-1]
+    *rels, ver = firma.split("|")  # la clave lleva las tablas que lee este dashboard y, al final, la carga publicada
     _limpiar_cache(ver)
     con = duckdb.connect()
     disponibles, faltan = [], []
-    # descargas en paralelo: con una URL, la primera carga baja ~45 ficheros
+    # descargas en paralelo
     with ThreadPoolExecutor(max_workers=8) as ex:
-        rutas = dict(zip(TABLAS + OPCIONALES, ex.map(lambda rel: _ruta_local(base, rel, ver), TABLAS + OPCIONALES)))
+        rutas = dict(zip(rels, ex.map(lambda rel: _ruta_local(base, rel, ver), rels)))
     errores = {rel.split("/")[-1]: err for rel, (_, err) in rutas.items() if err and rel not in OPCIONALES}
-    for rel in TABLAS + OPCIONALES:
+    for rel in rels:
         p = rutas[rel][0]
         nombre = rel.split("/")[-1]
         if p is None:

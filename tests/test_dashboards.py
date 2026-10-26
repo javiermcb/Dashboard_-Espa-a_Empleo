@@ -48,3 +48,14 @@ def test_sin_boton_pantalla_completa(dashboard):
     at = _abrir(dashboard)
     reglas = [m.value for m in at.markdown if 'aria-label="Fullscreen"' in m.value and "display: none" in m.value]
     assert reglas, f"{dashboard}: falta la regla CSS que oculta «Fullscreen»"
+
+
+@pytest.mark.parametrize("dashboard", DASHBOARDS)
+def test_solo_carga_sus_tablas(dashboard):
+    """Cada dashboard abre solo las tablas que declara (y alertas): así arranca rápido y gasta poca memoria."""
+    from comun import datos
+    at = _abrir(dashboard)
+    _sin_errores(at, dashboard)
+    declaradas = {t.strip('"') for t in (RAIZ / "dashboards" / dashboard / "app.py").read_text(encoding="utf-8").split("tablas=[", 1)[1].split("]", 1)[0].replace('"', "").split(",") if t.strip()}
+    _, disponibles, _ = datos.conexion()
+    assert set(disponibles) - {"alertas"} <= {t.strip() for t in declaradas}, f"{dashboard}: carga tablas que no declara"

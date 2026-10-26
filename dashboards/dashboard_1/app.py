@@ -12,6 +12,7 @@ AQUI = Path(__file__).resolve().parent
 
 base.arrancar(
     titulo="Dashboard 1",
+    tablas=["dim_territorio", "mart_neet"],
     icono="📊",
     mapas=True,
     menu={

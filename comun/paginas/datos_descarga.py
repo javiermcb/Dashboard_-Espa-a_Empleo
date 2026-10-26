@@ -4,7 +4,7 @@ import streamlit as st
 from comun import datos
 
 st.title("Datos y descargas")
-st.caption("Todas las tablas del modelo, con filtros y descarga en CSV (separador ';' para abrirlo en Excel en español).")
+st.caption("Las tablas del modelo que usa este dashboard, con filtros y descarga en CSV (separador ';' para abrirlo en Excel en español).")
 st.caption("Al reutilizar estos datos hay que citar la fuente («Elaboración propia con datos extraídos del sitio web del "
            "INE (www.ine.es), del SEPE, de la Seguridad Social y del Ministerio de Trabajo y Economía Social»), no "
            "desvirtuar su sentido, indicar su fecha de actualización (en «Estado de los datos») y no dar a entender que "
