@@ -8,6 +8,8 @@ Comprueba, con datos/publicar/modelo/metadatos.json (publicacion.py) y el de la 
   1. Están todas las tablas que lee la app (lista TABLAS de comun/datos.py) y ninguna está vacía.
   2. No desaparece ninguna tabla que estaba publicada.
   3. Ninguna tabla pierde más del 50 % de sus filas frente a la carga publicada (un fichero cortado o un cambio de formato).
+  4. Las tablas mensuales de SEPE (que solo crecen) no pierden más del 5 % de sus filas: un CSV anual cortado quitaba meses sin llegar al 50 %.
+  5. El último periodo de una tabla con fecha no retrocede frente a la carga publicada (si esa carga ya lo registra).
 Salida: datos/qa/control_publicacion.md · código 1 si no se debe publicar.
 Uso:    python pipeline/control_publicacion.py [--caida-max 0.5]
 """
@@ -19,6 +21,8 @@ NUEVO = RAIZ / "datos" / "publicar" / "modelo" / "metadatos.json"
 PREVIO = RAIZ / "datos" / "qa" / "metadatos_previos.json"
 SALIDA = RAIZ / "datos" / "qa" / "control_publicacion.md"
 APP = RAIZ / "comun" / "datos.py"
+MENSUALES_SEPE = ("fact_sepe_paro_municipio", "fact_sepe_contratos_municipio", "fact_sepe_demandantes_municipio")
+CAIDA_MAX_SEPE = 0.05
 
 
 def tablas_app(ruta=APP):
@@ -32,6 +36,10 @@ def tablas_app(ruta=APP):
 
 def filas(meta):
     return {k: v.get("filas") for k, v in (meta or {}).get("ficheros", {}).items()}
+
+
+def periodos(meta):
+    return {k: v.get("ultimo_periodo") for k, v in (meta or {}).get("ficheros", {}).items() if v.get("ultimo_periodo")}
 
 
 def revisar(nuevo, previo, requeridas, caida_max=0.5):
@@ -50,6 +58,12 @@ def revisar(nuevo, previo, requeridas, caida_max=0.5):
             problemas.append(f"`{t}`: estaba publicada y ha desaparecido")
         elif antes and n[t] is not None and n[t] < antes * (1 - caida_max):
             problemas.append(f"`{t}`: pasa de {antes:,} a {n[t]:,} filas (cae más de un {caida_max:.0%})".replace(",", "."))
+        elif t in MENSUALES_SEPE and antes and n[t] is not None and n[t] < antes * (1 - CAIDA_MAX_SEPE) and n[t] >= antes * (1 - caida_max):
+            problemas.append(f"`{t}`: pasa de {antes:,} a {n[t]:,} filas (una tabla mensual de SEPE no debería perder más de un {CAIDA_MAX_SEPE:.0%})".replace(",", "."))
+    nuevos, previos = periodos(nuevo), periodos(previo)
+    for t, antes in sorted(previos.items()):
+        if t in nuevos and nuevos[t] < antes:
+            problemas.append(f"`{t}`: el último periodo retrocede de {antes} a {nuevos[t]}")
     return problemas
 
 

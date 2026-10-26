@@ -41,7 +41,10 @@ def main():
     tablas = {}
     for p in sorted(MODELO.glob("*.parquet")) + sorted(MODELO.glob("marts/*.parquet")):
         n = con.execute(f"SELECT count(*) FROM '{p}'").fetchone()[0]
-        tablas[str(p.relative_to(MODELO).with_suffix(""))] = {"filas": n, "bytes_parquet": p.stat().st_size}
+        ficha = {"filas": n, "bytes_parquet": p.stat().st_size}
+        if any(c[0] == "fecha" for c in con.execute(f"DESCRIBE SELECT * FROM '{p}'").fetchall()):
+            ficha["ultimo_periodo"] = str(con.execute(f"SELECT max(fecha) FROM '{p}'").fetchone()[0])  # lo usa control_publicacion.py
+        tablas[str(p.relative_to(MODELO).with_suffix(""))] = ficha
     por_tabla = con.execute(f"""
         SELECT d.tabla_id, d.punto_nombre, d.tema, count(f.valor) AS datos, max(f.fecha) AS ultimo_periodo
         FROM '{MODELO / "dim_tabla.parquet"}' d LEFT JOIN '{MODELO / "fact_ine.parquet"}' f USING (tabla_id)
