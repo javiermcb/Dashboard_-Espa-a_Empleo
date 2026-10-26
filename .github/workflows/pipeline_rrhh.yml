@@ -116,7 +116,7 @@ jobs:
           path: datos/publicar/
           retention-days: 3
       - name: Control de calidad antes de publicar
-        # si falla (falta una tabla de la app, una tabla vacía o que pierde más de la mitad de sus filas), no se publica:
+        # si falla (falta una tabla de la app, una tabla vacía o que pierde más de la mitad de sus filas, una tabla mensual de SEPE más de un 5 % o un último periodo que retrocede), no se publica:
         # la app sigue con la última carga buena y el paso «Avisar si la carga se ha roto» abre la incidencia
         id: control
         env:
