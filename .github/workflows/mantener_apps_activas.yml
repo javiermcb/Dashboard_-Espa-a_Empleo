@@ -2,6 +2,7 @@ name: Mantener las apps activas
 
 # Streamlit Community Cloud duerme las apps sin visitas. Cada 4 horas se abre cada dashboard con un navegador sin pantalla
 # y, si estaba dormido, se despierta. URLs: variables del repositorio APP_URL_1 … APP_URL_3 (las que no existan se saltan).
+# El job «frescura» avisa además si la carga publicada en datos-modelo tiene más de 4 días (el pipeline dejó de publicar).
 on:
   schedule:
     - cron: "23 */4 * * *"
@@ -17,7 +18,7 @@ concurrency:
 
 jobs:
   visitar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -63,4 +64,39 @@ jobs:
         run: |
           for n in $(gh issue list --label app-caida --state open --json number --jq '.[].number' 2>/dev/null || true); do
             gh issue close "$n" --comment "Resuelto: los dashboards vuelven a responder."
+          done
+
+  frescura:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Comprobar la fecha de la carga publicada
+        id: frescura
+        run: |
+          git fetch -q --depth 1 origin datos-modelo && git show FETCH_HEAD:modelo/metadatos.json > /tmp/metadatos.json \
+            || { echo "no se puede leer la rama datos-modelo" > /tmp/metadatos_error.txt; echo "{}" > /tmp/metadatos.json; }
+          python pipeline/comprobar_frescura.py /tmp/metadatos.json --max-horas 96 | tee /tmp/frescura.txt
+      - name: Avisar si los datos están desactualizados
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          gh label create datos-viejos --force --color fbca04 > /dev/null
+          n=$(gh issue list --label datos-viejos --state open --json number --jq '.[0].number')
+          texto="Los datos publicados están desactualizados ($(date -u +'%Y-%m-%d %H:%M') UTC): $(cat /tmp/frescura.txt /tmp/metadatos_error.txt 2>/dev/null | tr '\n' ' ')
+
+          La carga diaria (workflow «Pipeline RRHH») debería publicar de lunes a viernes. Comprobar que el workflow sigue activo y la última ejecución. Detalle: $url"
+          if [ -n "$n" ]; then gh issue comment "$n" --body "$texto"; else gh issue create --title "Los datos publicados están desactualizados" --label datos-viejos --body "$texto"; fi
+      - name: Cerrar el aviso si los datos vuelven a estar al día
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --label datos-viejos --state open --json number --jq '.[].number' 2>/dev/null || true); do
+            gh issue close "$n" --comment "Resuelto: los datos publicados vuelven a estar al día."
           done
