@@ -4,7 +4,7 @@
 -- Todas comparten territorio_id (-> dim_territorio) y fecha (-> dim_tiempo).
 
 -- Quita de 'medida' las etiquetas genéricas y deja el concepto (p. ej. 'Coste laboral total', 'Horas no trabajadas')
-CREATE OR REPLACE MACRO concepto(m) AS array_to_string(list_filter(string_split(m, ' · '), x -> x NOT IN (
+CREATE OR REPLACE MACRO concepto(m) AS array_to_string(list_filter(string_split(m, ' · '), lambda x: x NOT IN (
     'Costes laborales', 'Euros', 'Número de Horas', 'Tiempo de trabajo', 'Dato base', 'Salario medio',
     'Salario bruto mensual del empleo principal')), ' · ');
 
@@ -84,8 +84,8 @@ FROM fact_ine WHERE tabla_id IN ('66023', '66031', '66055') AND valor IS NOT NUL
 -- EFPA: flujos entre trimestres (miles de personas)
 CREATE OR REPLACE VIEW mart_flujos AS
 SELECT fecha, anyo, periodo, territorio_id,
-       trim(replace(list_filter(string_split(situacion, ' · '), x -> x LIKE '%(trimestre actual)')[1], '(trimestre actual)', '')) AS situacion_actual,
-       trim(replace(list_filter(string_split(situacion, ' · '), x -> x LIKE '%(trimestre anterior)')[1], '(trimestre anterior)', '')) AS situacion_anterior,
+       trim(replace(list_filter(string_split(situacion, ' · '), lambda x: x LIKE '%(trimestre actual)')[1], '(trimestre actual)', '')) AS situacion_actual,
+       trim(replace(list_filter(string_split(situacion, ' · '), lambda x: x LIKE '%(trimestre anterior)')[1], '(trimestre anterior)', '')) AS situacion_anterior,
        valor AS miles_personas, tabla_id
 FROM fact_ine WHERE tabla_id = '66266' AND valor IS NOT NULL;
 
