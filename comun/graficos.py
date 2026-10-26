@@ -120,14 +120,14 @@ def dispersion(df, x, y, etiqueta, ref_x=None, ref_y=None, resaltar=None, fmt_x=
     mostrar(capas.properties(height=alto))
 
 
-def barras_grupo(df, cat, serie, val, fmt=",.0f", orden_series=None, alto_fila=30, titulo_val=None):
-    """Barras horizontales agrupadas (p. ej. hombres / mujeres)."""
+def barras_grupo(df, cat, serie, val, fmt=",.0f", orden_series=None, alto_fila=30, titulo_val=None, orden_cat=None):
+    """Barras horizontales agrupadas (p. ej. hombres / mujeres). `orden_cat`: orden fijo de las categorías (p. ej. tramos de tamaño)."""
     if df.empty:
         st.info("Sin datos en esta carga.")
         return
     series = orden_series or sorted(df[serie].dropna().unique().tolist())
     ch = alt.Chart(df).mark_bar(cornerRadiusEnd=3).encode(
-        y=alt.Y(f"{cat}:N", title=None, sort="-x", axis=alt.Axis(labelLimit=_lim(260))),
+        y=alt.Y(f"{cat}:N", title=None, sort=orden_cat or "-x", axis=alt.Axis(labelLimit=_lim(260))),
         yOffset=alt.YOffset(f"{serie}:N", sort=series),
         x=alt.X(f"{val}:Q", title=titulo_val, axis=alt.Axis(format=fmt)),
         color=alt.Color(f"{serie}:N", scale=alt.Scale(domain=series, range=colores(len(series)))),
