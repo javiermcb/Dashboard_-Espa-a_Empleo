@@ -68,6 +68,10 @@ RRHH_DATOS_TOKEN = "github_pat_..."   # fine-grained, solo este repo, Contents: 
 
 Los dashboards son públicos: sin login ni registro de visitas.
 
+## Licencia
+
+© Fundación Gi Group. Sin licencia: todos los derechos reservados. Aunque el repositorio sea público, no se concede permiso para usar, copiar, modificar ni distribuir el código. Los datos de INE, SEPE, Seguridad Social, Ministerio de Trabajo y FUNDAE son de sus fuentes y se reutilizan según las condiciones de cada una.
+
 ## Pendiente de decidir
 
 - Dashboard 1: nivel educativo y urbano/rural de los NEET, y cifras 16-29 (ver `docs/dashboard_1_fuentes.md`).
@@ -75,3 +79,4 @@ Los dashboards son públicos: sin login ni registro de visitas.
 - Dashboard 3: sin crédito asignado/disponible (FUNDAE solo publica el «dispuesto»).
 
 Decidido (26/10/2026): `Datos_INE` y este repositorio son proyectos distintos y mantienen cada uno su propia carga diaria.
+Decidido (26/10/2026): el código no lleva licencia (todos los derechos reservados).
