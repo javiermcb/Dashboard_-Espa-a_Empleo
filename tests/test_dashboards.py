@@ -40,3 +40,11 @@ def test_paginas_propias(dashboard):
 def test_paginas_comunes(pagina):
     at = _abrir(DASHBOARDS[0])
     _sin_errores(at.switch_page(f"../../comun/paginas/{pagina}").run(), f"comun/{pagina}")
+
+
+@pytest.mark.parametrize("dashboard", DASHBOARDS)
+def test_sin_boton_pantalla_completa(dashboard):
+    """Cada dashboard inyecta la regla que oculta el botón «Fullscreen» (útil al incrustarlos en otra web)."""
+    at = _abrir(dashboard)
+    reglas = [m.value for m in at.markdown if 'aria-label="Fullscreen"' in m.value and "display: none" in m.value]
+    assert reglas, f"{dashboard}: falta la regla CSS que oculta «Fullscreen»"

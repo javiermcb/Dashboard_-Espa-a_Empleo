@@ -11,6 +11,13 @@ import streamlit as st
 RAIZ = Path(__file__).resolve().parent.parent
 PAGINAS_COMUNES = RAIZ / "comun" / "paginas"
 
+# Oculta el botón «Fullscreen» que Streamlit muestra al pasar el ratón por gráficos y tablas (molesta al incrustar los
+# dashboards en otra web). Se apoya en atributos internos de Streamlit (data-testid / aria-label), fijados en la versión de
+# requirements.txt: al actualizar Streamlit hay que comprobar que sigue funcionando.
+CSS_SIN_PANTALLA_COMPLETA = """<style>
+[data-testid="stElementToolbar"] button[aria-label="Fullscreen"] { display: none !important; }
+</style>"""
+
 AVISO_FUENTES = ("Elaboración propia con datos extraídos del sitio web del INE (www.ine.es), del SEPE, de la Seguridad Social, "
                  "del Ministerio de Trabajo y Economía Social y de FUNDAE. Los indicadores calculados (cocientes, acumulados, "
                  "aproximaciones) son elaboración propia, no cifras oficiales. Estos organismos no participan en esta "
@@ -24,13 +31,16 @@ def comun(nombre, titulo, icono):
     return st.Page(str(PAGINAS_COMUNES / f"{nombre}.py"), title=titulo, icon=icono, url_path=nombre)
 
 
-def arrancar(titulo, icono, menu, mapas=False):
+def arrancar(titulo, icono, menu, mapas=False, pantalla_completa=False):
     """
     titulo  nombre del dashboard (pestaña del navegador y barra lateral)
     menu    {sección: [st.Page, ...]}; la primera página con default=True es la de entrada
     mapas   True: selector «Geográfico / Mosaico» de los mapas de comunidades en la barra lateral
+    pantalla_completa   True: deja el botón «Fullscreen» de gráficos y tablas (por defecto se oculta)
     """
     st.set_page_config(page_title=titulo, page_icon=icono, layout="wide")
+    if not pantalla_completa:
+        st.markdown(CSS_SIN_PANTALLA_COMPLETA, unsafe_allow_html=True)
 
     from comun import recarga
     recarga.comprobar()  # tras publicar código nuevo, recarga los módulos comunes (Streamlit Cloud guarda la versión antigua)
