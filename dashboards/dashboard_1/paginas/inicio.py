@@ -29,6 +29,20 @@ ccaa_todas["nombre"] = ccaa_todas.nombre.map(g.corto)
 act_u = ccaa_todas[ccaa_todas.anyo == ultimo].sort_values("porcentaje")
 previo = nac.get(ultimo - 1)
 
+# Eurostat (tabla opcional): población, tasa de empleo, NEET por nivel de formación y por urbanización
+eu = datos.q("SELECT serie, anyo, sexo, categoria, valor, estado FROM fact_eurostat") if datos.hay("fact_eurostat") else pd.DataFrame()
+
+
+def serie_eu(nombre, categoria="Total", sexo="Total"):
+    """Serie anual de Eurostat (índice: año); vacía si la tabla o la serie no están en la carga."""
+    if eu.empty:
+        return pd.Series(dtype=float)
+    f = eu[(eu.serie == nombre) & (eu.categoria == categoria) & (eu.sexo == sexo)]
+    return f.set_index("anyo").valor.sort_index()
+
+
+poblacion, empleo = serie_eu("poblacion_16_29"), serie_eu("tasa_empleo_15_29")
+
 # --- la respuesta en una frase ----------------------------------------------------------------------------------
 puntos = []
 if previo is not None:
@@ -59,9 +73,20 @@ if len(act_u) > 1:
     tarjetas.append(dict(titulo=f"Distancia entre comunidades, {ultimo}", valor=g.es(brecha, 1, " p.p."),
                          nota=f"{act_u.iloc[0].nombre} frente a {act_u.iloc[-1].nombre}",
                          serie=ccaa_todas.groupby("anyo").porcentaje.apply(lambda x: x.max() - x.min()).sort_index().tolist(), desde=primero, hasta=ultimo))
+if not poblacion.empty:
+    pu, pp = poblacion.index.max(), poblacion.get(poblacion.index.max() - 1)
+    tarjetas.insert(0, dict(titulo=f"Población de 16 a 29 años, 1 de enero de {pu}", valor=g.es(poblacion[pu] / 1e6, 2, " M"),
+                            delta=im.delta_rel(poblacion[pu], pp), nota=f"frente a {pu - 1} · {g.es(poblacion[pu])} personas",
+                            serie=poblacion.tolist(), desde=int(poblacion.index.min()), hasta=int(pu)))
+if not empleo.empty:
+    eu_u, ep = empleo.index.max(), empleo.get(empleo.index.max() - 1)
+    tarjetas.insert(1, dict(titulo=f"Tasa de empleo, 15 a 29 años, {eu_u}", valor=g.pct(empleo[eu_u]), delta=im.delta_pp(empleo[eu_u], ep),
+                            bueno=None if ep is None else bool(empleo[eu_u] >= ep), nota=f"frente a {eu_u - 1}",
+                            serie=empleo.tolist(), desde=int(empleo.index.min()), hasta=int(eu_u)))
 im.tarjetas(tarjetas)
-st.caption("Pendientes de fuente (no hay en el modelo una tabla con el grupo 16-29 o 15-29): volumen de población joven, "
-           "tasa de actividad y tasa de empleo.")
+if not poblacion.empty or not empleo.empty:
+    st.caption("Población: INE (vía Eurostat, suma de las edades de 16 a 29). Tasa de empleo: INE, EPA "
+               "(vía Eurostat); Eurostat no publica el grupo 16-29, solo 15-29. Si el último año lleva la marca «d», Eurostat avisa de un cambio de definición.")
 
 # --- 01 mapa y 05 comparativa con la media ----------------------------------------------------------------------
 anyos = sorted(ccaa_todas.anyo.unique(), reverse=True)
@@ -134,10 +159,35 @@ if not nacion.empty:
         st.caption(f"En {ultimo}, el valor más alto es el de «{mx}» ({g.pct(nacion.loc[ultimo, mx])}) y el más bajo el de "
                    f"«{nacion.loc[ultimo].idxmin()}» ({g.pct(nacion.loc[ultimo].min())}).")
 
-# --- paneles sin fuente -----------------------------------------------------------------------------------------
-st.subheader("Pendientes de fuente")
-p = st.columns(2)
-p[0].info("**02 · Nivel educativo de los NEET.** Existe el desglose por nivel de formación (EPA, desde 2002), pero aún no "
-          "está localizada la tabla del INE que lo publica.")
-p[1].info("**03 · Entorno urbano / rural.** Eurostat lo publica por grado de urbanización; falta confirmar que cubra España "
-          "con esta edad. Detalle en `docs/dashboard_1_fuentes.md`.")
+# --- 02 nivel educativo de los NEET (rosco) y 03 entorno urbano / rural -----------------------------------------
+NIVELES = ["Primaria y primera etapa de secundaria", "Segunda etapa de secundaria y postsecundaria", "Educación superior"]
+izq, der = st.columns(2)
+with izq:
+    st.subheader("02 · Nivel educativo de los NEET")
+    tasa_n = eu[eu.serie == "neet_nivel"].pivot_table(index="anyo", columns="categoria", values="valor") if not eu.empty else pd.DataFrame()
+    pob_n = eu[eu.serie == "poblacion_nivel"].pivot_table(index="anyo", columns="categoria", values="valor") if not eu.empty else pd.DataFrame()
+    comunes = [a for a in tasa_n.index if a in pob_n.index and set(NIVELES) <= set(tasa_n.columns) and set(NIVELES) <= set(pob_n.columns)]
+    if comunes:
+        a_n = st.select_slider("Año", options=sorted(comunes), value=max(comunes), key="anyo_nivel")
+        nivel = pd.DataFrame({"nivel": NIVELES, "neet": [tasa_n.loc[a_n, n] / 100 * pob_n.loc[a_n, n] for n in NIVELES]})
+        corto_n = {NIVELES[0]: "Hasta 1.ª secundaria", NIVELES[1]: "2.ª secundaria", NIVELES[2]: "Educación superior"}
+        nivel["nivel"] = [f"{corto_n[n]} · {g.pct(v / nivel.neet.sum() * 100, 0)}" for n, v in zip(nivel.nivel, nivel.neet)]
+        im.rosco(nivel, "nivel", "neet", orden=nivel.nivel.tolist(), colores=[g.MARINO, g.ORO, g.MARINO_CLARO], centro=g.es(nivel.neet.sum() / 1e3, 0, " mil"),
+                 sub="jóvenes NEET", fmt=".1%", alto=330)
+        st.caption("Reparto de los NEET de 15 a 29 años por nivel de formación. Es un cálculo propio: la tasa de NEET de cada nivel "
+                   "(Eurostat) por la población de 15-29 de ese nivel (Eurostat). Eurostat no publica este reparto directamente; "
+                   "hay datos desde 2021.")
+    else:
+        st.info("Esta carga no incluye todavía el nivel de formación de los NEET.")
+with der:
+    st.subheader("03 · Entorno: ciudad, periferia o rural")
+    urb = eu[eu.serie == "neet_urbanizacion"] if not eu.empty else pd.DataFrame()
+    if not urb.empty:
+        orden_u = ["Ciudades", "Pueblos y periferias", "Zonas rurales"]
+        urb = urb.drop(columns="serie").rename(columns={"categoria": "serie"}).assign(fecha=lambda x: x.anyo.astype(str) + "-01-01")
+        im.lineas_etiquetadas(urb[["fecha", "valor", "serie"]], "fecha", "valor", "serie", fmt=",.1f", titulo_y="% jóvenes NEET (15-29)",
+                              orden_series=[o for o in orden_u if o in set(urb.serie)], alto=330)
+        st.caption("Tasa de NEET (15-29) según el grado de urbanización del lugar de residencia (Eurostat, a partir de la EPA). Son tasas dentro de "
+                   "cada entorno, no un reparto: Eurostat no publica cuántos jóvenes NEET viven en cada uno.")
+    else:
+        st.info("Esta carga no incluye todavía la tasa de NEET por entorno.")
