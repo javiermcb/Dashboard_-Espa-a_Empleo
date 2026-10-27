@@ -27,3 +27,22 @@ def test_rechaza_otro_fichero():
     # el de demandantes por nivel formativo no es este fichero
     with pytest.raises(ValueError):
         fuentes.parsear_contratos_nivel('"Nivel Formativo Agrupación OBS-1";"Dem. Parados Hombres"\n"x";"1"', "2026-04-01")
+
+
+def test_un_mes_que_falla_no_borra_los_ya_guardados(tmp_path, monkeypatch):
+    import urllib.error
+    monkeypatch.setattr(fuentes, "NORM", tmp_path)
+    previo = fuentes.parsear_contratos_nivel(CSV, "2026-04-01")
+    cab = ["fecha", "nivel", "hombres", "mujeres", "indefinidos", "temporales", "total"]
+    fuentes.escribir("sepe_contratos_nivel", cab, previo)  # carga anterior: abril
+
+    def descargar(url, *a, **k):  # ahora solo responde mayo; abril da 404
+        if "202605" in url:
+            return CSV.encode("utf-8")
+        raise urllib.error.HTTPError(url, 404, "no encontrado", {}, None)
+    monkeypatch.setattr(fuentes, "descargar", descargar)
+    res = fuentes.sepe_contratos_nivel(desde=2026)
+    with open(tmp_path / "sepe_contratos_nivel.csv", encoding="utf-8") as fh:
+        meses = sorted({l.split(",")[0] for l in fh.read().splitlines()[1:]})
+    assert meses == ["2026-04-01", "2026-05-01"]  # abril se conserva y mayo se añade
+    assert res[0][3:5] == ["2026-04", "2026-05"]

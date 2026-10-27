@@ -202,7 +202,8 @@ Estado de los hallazgos de arriba tras las últimas fusiones (PR #32 a #50) y lo
 
 Encontrado y corregido en esta revisión:
 - **Vigilante de apps con falsa alarma** desde que se simplificó el diseño: mantenía abierta la issue «Un dashboard no responde» y habría tapado una caída real.
-- **Serie 13 de FUNDAE sin cargar**: el lector recorría siempre las series en el mismo orden y cortaba a los 420 s; la serie más nueva (la última de la lista) se quedaba sin turno. Ahora van primero las series sin copia y luego las de copia más antigua.
+- **Serie 13 de FUNDAE sin cargar**: el lector recorría siempre las series en el mismo orden y cortaba a los 420 s; la serie más nueva (la última de la lista) se quedaba sin turno en una carga lenta (441 s). En la carga siguiente las 19 series entraron en 194 s, así que la causa de fondo es la lentitud intermitente del servidor de FUNDAE. Ahora van primero las series sin copia y luego las de copia más antigua.
+- **SEPE por nivel formativo perdía meses**: el fichero de un mes falla a ratos (abril de contratos faltó en una carga) y el lector reescribía el CSV solo con lo descargado ese día. Ahora conserva los meses ya guardados y añade los nuevos. Test nuevo.
 - **Archivos retirados**: `_apartado/` (acceso por email, ya sin uso; sigue en el historial de git) y `ops/explorar_fuentes.py` con su workflow manual (herramienta de exploración de fuentes de un solo uso).
 - **Documentación**: README y guía de puesta en marcha actualizados (estado real de las apps, fuentes, paneles pendientes).
 
