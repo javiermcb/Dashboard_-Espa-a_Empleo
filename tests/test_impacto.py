@@ -32,3 +32,15 @@ def test_etiquetas_finales_no_se_pisan_y_mantienen_el_orden():
     pos = [out[i] for i in orden]
     assert all(b - a >= 0.999 for a, b in zip(pos, pos[1:]))
     assert out[3] == 20.0  # la que ya estaba lejos no se mueve
+
+
+def test_rosco_reparte_en_porcentajes_y_ordena():
+    import pandas as pd
+    df = pd.DataFrame({"c": ["A", "B", "C", "D"], "v": [50.0, 30.0, 20.0, 0.0]})  # solo para probar la función
+    ch = im._rosco(df, "c", "v", orden=["C", "B", "A", "D"], centro="2025", sub="x")
+    d = ch.to_dict()
+    capas = d["layer"]
+    assert capas[0]["mark"]["type"] == "arc" and len(capas) == 3
+    datos = d["datasets"][d["layer"][0]["data"]["name"]]
+    assert [r["c"] for r in sorted(datos, key=lambda r: r["_ord"])] == ["C", "B", "A"]  # la categoría con 0 no entra
+    assert abs(sum(r["_pct"] for r in datos) - 1) < 1e-9

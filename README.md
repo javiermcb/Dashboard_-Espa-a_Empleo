@@ -72,6 +72,21 @@ RRHH_DATOS_TOKEN = "github_pat_..."   # fine-grained, solo este repo, Contents: 
 
 Los dashboards son públicos: sin login ni registro de visitas.
 
+## Colores
+
+Paleta de marca (Fundación Gi Group): azul marino `#00145a` y dorado `#d9ab42` predominan, sobre blanco; `#e1bc68` y `#e8cd8e`
+completan la familia dorada. Las constantes están en `comun/graficos.py` (`MARINO`, `ORO`…) y el tema de Streamlit en
+`.streamlit/config.toml`; nada debe llevar un color suelto: `tests/test_paleta.py` falla si aparece uno fuera de la paleta,
+de sus derivados y de los neutros.
+
+- Los tres dorados juntos **no** se distinguen entre sí como series (ΔE ≈ 5): sirven de rampa y de fondos suaves. Para más de
+  dos series hay cuatro derivados (marino suave `#6b79b0`, dorado oscuro `#9a7312`, marino claro `#aab3d8`, dorado pálido).
+- Magnitud (mapas y mapas de calor): rampa del blanco azulado al marino. Por encima de la media: dorado; por debajo: marino suave.
+- Variaciones: pastilla marino si mejora y dorada si empeora; la flecha y el signo van siempre.
+- Validación con el validador de color: pasa la separación entre series (también con daltonismo) pero no la banda de luminosidad ni
+  el croma mínimo (el marino es muy oscuro y los derivados, apagados: es propio de la marca), y el dorado tiene poco contraste
+  sobre blanco (2,1:1). Por eso se limita a 4-5 series por gráfico y todos llevan etiquetas visibles, leyenda y tooltip.
+
 ## Versiones fijadas y cómo actualizar
 
 `requirements.txt` (apps) y `pipeline/requirements.txt` (pipeline) fijan versiones exactas. Para actualizar: cambiar la

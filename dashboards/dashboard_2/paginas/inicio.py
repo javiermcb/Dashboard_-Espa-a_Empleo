@@ -73,8 +73,8 @@ im.tarjetas(tarjetas)
 # --- 01 por territorio, con el deslizante de año dentro del gráfico ---------------------------------------------
 st.subheader("01 · Por comunidad autónoma, año a año")
 indicador = st.radio("Indicador", INDICADORES, horizontal=True, index=0, key="ind_ccaa")
-st.caption("Mueve el deslizante del gráfico para cambiar de año. En naranja, por encima de la media de España de ese año; "
-           "en azul marino, la propia media.")
+st.caption("Mueve el deslizante del gráfico para cambiar de año. En dorado, por encima de la media de España de ese año; "
+           "en marino suave, por debajo; en azul marino, la propia media.")
 sub = ccaa[ccaa.indicador == indicador].dropna(subset=["tasa"])
 im.barras_anuales(sub[["nombre", "anyo", "tasa"]], "nombre", "tasa", "anyo", ref=nac[indicador].dropna().to_dict(), fmt=",.1f",
                   titulo_val=f"% de la población de {etiqueta}")
@@ -110,7 +110,7 @@ im.lineas_etiquetadas(bg, "fecha", "tasa", "serie", fmt=",.1f", titulo_y=f"{sel_
 st.subheader(f"Dónde y cuándo: paro de los {etiqueta}, comunidad a comunidad")
 calor = ccaa[ccaa.indicador == "Tasa de paro"].dropna(subset=["tasa"])
 orden = calor[calor.anyo == ultimo].sort_values("tasa", ascending=False).nombre.tolist()
-g.mapa_calor(calor, "nombre", "anyo", "tasa", fmt=",.0f", orden_filas=orden, orden_cols=sorted(calor.anyo.unique()), titulo="Tasa de paro (%)", escala=("#fde8d7", "#b83a0b"))
+g.mapa_calor(calor, "nombre", "anyo", "tasa", fmt=",.0f", orden_filas=orden, orden_cols=sorted(calor.anyo.unique()), titulo="Tasa de paro (%)", escala=g.ESCALA)
 st.caption(f"Ordenadas por su valor en {ultimo}. Cuanto más oscuro, mayor es el paro.")
 
 # --- comparativa territorial: actividad frente a paro, y tabla --------------------------------------------------

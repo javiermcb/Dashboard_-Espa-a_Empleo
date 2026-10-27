@@ -1,11 +1,25 @@
 [theme]
-# Textos en azul marino rgb(0, 20, 90) y hojas en blanco
+# Colores de marca: azul marino (#00145A) y dorado (#D9AB42) sobre blanco; el fondo secundario es un dorado muy suave
 base = "light"
 primaryColor = "#00145A"
 textColor = "#00145A"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F2F4FA"
+secondaryBackgroundColor = "#FBF6E9"
 font = "sans serif"
+linkColor = "#00145A"
+borderColor = "#EADFBD"
+# recuadros st.info (azul de Streamlit) y st.warning (naranja) en la paleta: fondo dorado suave y texto marino
+blueColor = "#D9AB42"
+blueBackgroundColor = "#FBF6E9"
+blueTextColor = "#00145A"
+orangeColor = "#D9AB42"
+orangeBackgroundColor = "#E8CD8E"
+orangeTextColor = "#00145A"
+dataframeHeaderBackgroundColor = "#FBF6E9"
+# gráficos nativos de Streamlit (si alguna página los usara): mismas series que comun/graficos.py
+chartCategoricalColors = ["#00145A", "#D9AB42", "#6B79B0", "#9A7312", "#AAB3D8", "#E8CD8E"]
+chartSequentialColors = ["#E6E9F4", "#AAB3D8", "#6B79B0", "#2F3F85", "#00145A"]
+chartDivergingColors = ["#00145A", "#6B79B0", "#AAB3D8", "#FFFFFF", "#E8CD8E", "#D9AB42", "#9A7312"]
 
 [browser]
 gatherUsageStats = false

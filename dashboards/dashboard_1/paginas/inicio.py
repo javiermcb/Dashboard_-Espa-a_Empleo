@@ -72,18 +72,18 @@ media = nac.get(anyo)
 izq, der = st.columns([3, 2])
 with izq:
     st.subheader("01 · Jóvenes NEET por comunidad autónoma")
-    g.mapa_ccaa(act, "porcentaje", fmt=",.1f", titulo="% jóvenes NEET (15-29)", escala=("#fde8d7", "#b83a0b"))
+    g.mapa_ccaa(act, "porcentaje", fmt=",.1f", titulo="% jóvenes NEET (15-29)", escala=g.ESCALA)
 with der:
     st.subheader("05 · Frente a la media de España")
     if media is not None:
         dv = act[["nombre", "porcentaje"]].assign(diferencia=act.porcentaje - media)
         im.divergentes(dv, "nombre", "diferencia", media, fmt="+.1f", titulo=f"Puntos respecto a la media nacional ({g.pct(media)})")
-        st.caption("En naranja, las comunidades por encima de la media nacional; en azul, por debajo.")
+        st.caption("En dorado, las comunidades por encima de la media nacional; en marino suave, por debajo.")
 
 # --- recorrer los años ------------------------------------------------------------------------------------------
 st.subheader("Recorre los años")
-st.caption("Mueve el deslizante del gráfico: el ranking de comunidades cambia al instante. En naranja, por encima de la media de "
-           "España de ese año; en azul marino, la propia media.")
+st.caption("Mueve el deslizante del gráfico: el ranking de comunidades cambia al instante. En dorado, por encima de la media de "
+           "España de ese año; en marino suave, por debajo; en azul marino, la propia media.")
 im.barras_anuales(ccaa_todas[["nombre", "anyo", "porcentaje"]], "nombre", "porcentaje", "anyo", ref=nac.to_dict(), fmt=",.1f",
                   titulo_val="% jóvenes NEET (15-29)")
 
@@ -92,7 +92,7 @@ st.subheader("Dónde y cuándo: cada comunidad, año a año")
 calor = ccaa_todas.copy()
 orden = act_u.sort_values("porcentaje", ascending=False).nombre.tolist()
 g.mapa_calor(calor, "nombre", "anyo", "porcentaje", fmt=",.1f", orden_filas=orden, titulo="% jóvenes NEET (15-29)",
-             escala=("#fde8d7", "#b83a0b"))
+             escala=g.ESCALA)
 st.caption(f"Ordenadas por su valor en {ultimo}. Cuanto más oscuro, mayor es la proporción de jóvenes NEET.")
 
 # --- quién ha mejorado más --------------------------------------------------------------------------------------

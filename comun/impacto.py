@@ -12,8 +12,8 @@ import streamlit as st
 
 from comun import graficos as g
 
-AZUL, NARANJA, VERDE = g.C1, g.C2, g.C3
-TENUE = "#9aa6cf"  # extremo «de partida» de las mancuernas y trazos de apoyo
+MARINO, ORO = g.MARINO, g.ORO
+TENUE = g.MARINO_CLARO  # extremo «de partida» de las mancuernas y trazos de apoyo
 _ids = count()
 
 CSS = """<style>
@@ -21,23 +21,23 @@ CSS = """<style>
 @keyframes im-traza{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
 @keyframes im-aparece{from{opacity:0}to{opacity:1}}
 .im-fila{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:0.9rem;margin:0.4rem 0 1.2rem 0}
-.im-t{background:linear-gradient(160deg,#ffffff 0%,#F2F4FA 100%);border:1px solid #dfe3f0;border-radius:14px;
+.im-t{background:linear-gradient(160deg,#ffffff 0%,#fbf6e9 100%);border:1px solid #eadfbd;border-top:3px solid #d9ab42;border-radius:14px;
   padding:0.9rem 1.1rem 0.7rem 1.1rem;box-shadow:0 1px 2px rgba(0,20,90,.05),0 6px 18px rgba(0,20,90,.06);
   animation:im-sube .6s ease-out both}
 .im-t-tit{color:#4a5585;font-size:0.82rem;line-height:1.25;min-height:2.05em}
-.im-t-val{color:#00145A;font-size:2.15rem;font-weight:700;line-height:1.15;margin:0.1rem 0 0.25rem 0;letter-spacing:-0.02em}
+.im-t-val{color:#00145a;font-size:2.15rem;font-weight:700;line-height:1.15;margin:0.1rem 0 0.25rem 0;letter-spacing:-0.02em}
 .im-t-pie{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;font-size:0.78rem;color:#4a5585;min-height:1.5em}
 .im-pill{border-radius:999px;padding:0.05rem 0.55rem;font-weight:600;white-space:nowrap}
-.im-pill.bueno{background:#e3f6ee;color:#0d6b49}
-.im-pill.malo{background:#fdebe3;color:#a8381a}
-.im-pill.neutro{background:#e9ecf6;color:#2c3a73}
+.im-pill.bueno{background:#00145a;color:#ffffff}
+.im-pill.malo{background:#d9ab42;color:#00145a}
+.im-pill.neutro{background:#eef0f8;color:#00145a}
 .im-spark{width:100%;height:42px;display:block;margin-top:0.35rem;overflow:visible}
 .im-spark .l{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:im-traza 1.4s .15s ease-out both}
 .im-spark .a{animation:im-aparece 1.2s .5s ease-out both}
 .im-spark .p{animation:im-aparece .4s 1.3s ease-out both}
 .im-rango{display:flex;justify-content:space-between;color:#7a84ad;font-size:0.7rem;margin-top:0.1rem}
-.im-lectura{border-left:6px solid #eb6834;background:linear-gradient(90deg,#fff6f1,#ffffff);border-radius:10px;padding:0.8rem 1.1rem;margin:0.4rem 0 1.2rem 0}
-.im-lectura h4{margin:0 0 0.35rem 0;color:#00145A;font-size:1.05rem}
+.im-lectura{border-left:6px solid #d9ab42;background:linear-gradient(90deg,#fbf6e9,#ffffff);border-radius:10px;padding:0.8rem 1.1rem;margin:0.4rem 0 1.2rem 0}
+.im-lectura h4{margin:0 0 0.35rem 0;color:#00145a;font-size:1.05rem}
 .im-lectura ul{margin:0.1rem 0 0 1.1rem;padding:0}
 .im-lectura li{margin:0.2rem 0;line-height:1.45}
 @media (prefers-reduced-motion:reduce){.im-t,.im-spark .l,.im-spark .a,.im-spark .p{animation:none;stroke-dashoffset:0}}
@@ -71,7 +71,7 @@ def _spark(valores, color):
 
 def tarjetas(items):
     """Fila de tarjetas de cifra. Cada item es un dict: titulo, valor (texto ya formateado), delta (texto, opcional),
-    bueno (True/False/None: color de la variación; la flecha y el signo van siempre, no solo el color), nota (texto tras
+    bueno (True/False/None: color de la variación, pastilla marino si mejora y dorada si empeora; la flecha y el signo van siempre, no solo el color), nota (texto tras
     la variación), serie (lista de números para el minigráfico), desde / hasta (rótulos bajo el minigráfico)."""
     estilo()
     html = []
@@ -83,7 +83,7 @@ def tarjetas(items):
             pie += f"<span class='im-pill {clase}'>{escape(delta)}</span>"
         if it.get("nota"):
             pie += f"<span>{escape(it['nota'])}</span>"
-        color = {True: VERDE, False: NARANJA}.get(it.get("bueno"), AZUL)
+        color = {True: MARINO, False: ORO}.get(it.get("bueno"), MARINO)  # mejora: marino; empeora: dorado (la flecha y el signo van siempre)
         rango = ""
         if it.get("serie") is not None and it.get("desde") is not None:
             rango = f"<div class='im-rango'><span>{escape(str(it['desde']))}</span><span>{escape(str(it.get('hasta', '')))}</span></div>"
@@ -129,7 +129,7 @@ def delta_rel(actual, previo, d=1):
 def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, alto_fila=24, nombre_ref="España"):
     """Barras por categoría (p. ej. comunidad) con un deslizante de año DENTRO del gráfico: cambia al instante, sin recargar
     la página. df en formato largo (cat, anyo, val). `ref` = serie {año: valor} de referencia (p. ej. la media nacional): se
-    dibuja como una barra más en azul marino y el resto va en naranja si supera la referencia de ese año y en azul si no.
+    dibuja como una barra más en azul marino y el resto va en dorado si supera la referencia de ese año y en marino suave si no.
     El puesto de cada barra se calcula antes, año a año, para que el ranking se reordene al mover el deslizante."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -144,7 +144,7 @@ def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, al
     anyos = sorted(d[anyo].unique())
     p = alt.param(name="anyo_sel", value=int(anyos[-1]),
                   bind=alt.binding_range(min=int(anyos[0]), max=int(anyos[-1]), step=1, name="Año: "))
-    escala = alt.Scale(domain=["mayor", "menor", "ref", "igual"], range=[NARANJA, AZUL, g.TEXTO, AZUL])
+    escala = alt.Scale(domain=["mayor", "menor", "ref", "igual"], range=[ORO, g.MARINO_SUAVE, MARINO, MARINO])
     base = alt.Chart(d).add_params(p).transform_filter(alt.datum[anyo] == p).encode(y=alt.Y("_puesto:O", axis=None, sort="ascending"))
     barras = base.mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4, size=alto_fila * 0.62).encode(
         x=alt.X(f"{val}:Q", title=titulo_val, axis=alt.Axis(format=fmt), scale=alt.Scale(domain=[0, float(d[val].max()) * 1.12])),
@@ -156,7 +156,7 @@ def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, al
 
 
 def mancuernas(df, cat, v0, v1, e0, e1, fmt=",.1f", titulo=None, alto_fila=24, unidad="p.p."):
-    """Gráfico de mancuernas: cada fila une el valor en el año de partida (`e0`, tenue) con el del año final (`e1`, azul),
+    """Gráfico de mancuernas: cada fila une el valor en el año de partida (`e0`, tenue) con el del año final (`e1`, marino),
     ordenado por el valor final, con la variación escrita al final de la barra."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -173,18 +173,18 @@ def mancuernas(df, cat, v0, v1, e0, e1, fmt=",.1f", titulo=None, alto_fila=24, u
     p0 = base.mark_circle(size=90, color=TENUE, opacity=1).encode(
         x=f"{v0}:Q", tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{v0}:Q", format=fmt, title=e0), alt.Tooltip(f"{v1}:Q", format=fmt, title=e1),
                               alt.Tooltip("_txt:N", title="Variación")])
-    p1 = base.mark_circle(size=130, color=AZUL, opacity=1, stroke="#ffffff", strokeWidth=2).encode(
+    p1 = base.mark_circle(size=130, color=MARINO, opacity=1, stroke="#ffffff", strokeWidth=2).encode(
         x=f"{v1}:Q", tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{v0}:Q", format=fmt, title=e0), alt.Tooltip(f"{v1}:Q", format=fmt, title=e1),
                               alt.Tooltip("_txt:N", title="Variación")])
     txt = base.mark_text(align="left", dx=10, fontSize=11, color=g.TEXTO).encode(x="_max:Q", text="_txt:N")
-    # leyenda manual (dos extremos): un punto tenue (año de partida) y uno azul (año final)
+    # leyenda manual (dos extremos): un punto tenue (año de partida) y uno marino (año final)
     leyenda = pd.DataFrame({"e": [str(e0), str(e1)]})
     ley = alt.Chart(leyenda).mark_circle(size=90, opacity=1, clip=True).encode(
-        x=alt.value(-60), y=alt.value(-60), color=alt.Color("e:N", scale=alt.Scale(domain=[str(e0), str(e1)], range=[TENUE, AZUL]), legend=alt.Legend(orient="top", title=None)))
+        x=alt.value(-60), y=alt.value(-60), color=alt.Color("e:N", scale=alt.Scale(domain=[str(e0), str(e1)], range=[TENUE, MARINO]), legend=alt.Legend(orient="top", title=None)))
     g.mostrar((regla + p0 + p1 + txt + ley).properties(height=alto_fila * len(d)))
 
 
-def area_gradiente(df, x, y, fmt=",.0f", titulo_y=None, x_fmt="%Y", color=AZUL, alto=230):
+def area_gradiente(df, x, y, fmt=",.0f", titulo_y=None, x_fmt="%Y", color=MARINO, alto=230):
     """Una serie en área con degradado, cruceta con el valor al pasar el ratón y el último punto marcado."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -243,14 +243,14 @@ def _separar(valores, minimo):
 
 def lineas_etiquetadas(df, x, y, serie, fmt=",.1f", x_fmt="%Y", orden_series=None, cero=False, alto=300, titulo_y=None, resaltar=None):
     """Líneas con el valor al final de cada una (el punto final lleva el color de la serie; el texto, tinta normal) y cruceta
-    con todos los valores. Si dos finales están muy cerca, sus etiquetas se separan. `resaltar`: serie que va en naranja y
+    con todos los valores. Si dos finales están muy cerca, sus etiquetas se separan. `resaltar`: serie que va en dorado y
     más gruesa (p. ej. el total o la referencia); el resto, en la paleta."""
     if df.empty:
         st.info("Sin datos en esta carga.")
         return
     series = orden_series or sorted(df[serie].dropna().unique().tolist())
-    otros = iter([c for c in g.PALETA if c != NARANJA])
-    rango = [NARANJA if s == resaltar else next(otros) for s in series]
+    otros = iter([c for c in g.PALETA if c != ORO])
+    rango = [ORO if s == resaltar else next(otros) for s in series]
     color = alt.Color(f"{serie}:N", scale=alt.Scale(domain=series, range=rango), legend=alt.Legend(orient="top", title=None))
     base = alt.Chart(df).encode(x=alt.X(f"{x}:T", title=None, axis=alt.Axis(format=x_fmt, tickCount={"interval": "year", "step": 1})))
     enc_y = alt.Y(f"{y}:Q", title=titulo_y, axis=alt.Axis(format=fmt), scale=alt.Scale(zero=cero))
@@ -270,8 +270,8 @@ def lineas_etiquetadas(df, x, y, serie, fmt=",.1f", x_fmt="%Y", orden_series=Non
 
 
 def divergentes(df, cat, val, centro, fmt="+.1f", titulo=None, alto_fila=24):
-    """Barras que parten de una referencia (p. ej. la media nacional): a la derecha, por encima (naranja); a la izquierda, por
-    debajo (azul). `val` ya es la diferencia respecto a `centro`; el título del eje dice la referencia."""
+    """Barras que parten de una referencia (p. ej. la media nacional): a la derecha, por encima (dorado); a la izquierda, por
+    debajo (marino suave). `val` ya es la diferencia respecto a `centro`; el título del eje dice la referencia."""
     if df.empty:
         st.info("Sin datos en esta carga.")
         return
@@ -282,7 +282,7 @@ def divergentes(df, cat, val, centro, fmt="+.1f", titulo=None, alto_fila=24):
     base = alt.Chart(d).encode(y=alt.Y(f"{cat}:N", sort=orden, title=None, axis=alt.Axis(labelLimit=g._lim(260), orient="left", labelPadding=6)))
     barras = base.mark_bar(cornerRadius=3, size=alto_fila * 0.62).encode(
         x=alt.X(f"{val}:Q", title=titulo, scale=alt.Scale(domain=[-lim, lim]), axis=alt.Axis(format=fmt)),
-        color=alt.Color("_c:N", scale=alt.Scale(domain=["mayor", "menor"], range=[NARANJA, AZUL]), legend=None),
+        color=alt.Color("_c:N", scale=alt.Scale(domain=["mayor", "menor"], range=[ORO, g.MARINO_SUAVE]), legend=None),
         tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{val}:Q", format=fmt, title=titulo or val)])
     txt_pos = base.transform_filter(alt.datum[val] >= 0).mark_text(fontSize=11, color=g.TEXTO, dx=4, align="left").encode(
         x=alt.X(f"{val}:Q"), text=alt.Text(f"{val}:Q", format=fmt))
@@ -291,3 +291,32 @@ def divergentes(df, cat, val, centro, fmt="+.1f", titulo=None, alto_fila=24):
     txt = txt_pos + txt_neg
     eje = alt.Chart(pd.DataFrame({"c": [0]})).mark_rule(color=g.TEXTO, strokeWidth=1.2).encode(x="c:Q")
     g.mostrar((barras + eje + txt).properties(height=alto_fila * len(d)))
+
+
+def _rosco(df, cat, val, orden=None, colores=None, centro=None, sub=None, fmt=".1%", alto=300):
+    """Gráfico de rosco (donut) de reparto: cada categoría con su % del total, el dato principal escrito en el centro. Devuelve el
+    gráfico Altair (mostrar() lo pinta). Solo para repartos de pocas categorías (hasta 5-6): más, mejor barras."""
+    d = df[[cat, val]].dropna().copy()
+    d = d[d[val] > 0]
+    d["_pct"] = d[val] / d[val].sum()
+    orden = [c for c in (orden or d[cat].tolist()) if c in set(d[cat])]
+    d["_ord"] = d[cat].map({c: i for i, c in enumerate(orden)})
+    escala = alt.Scale(domain=orden, range=(colores or g.colores(len(orden)))[:len(orden)])
+    arcos = alt.Chart(d).mark_arc(innerRadius=alto * 0.22, outerRadius=alto * 0.36, stroke="#ffffff", strokeWidth=2.5, cornerRadius=3).encode(
+        theta=alt.Theta(f"{val}:Q", stack=True), order=alt.Order("_ord:Q"),
+        color=alt.Color(f"{cat}:N", scale=escala, sort=orden, legend=alt.Legend(orient="bottom", title=None, columns=2, labelLimit=170)),
+        tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip("_pct:Q", format=fmt, title="% del total"), alt.Tooltip(f"{val}:Q", format=",.0f", title="Valor")])
+    capas = arcos
+    if centro:
+        capas += alt.Chart(pd.DataFrame({"t": [centro]})).mark_text(fontSize=alto * 0.11, fontWeight="bold", color=g.TEXTO, dy=-4 if sub else 0).encode(text="t:N")
+    if sub:
+        capas += alt.Chart(pd.DataFrame({"t": [sub]})).mark_text(fontSize=10.5, color=g.TEXTO_SUAVE, dy=alto * 0.085).encode(text="t:N")
+    return capas.properties(height=alto)
+
+
+def rosco(df, cat, val, **kw):
+    """Rosco de reparto (ver _rosco). Con df vacío avisa en vez de pintar un gráfico vacío."""
+    if df.empty or not (df[val] > 0).any():
+        st.info("Sin datos en esta carga.")
+        return
+    g.mostrar(_rosco(df, cat, val, **kw))
