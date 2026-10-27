@@ -142,14 +142,6 @@ ev = pd.concat([s.rename("porcentaje").reset_index().assign(serie=k) for k, s in
 ev["fecha"] = ev.anyo.astype(str) + "-01-01"
 im.lineas_etiquetadas(ev, "fecha", "porcentaje", "serie", fmt=",.1f", titulo_y="% jóvenes NEET (15-29)", orden_series=list(series), resaltar="Total")
 
-n24 = d[(d.grupo_edad == "15-24") & (d.desglose == "Sexo") & (d.categoria == "Total")].set_index("anyo").porcentaje.sort_index()
-if not n24.empty:
-    st.markdown("**15-24 y 15-29, juntos**")
-    c2 = pd.concat([nac.loc[n24.index].rename("porcentaje").reset_index().assign(serie="15-29 años"),
-                    n24.rename("porcentaje").reset_index().assign(serie="15-24 años")], ignore_index=True)
-    c2["fecha"] = c2.anyo.astype(str) + "-01-01"
-    im.lineas_etiquetadas(c2, "fecha", "porcentaje", "serie", fmt=",.1f", titulo_y="% jóvenes NEET", orden_series=["15-29 años", "15-24 años"], alto=240)
-    st.caption(f"El INE publica el grupo 15-24 desde {int(n24.index.min())}.")
 
 # --- nacionalidad -----------------------------------------------------------------------------------------------
 st.subheader("Por nacionalidad")
