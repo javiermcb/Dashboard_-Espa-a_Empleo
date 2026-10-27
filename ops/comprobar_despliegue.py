@@ -16,7 +16,8 @@ MEDIR = """() => { const s = document.querySelector('[data-testid="stSidebar"]')
   const c = document.querySelector('[data-testid="stMainBlockContainer"]'), h = document.querySelector('h1'), pie = document.querySelector('.rr-pie');
   return s ? {ancho: Math.round(s.getBoundingClientRect().width), texto: s.innerText.replace(/\\s+/g, ' ').trim().slice(0, 80),
     relleno: c ? getComputedStyle(c).paddingTop : null, titulo: h ? Math.round(h.getBoundingClientRect().top) : null,
-    pie_margen: pie ? getComputedStyle(pie).marginTop : null} : null; }"""
+    pie_margen: pie ? getComputedStyle(pie).marginTop : null,
+    relleno_inf: c ? getComputedStyle(c).paddingBottom : null} : null; }"""
 
 
 def medir(pag):
@@ -35,7 +36,7 @@ def main():
         nav = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH"))
         pag = nav.new_page(viewport={"width": 1280, "height": 900})
         try:
-            pag.goto(URL, wait_until="domcontentloaded", timeout=120_000)
+            pag.goto(URL + ('&' if '?' in URL else '?') + 'embed=true', wait_until="domcontentloaded", timeout=120_000)
         except Exception as e:
             print(f"{URL}: no responde ({type(e).__name__})")
             return 1
@@ -58,7 +59,7 @@ def main():
             return 1
         nueva = r["ancho"] <= 100
         print(f"{URL}: barra de {r['ancho']} px ({r['ancho'] / 37.8:.1f} cm) → {'BARRA NUEVA' if nueva else 'BARRA ANTIGUA'} · texto: «{r['texto']}»")
-        print(f"   cabecera: relleno superior {r['relleno']} (nuevo: 48px, antiguo: 96px) · título a {r['titulo']} px · margen del pie {r['pie_margen']} (nuevo: -6.4px)")
+        print(f"   cabecera: relleno superior {r['relleno']} (nuevo: 48px, antiguo: 96px) · título a {r['titulo']} px · margen del pie {r['pie_margen']} (nuevo: -6.4px) · relleno inferior {r['relleno_inf']} (nuevo: 56px; incrustado antes: 16px)")
         return 0 if nueva else 1
 
 
