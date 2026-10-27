@@ -59,3 +59,16 @@ def test_solo_carga_sus_tablas(dashboard):
     declaradas = {t.strip('"') for t in (RAIZ / "dashboards" / dashboard / "app.py").read_text(encoding="utf-8").split("tablas=[", 1)[1].split("]", 1)[0].replace('"', "").split(",") if t.strip()}
     _, disponibles, _ = datos.conexion()
     assert set(disponibles) - {"alertas"} <= {t.strip() for t in declaradas}, f"{dashboard}: carga tablas que no declara"
+
+
+@pytest.mark.parametrize("dashboard", DASHBOARDS)
+def test_barra_lateral_minima(dashboard):
+    """La barra lateral solo lleva la fecha de los datos; la atribución de las fuentes y los enlaces a las páginas van en el pie."""
+    from comun import base
+    at = _abrir(dashboard)
+    _sin_errores(at, dashboard)
+    lateral = " ".join(m.value for m in at.sidebar.markdown)
+    assert "bl-fecha" in lateral and "Datos" in lateral
+    assert not at.sidebar.radio and not at.sidebar.caption, f"{dashboard}: la barra lateral lleva más que la fecha"
+    cuerpo = " ".join(m.value for m in at.markdown)
+    assert "Elaboración propia con datos extraídos" in cuerpo or base.AVISO_FUENTES[:40] in cuerpo, f"{dashboard}: falta el aviso de fuentes"

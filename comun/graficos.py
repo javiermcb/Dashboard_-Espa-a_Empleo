@@ -266,8 +266,8 @@ def _contornos():
 
 
 def mapa_ccaa(df, val, fmt=",.1f", titulo=None, clave=None, nombre="nombre", escala=("#dfe6f7", "#00145A")):
-    """Mapa de CCAA coloreado por `val` (df con territorio_id y `nombre`): geográfico o en mosaico según la opción de la
-    barra lateral. Con `clave`, permite hacer clic en una comunidad y devuelve su territorio_id (o None)."""
+    """Mapa de CCAA coloreado por `val` (df con territorio_id y `nombre`): geográfico por defecto, o en mosaico si
+    st.session_state["vista_mapa"] == "Mosaico" (ya no hay selector en pantalla). Con `clave`, permite hacer clic en una comunidad y devuelve su territorio_id (o None)."""
     d = df[df.territorio_id.isin(MOSAICO)].dropna(subset=[val]).copy()
     if d.empty:
         st.info("Sin datos por comunidad en esta carga.")

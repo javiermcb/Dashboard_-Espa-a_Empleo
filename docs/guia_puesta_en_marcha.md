@@ -157,11 +157,11 @@ Repite el bloque entero **tres veces**, una por dashboard (cambia el fichero pri
 4. Pulsa **Deploy**. La primera vez instala las dependencias (`requirements.txt` de la raíz) y tarda unos minutos.
 
 ### 5.3 Qué debes ver
-1. Se abre la app con el título de su dashboard y una barra lateral.
+1. Se abre la app con el título de su dashboard y una barra lateral estrecha (unos 2 cm) que solo lleva la fecha de los datos.
 2. **Dashboard 1**: el título «Mapa país: jóvenes NEET en España», tres cifras, un mapa y barras por comunidad.
 3. **Dashboard 2**: «Empleo, actividad y sectores con más oportunidad», selector de edad y tabla comparativa.
 4. **Dashboard 3**: «Formación bonificada y ecosistema FUNDAE», cifras y mapa.
-5. En la barra lateral debe poner «Datos de la carga del …» con una fecha reciente.
+5. En la barra lateral debe poner «Datos» con una fecha reciente (día/mes/año y hora UTC). En el pie de la página, los enlaces a «Estado de los datos» y «Datos y descargas», la fecha completa de la carga y los avisos de las fuentes.
 
 ### 5.4 Si algo sale mal
 
@@ -205,7 +205,7 @@ Abre cada URL en el navegador (también en el móvil) y comprueba:
 
 **Dashboard 1 — jóvenes NEET**
 - [ ] Cifra «% jóvenes NEET (15-29)» con variación frente al año anterior.
-- [ ] Mapa por comunidades y selector «Geográfico / Mosaico» en la barra lateral.
+- [ ] Mapa por comunidades (geográfico).
 - [ ] Selector de año y comparativa por comunidad.
 - [ ] Evolución 2015-2025 y desglose por nacionalidad.
 - [ ] Dos recuadros azules «Pendientes de fuente» (nivel educativo y urbano/rural): es lo esperado.
