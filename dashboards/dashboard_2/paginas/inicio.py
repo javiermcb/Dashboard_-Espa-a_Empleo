@@ -91,7 +91,7 @@ im.tarjetas(tarjetas)
 st.subheader("Por comunidad autónoma, año a año")
 indicador = st.radio("Indicador", INDICADORES, horizontal=True, index=0, key="ind_ccaa")
 st.caption("Mueve el deslizante del gráfico para cambiar de año. En dorado, por encima de la media de España de ese año; "
-           "en marino suave, por debajo; en azul marino, la propia media.")
+           "en marino suave, por debajo; en gris claro, la propia media.")
 sub = ccaa[ccaa.indicador == indicador].dropna(subset=["tasa"])
 im.barras_anuales(sub[["nombre", "anyo", "tasa"]], "nombre", "tasa", "anyo", ref=nac[indicador].dropna().to_dict(), fmt=",.1f",
                   titulo_val=f"% de la población de {etiqueta}")
@@ -157,8 +157,14 @@ tot = nac.loc[[anyo]].reset_index(drop=True).assign(nombre="España") if anyo in
 if tot is not None:
     tabla = pd.concat([tot, tabla.sort_values("Tasa de actividad", ascending=False)], ignore_index=True)
 tabla = tabla.rename(columns={"nombre": "Territorio"})[["Territorio", "Tasa de actividad", "Tasa de empleo", "Tasa de paro"]]
-cfg = {k: st.column_config.NumberColumn(k, format="%.1f %%") for k in tabla.columns[1:]}
-st.dataframe(tabla, hide_index=True, width="stretch", column_config=cfg)
+if tot is not None:
+    st.dataframe(g.tabla_semaforo(tabla, "Territorio", "España", bajo_es_bueno=("Tasa de paro",)), hide_index=True, width="stretch",
+                 height=min(35 * (len(tabla) + 1) + 3, 780))
+    st.caption("En gris, la media de España. En verde, mejor que la media; en rojo, peor, y más intenso cuanto más se aleja. "
+               "En actividad y empleo es mejor lo más alto; en paro, lo más bajo.")
+else:
+    cfg = {k: st.column_config.NumberColumn(k, format="%.1f %%") for k in tabla.columns[1:]}
+    st.dataframe(tabla, hide_index=True, width="stretch", column_config=cfg)
 
 # --- 06 tipo de contrato y jornada, España frente a la UE-27 -------------------------------------------------------
 st.subheader("Temporalidad y jornada parcial")

@@ -111,7 +111,7 @@ with der:
 # --- recorrer los años ------------------------------------------------------------------------------------------
 st.subheader("Recorre los años")
 st.caption("Mueve el deslizante del gráfico: el ranking de comunidades cambia al instante. En dorado, por encima de la media de "
-           "España de ese año; en marino suave, por debajo; en azul marino, la propia media.")
+           "España de ese año; en marino suave, por debajo; en gris claro, la propia media.")
 im.barras_anuales(ccaa_todas[["nombre", "anyo", "porcentaje"]], "nombre", "porcentaje", "anyo", ref=nac.to_dict(), fmt=",.1f",
                   titulo_val="% jóvenes NEET (15-29)")
 

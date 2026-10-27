@@ -11,6 +11,8 @@ PERMITIDOS = {
     "#eef1f8", "#c9d0e8",
     # neutros (rejilla, ejes, rotulado)
     "#c3c2b7", "#e1e0d9",
+    # semáforo de la tabla comparativa del Dashboard 2 (verde, rojo) y gris de la media: petición expresa, solo en esa tabla
+    "#7cc48a", "#ec8f86", "#d9d9d9",
 }
 
 

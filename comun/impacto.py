@@ -151,7 +151,7 @@ def delta_rel(actual, previo, d=1):
 def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, alto_fila=24, nombre_ref="España"):
     """Barras por categoría (p. ej. comunidad) con un deslizante de año DENTRO del gráfico: cambia al instante, sin recargar
     la página. df en formato largo (cat, anyo, val). `ref` = serie {año: valor} de referencia (p. ej. la media nacional): se
-    dibuja como una barra más en azul marino y el resto va en dorado si supera la referencia de ese año y en marino suave si no.
+    dibuja como una barra más en gris claro (para que se vea el corte entre las de arriba y las de abajo) y el resto va en dorado si supera la referencia de ese año y en marino suave si no.
     El puesto de cada barra se calcula antes, año a año, para que el ranking se reordene al mover el deslizante."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -166,10 +166,10 @@ def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, al
     anyos = sorted(d[anyo].unique())
     p = alt.param(name="anyo_sel", value=int(anyos[-1]),
                   bind=alt.binding_range(min=int(anyos[0]), max=int(anyos[-1]), step=1, name="Año: "))
-    escala = alt.Scale(domain=["mayor", "menor", "ref", "igual"], range=[ORO, g.MARINO_SUAVE, MARINO, MARINO])
+    escala = alt.Scale(domain=["mayor", "menor", "ref", "igual"], range=[ORO, g.MARINO_SUAVE, g.GRIS_MEDIA, MARINO])
     base = alt.Chart(d).add_params(p).transform_filter(alt.datum[anyo] == p).encode(y=alt.Y("_puesto:O", axis=None, sort="ascending"))
     barras = base.mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4, size=alto_fila * 0.62).encode(
-        x=alt.X(f"{val}:Q", title=titulo_val, axis=alt.Axis(format=fmt), scale=alt.Scale(domain=[0, float(d[val].max()) * 1.12])),
+        x=alt.X(f"{val}:Q", title=titulo_val, axis=alt.Axis(format=fmt, tickCount=8, labelOverlap=True), scale=alt.Scale(domain=[0, float(d[val].max()) * 1.12])),
         color=alt.Color("_c:N", scale=escala, legend=None),
         tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{anyo}:O", title="Año"), alt.Tooltip(f"{val}:Q", format=fmt, title=titulo_val or val)])
     nombres = base.mark_text(align="right", dx=-8, fontSize=11, color=g.TEXTO_SUAVE).encode(x=alt.value(0), text=f"{cat}:N")
