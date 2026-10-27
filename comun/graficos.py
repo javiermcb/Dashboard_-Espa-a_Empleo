@@ -373,12 +373,15 @@ def _mezcla(c1, c2, t):
     return "#%02x%02x%02x" % tuple(round(x + (y - x) * t) for x, y in zip(a, b))
 
 
-def tabla_semaforo(df, nombre, ref, bajo_es_bueno=()):
+def tabla_semaforo(df, nombre, ref, bajo_es_bueno=(), sin_calor=(), formatos=None):
     """Tabla (Styler) con mapa de calor por columna respecto a una fila de referencia (p. ej. la media de España): la fila de
     referencia va en gris y negrita; el resto, de blanco a verde si está mejor que ella y a rojo si peor, con más intensidad
     cuanto más se aleja (con tope en el percentil 90 de cada columna). `bajo_es_bueno`: columnas donde un valor más bajo es mejor (el paro).
+    `sin_calor`: columnas que se escriben sin color (p. ej. cifras absolutas); `formatos`: {columna: función de formato} (por defecto, % con coma).
     Las cifras se escriben siempre: el color no es la única señal."""
+    formatos = formatos or {}
     cols = [c for c in df.columns if c != nombre]
+    con_calor = [c for c in cols if c not in sin_calor]
     pos = int(df.index[df[nombre] == ref][0])
 
     def por_columna(col):
@@ -399,5 +402,7 @@ def tabla_semaforo(df, nombre, ref, bajo_es_bueno=()):
     def fila_ref(col):
         return [f"background-color:{GRIS_MEDIA};color:{MARINO};font-weight:700" if i == pos else "" for i in range(len(col))]
 
-    return (df.style.apply(por_columna, subset=cols).apply(fila_ref, subset=[nombre])
-            .format(lambda v: pct(v), subset=cols))
+    sty = df.style.apply(por_columna, subset=con_calor).apply(fila_ref, subset=[nombre] + list(sin_calor))
+    for c in cols:
+        sty = sty.format(formatos.get(c, lambda v: pct(v)), subset=[c])
+    return sty

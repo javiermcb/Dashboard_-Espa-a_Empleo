@@ -128,6 +128,36 @@ else:
         g.barras(g.top(cc[["nombre", "pct"]], "pct", 10, "cc")[["nombre", "pct"]], "nombre", "pct", fmt=",.1f", titulo_val="% de los participantes", alto_fila=24)
     st.caption("Comunidad autónoma del participante. Cada comunidad en % del total nacional de participantes; no está "
                "corregido por población ni por número de trabajadores.")
+# --- dónde puede haber oportunidades: demandantes jóvenes, contratos y formación, por comunidad ----------------------
+op = (datos.q("""SELECT o.fecha, o.territorio_id, t.nombre, o.demandantes, o.demandantes_menores_25, o.contratos
+                 FROM mart_oportunidad_ccaa o LEFT JOIN dim_territorio t USING (territorio_id)""")
+      if datos.hay("mart_oportunidad_ccaa") else pd.DataFrame())
+if not op.empty:
+    st.subheader("Dónde puede haber oportunidades")
+    op["fecha"] = pd.to_datetime(op.fecha)
+    ult_op = op.fecha.max()
+    ventana = op[op.fecha > ult_op - pd.DateOffset(months=12)]
+    dem = op[op.fecha == ult_op].set_index("territorio_id")
+    contr = ventana.groupby("territorio_id").contratos.sum(min_count=1)
+    form = datos.q("SELECT ccaa_id AS territorio_id, valor FROM fact_fundae WHERE serie = '30' AND medida = 'Participantes' AND anyo = ? AND ccaa_id IS NOT NULL",
+                   [anyo]).set_index("territorio_id").valor
+    C1, C2, C3, C4 = ("Demandantes <25", "<25 (% demandantes)", "Contratos/año por demandante", f"Formación FUNDAE {anyo}")
+    ccaa_op = pd.DataFrame({"Territorio": dem.nombre.map(g.corto), C1: dem.demandantes_menores_25, C2: dem.demandantes_menores_25 / dem.demandantes * 100,
+                            C3: contr.reindex(dem.index) / dem.demandantes, C4: form.reindex(dem.index)}).dropna(subset=[C1, C2])
+    total = pd.DataFrame([{"Territorio": "España", C1: dem.demandantes_menores_25.sum(), C2: dem.demandantes_menores_25.sum() / dem.demandantes.sum() * 100,
+                           C3: contr.sum() / dem.demandantes.sum(), C4: form.reindex(dem.index).sum(min_count=1)}])
+    tabla_op = pd.concat([total, ccaa_op.sort_values(C1, ascending=False)], ignore_index=True)
+    st.dataframe(g.tabla_semaforo(tabla_op, "Territorio", "España", bajo_es_bueno=(C2,), sin_calor=(C1, C4),
+                                  formatos={C1: lambda v: g.es(v), C3: lambda v: g.es(v, 2), C4: lambda v: g.es(v)}),
+                 hide_index=True, width="stretch", height=min(35 * (len(tabla_op) + 1) + 3, 780))
+    mejor, peor = ccaa_op.dropna(subset=[C3]).sort_values(C3).iloc[[-1, 0]].Territorio.tolist()
+    st.caption(f"En gris, el total de España. En verde, mejor que ese total; en rojo, peor, y más intenso cuanto más se aleja. Menos jóvenes entre los demandantes "
+               f"y más contratos por demandante se leen como más oportunidad. Hoy, {mejor} es la comunidad con más contratos por demandante y {peor} la que menos. "
+               f"Demandantes: SEPE, {ult_op.strftime('%m/%Y')}; contratos: suma de los últimos 12 meses del SEPE. Participantes: FUNDAE, comunidad del participante. "
+               "Los demandantes menores de 25 son los de la estadística del SEPE por municipio, que no da el nivel de estudios. Las series de FUNDAE que usamos "
+               "son de formación bonificada y permisos: no hemos cargado la formación subvencionada para desempleados, así que la columna de formación no mide "
+               "lo que reciben los demandantes. Los valores que el SEPE oculta por secreto estadístico (menos de 5) no se suman.")
+
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
 st.subheader("Cómo se forma: presencial, teleformación y mixta")
 if not mod.empty:
