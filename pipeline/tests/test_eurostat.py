@@ -63,3 +63,11 @@ def test_cargar_sin_ninguna_serie_falla():
         assert "ninguna serie" in str(e)
     else:
         raise AssertionError("debería fallar")
+
+
+def test_serie_con_zona_y_edad():
+    j = jsonstat([("geo", ["ES", "EU27_2020"]), ("age", ["Y15-29", "Y15-64"]), ("time", ["2025"])], [50.0, 20.0, 30.0, 10.0])
+    filas = eurostat._serie("temporalidad_ue", lambda u: json.dumps(j).encode())
+    assert {(f[7], f[3]): f[4] for f in filas} == {("España", "15-29"): 50.0, ("España", "15-64"): 20.0,
+                                                    ("UE-27", "15-29"): 30.0, ("UE-27", "15-64"): 10.0}
+    assert len(filas[0]) == len(eurostat.CABECERA)
