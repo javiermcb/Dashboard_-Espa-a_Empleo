@@ -110,6 +110,14 @@ else:
     fam["pct"] = fam.valor / tot.iloc[0] * 100
     g.barras(g.top(fam[["categoria", "pct"]], "pct", 10, "fam")[["categoria", "pct"]], "categoria", "pct", fmt=",.1f", titulo_val="% de los participantes")
 
+# --- contenidos formativos más frecuentes (serie 13 de FUNDAE, bonificada) -------------------------------------------
+con = datos.q("SELECT categoria, valor FROM fact_fundae WHERE serie = '13' AND medida = 'Participantes' AND anyo = ? AND categoria <> 'Total'", [anyo])
+if not con.empty:
+    st.subheader("En qué se forman: contenidos más frecuentes")
+    g.barras(g.top(con[["categoria", "valor"]], "valor", 10, "contenidos")[["categoria", "valor"]], "categoria", "valor", fmt=",.0f", titulo_val="Participantes formados")
+    st.caption("Contenido formativo de la acción, en número de participantes (formación bonificada). No se expresa en % porque no se ha comprobado si un "
+               "participante cuenta en más de un contenido. La formación subvencionada para desempleados no está en estas series.")
+
 # --- 02 distribución por comunidad autónoma ---------------------------------------------------------------------
 st.subheader("Distribución por comunidad autónoma")
 cc = datos.q("""SELECT f.ccaa_id AS territorio_id, t.nombre, f.valor FROM fact_fundae f
@@ -157,6 +165,26 @@ if not op.empty:
                "Los demandantes menores de 25 son los de la estadística del SEPE por municipio, que no da el nivel de estudios. Las series de FUNDAE que usamos "
                "son de formación bonificada y permisos: no hemos cargado la formación subvencionada para desempleados, así que la columna de formación no mide "
                "lo que reciben los demandantes. Los valores que el SEPE oculta por secreto estadístico (menos de 5) no se suman.")
+
+# --- nivel de estudios de los parados registrados (SEPE, nacional) --------------------------------------------------
+nf = (datos.q("SELECT fecha, nivel, hombres, mujeres, total FROM fact_sepe_demandantes_nivel")
+      if datos.hay("fact_sepe_demandantes_nivel") else pd.DataFrame())
+if not nf.empty:
+    st.subheader("Nivel de estudios de las personas paradas")
+    nf["fecha"] = pd.to_datetime(nf.fecha)
+    mes_nf = nf.fecha.max()
+    ult_nf = nf[(nf.fecha == mes_nf) & (nf.nivel != "Indeterminado")]
+    ORDEN_NF = ult_nf.nivel.tolist()
+    por_sexo = pd.concat([(ult_nf.hombres / ult_nf.hombres.sum() * 100).rename("pct").to_frame().assign(nivel=ult_nf.nivel, sexo="Hombres"),
+                          (ult_nf.mujeres / ult_nf.mujeres.sum() * 100).rename("pct").to_frame().assign(nivel=ult_nf.nivel, sexo="Mujeres")])
+    g.barras_grupo(por_sexo, "nivel", "sexo", "pct", fmt=",.1f", orden_series=["Hombres", "Mujeres"], orden_cat=ORDEN_NF,
+                   titulo_val="% de las personas paradas de cada sexo", alto_fila=56)
+    basico = ult_nf[ult_nf.nivel.str.startswith(("Estudios primarios", "Educación secundaria"))].total.sum() / ult_nf.total.sum() * 100
+    univ = ult_nf[ult_nf.nivel == "Universitario"].total.sum() / ult_nf.total.sum() * 100
+    st.caption(f"Parados registrados en el SEPE, {mes_nf.strftime('%m/%Y')} ({g.es(ult_nf.total.sum())} personas): el {g.pct(basico)} tiene como máximo la ESO y "
+               f"el {g.pct(univ)}, estudios universitarios. Cada barra es el % sobre el total de su sexo. Es el conjunto de las personas paradas registradas, "
+               "a nivel nacional: el SEPE no publica este dato por edad ni por comunidad (para los jóvenes, ver el paro por estudios del Dashboard 2). "
+               "No se muestra el grupo «Indeterminado» (menos del 0,1 %).")
 
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
 st.subheader("Cómo se forma: presencial, teleformación y mixta")

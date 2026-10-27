@@ -32,6 +32,7 @@ SERIES = {
     "10": ("modalidad de impartición", "Modalidad", None),
     "14": ("familia profesional", "Familia profesional", None),
     "15": ("área profesional", "Área profesional", None),
+    "13": ("por contenidos formativos", "Contenidos formativos", None),  # la 11 trae lo mismo y el visor la sirve peor
     "30": ("Comunidad Autónoma del participante", "Comunidad autónoma", None),
     "20": ("beneficiarios por edad", "Edad (permisos de formación)", None),
     "22": ("beneficiarios por nivel de estudios", "Nivel de estudios (permisos de formación)", None),

@@ -6,6 +6,7 @@ Cada lector descarga la fuente, la lleva a una tabla limpia y la deja en datos/n
   sepe_paro_municipio       SEPE · paro registrado por municipio y mes (sexo x edad, sector)        [CSV anual]
   sepe_contratos_municipio  SEPE · contratos registrados por municipio y mes (sexo x tipo, sector)  [CSV anual]
   sepe_demandantes_municipio SEPE · demandantes de empleo por municipio y mes (sexo x edad, sector)  [CSV anual]
+  sepe_demandantes_nivel    SEPE · demandantes parados por nivel formativo, sexo y nacionalidad (nacional, un fichero por mes)
   ss_it_detalle             Seguridad Social · IT por mes, régimen, contingencia, sexo y provincia (duración media)
   ss_afiliacion             Seguridad Social · afiliación (PX-Web): provincia/CCAA, régimen, CNAE, contrato, sexo
   ss_incapacidad_temporal   Seguridad Social · IT por provincia: duración media, incidencia y prevalencia por mil protegidos
@@ -53,6 +54,7 @@ MESES_ABR = {"ene": 1, "feb": 2, "mar": 3, "abr": 4, "may": 5, "jun": 6, "jul": 
              "nov": 11, "dic": 12}
 
 SEPE = "https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/{}_por_municipios_{}_csv.csv"
+SEPE_NF = "https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/Demandantes_empleo_por_NF_{}_csv.csv"
 SS_CONSULTAS = {  # consultas guardadas de PX-Web (vistas en datos.gob.es, publicador E05072501)
     "afil_medios_prov_cnae09_regimen": "https://w6.seg-social.es/PXWeb/sq/e7afe15e-d110-4584-907c-b25235dd3f42",
     "afil_ultimo_dia_prov_cnae": "https://w6.seg-social.es/PXWeb/sq/d921596c-f52d-478b-94b8-0998230648a6",
@@ -259,6 +261,55 @@ def sepe(desde, solo=None):
 # la sección es el primer "X. TEXTO EN MAYÚSCULAS" de la cabecera (el régimen puede empezar por letra y punto: "R. General")
 RX_SECCION = re.compile(r"^(.*?)\s*((?:\b[A-V]\.\s[A-ZÁÉÍÓÚÑ\"]{2}.*)|TODAS LAS SECCIONES)$")  # el nombre de la sección puede llevar puntos ("E. … SANEAMIENTO. GESTIÓN …")
 RX_SEXO = re.compile(r"^(.*?)\s+(Total Sexo|Mujer|Mujeres|Varón|Varones|Hombres)$", re.I)
+
+
+def parsear_nivel_formativo(t, fecha):
+    """Texto del CSV del SEPE «Demandantes de empleo por nivel formativo» de un mes -> filas
+    [fecha, nivel, hombres, mujeres, espanoles, extranjeros, total]. Las cifras vienen con punto de millares («392.725»).
+    Las columnas de antigüedad no se leen: sus cifras no cuadran con otras estadísticas (casi todo «más de 12 meses»)."""
+    def n(v):
+        v = str(v).strip().strip('"').replace(".", "")
+        return int(v) if re.fullmatch(r"\d+", v) else None
+    lineas = [l for l in t.splitlines() if l.strip()]
+    if not lineas or "nivel formativo" not in lineas[0].lower():
+        raise ValueError("cabecera inesperada (no es el fichero por nivel formativo)")
+    cab = [c.strip().strip('"').lower() for c in lineas[0].split(";")]
+    idx = {k: next((i for i, c in enumerate(cab) if k in c), None) for k in ("hombres", "mujeres", "españoles", "extranjeros")}
+    if None in idx.values():
+        raise ValueError(f"faltan columnas esperadas: {cab}")
+    filas = []
+    for l in lineas[1:]:
+        c = [x.strip().strip('"') for x in l.split(";")]
+        h, m = n(c[idx["hombres"]]), n(c[idx["mujeres"]])
+        if not c[0] or h is None or m is None:
+            continue
+        filas.append([fecha, c[0], h, m, n(c[idx["españoles"]]), n(c[idx["extranjeros"]]), h + m])
+    if len(filas) < 5:
+        raise ValueError(f"solo {len(filas)} niveles")
+    return filas
+
+
+def sepe_nivel_formativo(desde=2019):
+    """SEPE: un fichero nacional por mes (Demandantes_empleo_por_NF_AAAAMM). Los meses sin fichero se omiten."""
+    cab = ["fecha", "nivel", "hombres", "mujeres", "espanoles", "extranjeros", "total"]
+    filas, meses = [], []
+    hoy = date.today()
+    for a in range(desde, hoy.year + 1):
+        for m in range(1, 13):
+            if (a, m) > (hoy.year, hoy.month):
+                break
+            try:
+                t = texto(descargar(SEPE_NF.format(f"{a}{m:02d}")))
+                filas += parsear_nivel_formativo(t, f"{a}-{m:02d}-01")
+                meses.append(f"{a}-{m:02d}")
+            except urllib.error.HTTPError:
+                continue
+            except ValueError as e:
+                print(f"  SEPE nivel formativo {a}-{m:02d}: se omite ({e})")
+    if not filas:
+        raise ValueError("SEPE nivel formativo: ningún mes descargado")
+    escribir("sepe_demandantes_nivel", cab, filas)
+    return [["sepe_demandantes_nivel", "OK", len(filas), meses[0], meses[-1], f"{len(meses)} meses"]]
 
 
 def ss():
@@ -552,6 +603,7 @@ def main():
     pasos = [("sepe", "sepe_paro_municipio", lambda: sepe(a.desde, "sepe_paro_municipio")),
              ("sepe", "sepe_contratos_municipio", lambda: sepe(a.desde, "sepe_contratos_municipio")),
              ("sepe", "sepe_demandantes_municipio", lambda: sepe(a.desde, "sepe_demandantes_municipio")),
+             ("sepe", "sepe_demandantes_nivel", sepe_nivel_formativo),
              ("ss", "ss_afiliacion", ss), ("ss", "ss_incapacidad_temporal", ss_it), ("ss", "ss_it_detalle", ss_it_detalle),
              ("mites", "mites_cpd_actividad", mites_ett),
              ("mites", "mites_convenios", mites_cct), ("mites", "mites_accidentes", mites_atr),
