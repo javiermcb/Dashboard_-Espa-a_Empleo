@@ -35,7 +35,7 @@ TABLAS = [  # (nombre, ruta relativa)
     "mart_salarios_ees_detalle", "mart_neet")]
 # tablas que la app usa si están, pero cuya falta no impide publicar la carga (control_publicacion.py solo exige TABLAS):
 # FUNDAE depende de un visor web que falla a menudo y sus series se van completando en cargas sucesivas
-OPCIONALES = ["fact_fundae"]
+OPCIONALES = ["fact_fundae", "fact_eurostat"]
 # las cachés (conexión y consultas) llevan en la clave esta firma y la versión de la carga publicada (clave()): al añadir
 # una tabla o publicarse una carga nueva, la app la lee en vez de seguir con la conexión antigua hasta que caduque la caché
 _ACTIVAS = None  # nombres de las tablas que carga este dashboard (None: todas); lo fija usar()

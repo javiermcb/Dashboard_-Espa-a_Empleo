@@ -22,6 +22,7 @@ Cada lector descarga la fuente, la lleva a una tabla limpia y la deja en datos/n
   mites_regulacion_empleo   ERE/ERTE · trabajadores afectados por tipo, sexo, actividad, territorio, causa y tamaño (10 meses)
   fundae_formacion          FUNDAE · series estadísticas de formación para el empleo: participantes, horas, empresas
                             formadoras y crédito por edad, estudios, grupo de cotización, tamaño, CCAA, familia… (anual)
+  eurostat_indicadores      Eurostat · población 16-29, tasa de empleo 15-29, NEET por nivel de formación y por urbanización
   (los lectores de detalle están en pipeline/mites_detalle.py y el de FUNDAE en pipeline/fundae.py)
 Calidad: datos/qa/fuentes_carga.csv (estado, filas y periodos de cada lector).
 Si un lector falla y existe la última versión buena de su tabla (conservada en caché entre ejecuciones), se mantiene
@@ -39,6 +40,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
 from catalogo_fuentes import contexto  # cadena TLS de mites.gob.es sin desactivar la verificación
 import estado
+import eurostat as eurostat_lector
 import fundae as fundae_lector
 import mites_detalle
 
@@ -531,9 +533,18 @@ def fundae():
     return [["fundae_formacion", "OK" if not cuenta["sin datos"] else "AVISO", len(filas), anyos[0], anyos[-1], detalle]]
 
 
+def eurostat():
+    """Eurostat (pipeline/eurostat.py): las series que fallen hoy se anotan; si falla todo, se usa la última carga buena."""
+    cab, filas, fallos = eurostat_lector.cargar(descargar)
+    escribir("eurostat_indicadores", cab, filas)
+    anyos = sorted({f[1] for f in filas})
+    detalle = "series completas" if not fallos else "; ".join(f"{k}: {v}" for k, v in fallos.items())
+    return [["eurostat_indicadores", "OK" if not fallos else "AVISO", len(filas), anyos[0], anyos[-1], detalle]]
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--solo", nargs="+", choices=["sepe", "ss", "mites", "fundae"])
+    ap.add_argument("--solo", nargs="+", choices=["sepe", "ss", "mites", "fundae", "eurostat"])
     ap.add_argument("--desde", type=int, default=2019, help="primer año del SEPE por municipio (por defecto 2019)")
     a = ap.parse_args()
     QA.mkdir(parents=True, exist_ok=True)
@@ -551,7 +562,8 @@ def main():
              ("mites", "mites_convenios_detalle", mites_cct_detalle),
              ("mites", "mites_accidentes_detalle", mites_atr_detalle),
              ("mites", "mites_regulacion_empleo", mites_reg_detalle),
-             ("fundae", "fundae_formacion", fundae)]
+             ("fundae", "fundae_formacion", fundae),
+             ("eurostat", "eurostat_indicadores", eurostat)]
     qa, ok = [], []
     for grupo, tabla, f in pasos:
         if a.solo and grupo not in a.solo:

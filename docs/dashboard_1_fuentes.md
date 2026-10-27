@@ -1,8 +1,8 @@
 # Dashboard 1 · Jóvenes NEET en España — revisión de fuentes
 
-Estado a 2026-10-22. Revisión hecha sin acceso directo a INE, ILOSTAT, Eurostat ni Banco Mundial (el entorno bloquea esos
-dominios): lo «comprobado en el modelo» sale de `resultados/dev_modelo`; lo «visto en búsqueda» son fichas publicadas por
-las propias fuentes y **no está verificado descargando los datos**.
+Estado a 2026-10-27. Eurostat (`ec.europa.eu`) sí se ha podido descargar; INE, ILOSTAT, Injuve y datos.gob.es seguían
+bloqueados desde el entorno de desarrollo. Lo «comprobado en el modelo» sale de `resultados/dev_modelo`; lo «visto en
+búsqueda» son fichas publicadas por las propias fuentes y **no está verificado descargando los datos**.
 
 ## Panel a panel
 
@@ -12,10 +12,10 @@ las propias fuentes y **no está verificado descargando los datos**.
 | 04 Evolución temporal | INE 62285 (total nacional), 2015-2025 | Comprobado en el modelo |
 | KPI % NEET | INE 62285 / 59513 | Comprobado. Es **15-29** |
 | NEET por sexo y nacionalidad (complemento) | INE 59513, 59514, 49508 | Comprobado en el modelo (59513 y 59514: 15-29; 49508: 15-24) |
-| KPI tasa de actividad y de empleo 16-29 | EPA INE 66023 / 66031 | **No sirve**: solo trae «16-19», «20-24», «25-54»… sin 25-29 ni 16-29 |
-| KPI volumen de población 16-29 | Injuve publica «EPA resultados 16 a 29» (tablas PDF trimestrales, a partir de la EPA) | Visto en búsqueda; formato PDF, sin API verificada |
-| 02 Nivel educativo de los NEET | datos.gob.es: «Población joven (15 a 29 años) que ni estudia ni trabaja por sexo, CCAA, nivel de formación y año» (desde 2002, EPA) | Visto en búsqueda; falta localizar la tabla INE de origen |
-| 03 Urbano / rural | Eurostat `edat_lfse_36` (NEET por sexo, edad, nacionalidad y grado de urbanización) | Visto en búsqueda; grado de urbanización a nivel nacional, no se ha verificado que incluya España ni 15-29. ILOSTAT: sin ficha de España con urbano/rural encontrada |
+| KPI tasa de empleo | EPA INE 66023 / 66031 no sirve (sin 16-29). Eurostat `lfsa_ergan`, España, 15-29 | **Descargado y cargado** (`pipeline/eurostat.py`). Es **15-29**: Eurostat no publica 16-29. Sin tasa de actividad por ahora |
+| KPI volumen de población 16-29 | Eurostat `demo_pjan` (población a 1 de enero por edad simple), suma de 16 a 29 | **Descargado y cargado**. Exactamente 16-29 |
+| 02 Nivel educativo de los NEET | Eurostat `edat_lfse_21` (tasa de NEET por nivel, 15-29) × `lfsa_pganedm` (población 15-29 por nivel) | **Cargado como cálculo propio**: Eurostat no publica el reparto directamente. Datos 2021-2025. Las tablas del INE siguen sin verificar (el INE sigue bloqueado en este entorno) |
+| 03 Urbano / rural | Eurostat `edat_lfse_29` (tasa de NEET por grado de urbanización: ciudades, pueblos y periferias, zonas rurales; 15-29) | **Cargado como tasas**, no como reparto: no se ha localizado la población por grado de urbanización, y sin ella no se puede calcular cuántos NEET viven en cada entorno |
 
 ## Edad: 16-29 frente a 15-29
 
@@ -28,7 +28,7 @@ las propias fuentes y **no está verificado descargando los datos**.
 ## Pendiente de verificar con acceso de red
 
 Dominios a permitir: `servicios.ine.es`, `www.ine.es`, `rplumber.ilo.org`, `ec.europa.eu`, `www.injuve.es`, `datos.gob.es`.
-1. Tabla INE de NEET por nivel de formación (origen del conjunto de datos.gob.es).
-2. Tabla EPA con grupo 16-29 (actividad, empleo, población).
-3. Si Eurostat `edat_lfse_36` (u otra) da urbano/rural para España en el grupo de edad necesario.
+1. Tabla INE de NEET por nivel de formación (origen del conjunto de datos.gob.es), que daría el reparto directo y por CCAA.
+2. Tabla EPA con grupo 16-29 (actividad, empleo, población) para sustituir el 15-29 de Eurostat.
+3. Población por grado de urbanización (15-29) para poder repartir los NEET entre entornos.
 4. Si ILOSTAT ofrece algo adicional para España (no se ha localizado nada).
