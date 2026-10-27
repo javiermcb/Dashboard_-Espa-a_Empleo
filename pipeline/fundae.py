@@ -183,14 +183,23 @@ def leer(serie, datos, url=""):
     return out
 
 
+def orden_de_carga(carpeta):
+    """Series por orden de prioridad: primero las que no tienen copia guardada y luego las de copia más antigua. Así, si el
+    tiempo no alcanza para todas (el servidor es lento), ninguna serie se queda sin actualizar de forma permanente."""
+    def clave(serie):
+        p = carpeta / f"rptSeries{serie}.csv"
+        return (p.exists(), p.stat().st_mtime if p.exists() else 0)
+    return sorted(SERIES, key=clave)
+
+
 def cargar(contexto, carpeta, limite_s=420, pausa=1.0):
-    """Intenta actualizar cada serie (hasta `limite_s` segundos en total) y monta la tabla con la última versión buena de
-    cada una, guardada en `carpeta`. Devuelve (CABECERA, filas, estado {serie: 'hoy' | 'anterior' | 'sin datos'}).
+    """Intenta actualizar cada serie (hasta `limite_s` segundos en total, empezando por las que faltan o están más viejas) y
+    monta la tabla con la última versión buena de cada una, guardada en `carpeta`. Devuelve (CABECERA, filas, estado {serie: 'hoy' | 'anterior' | 'sin datos'}).
     Lanza ValueError si no hay ninguna serie (ni de hoy ni de cargas anteriores)."""
     import csv
     carpeta.mkdir(parents=True, exist_ok=True)
     t0, estado, errores = time.time(), {}, {}
-    for serie in SERIES:
+    for serie in orden_de_carga(carpeta):
         if time.time() - t0 > limite_s:
             errores[serie] = "sin tiempo en esta carga"
             continue

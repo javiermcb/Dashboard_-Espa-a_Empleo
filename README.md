@@ -1,6 +1,6 @@
 # Dashboard España · Empleo
 
-Un solo origen de datos (pipeline diario con INE, SEPE, Seguridad Social y Ministerio de Trabajo) y varios dashboards
+Un solo origen de datos (pipeline diario con INE, SEPE, Seguridad Social, Ministerio de Trabajo, FUNDAE y Eurostat) y varios dashboards
 de Streamlit independientes que leen el mismo modelo. Es la misma lógica que `javiermcb/Datos_INE`, reorganizada para
 alimentar varios dashboards desde un único repositorio y una única acción de carga.
 
@@ -8,7 +8,7 @@ alimentar varios dashboards desde un único repositorio y una única acción de 
 
 ```mermaid
 flowchart LR
-  F[Webs oficiales<br>INE · SEPE · SS · Ministerio] -->|06:17 UTC, días laborables| P[GitHub Actions<br>pipeline_rrhh.yml]
+  F[Webs oficiales<br>INE · SEPE · SS · Ministerio · FUNDAE · Eurostat] -->|06:17 UTC, días laborables| P[GitHub Actions<br>pipeline_rrhh.yml]
   P -->|Parquet, si supera el control de calidad| D[(rama datos-modelo)]
   P -->|informes de calidad| C[(rama calidad)]
   P -->|si algo falla| I[Issues → correo]
@@ -23,8 +23,7 @@ flowchart LR
 | `dashboards/dashboard_1` … `dashboard_3` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). El 1 (jóvenes NEET), el 2 (empleo, actividad y sectores) y el 3 (FUNDAE) están hechos en lo que cubren los datos |
 | `tests/` | Abre todas las páginas de todos los dashboards con la muestra `resultados/dev_modelo` (o con los datos publicados, si `RRHH_DATOS` apunta a ellos); comprueba además que cada dashboard carga solo sus tablas y que oculta el botón «Fullscreen» |
 | `resultados/dev_modelo/` | Muestra del modelo para pruebas y desarrollo local |
-| `_apartado/` | Código retirado y pendiente de borrar (acceso por email con registro): no se importa en ningún dashboard |
-| `ops/` | Script que despierta las apps de Streamlit Community Cloud |
+| `ops/` | `mantener_activa.py`: abre cada app con un navegador sin pantalla para que Streamlit no la duerma y avisa si no pinta; `comprobar_despliegue.py`: mide a mano en la app desplegada el ancho de la barra lateral y los márgenes |
 | `docs/` | Documentación heredada de `Datos_INE` (operación, tablas del modelo, catálogo de APIs, fuentes) |
 
 ## Workflows (`.github/workflows/`)
@@ -35,6 +34,7 @@ flowchart LR
 | `pipeline_pruebas.yml` | cambios en `pipeline/` y PRs | pruebas sin red del pipeline |
 | `apps_pruebas.yml` | cambios en `dashboards/`, `comun/` | abre todas las páginas de todos los dashboards |
 | `mantener_apps_activas.yml` | cada 4 horas | job `visitar`: abre con un navegador y despierta si duerme; visita las URLs `APP_URL_1`…`APP_URL_3` (variables del repositorio). Job `frescura`: abre una issue `datos-viejos` si la carga publicada en `datos-modelo` tiene más de 96 h (el pipeline dejó de publicar sin fallar) y la cierra cuando vuelve a estar al día |
+| `comprobar_despliegue.yml` | a mano | mide en las apps desplegadas la barra lateral y los márgenes (útil tras cambiar el diseño común) |
 | `prueba_tras_publicar.yml` | al terminar bien «Pipeline RRHH» en `main` | abre todas las páginas de todos los dashboards con los datos recién publicados en `datos-modelo`; si alguna falla, abre una issue `prueba-publicacion` |
 
 Todos los workflows usan `ubuntu-24.04` (no `ubuntu-latest`) y las acciones fijadas por commit.
@@ -117,9 +117,10 @@ las dos versiones y las pruebas pasan con ambas, pero falta ejecutar una carga c
 
 ## Pendiente de decidir
 
-- Dashboard 1: nivel educativo y urbano/rural de los NEET, y cifras 16-29 (ver `docs/dashboard_1_fuentes.md`).
-- Dashboard 2: UE-27, sectores con potencial, competencias y tipo de contrato por edad.
-- Dashboard 3: sin crédito asignado/disponible (FUNDAE solo publica el «dispuesto»).
+- Dashboard 1: cifras 16-29 para los NEET (el INE solo publica 15-29; ver `docs/dashboard_1_fuentes.md`).
+- Dashboard 2: sectores con potencial (previsión) y competencias demandadas: no hay una fuente abierta que se actualice sola.
+- Dashboard 3: sin crédito asignado/disponible (FUNDAE solo publica el «dispuesto») y sin formación subvencionada para desempleados
+  (FUNDAE solo la publica en PDF por convocatoria y en informes de Power BI sin descarga; se descartó depender de PDFs).
 
 Decidido (26/10/2026): `Datos_INE` y este repositorio son proyectos distintos y mantienen cada uno su propia carga diaria.
 Decidido (26/10/2026): el código no lleva licencia (todos los derechos reservados).

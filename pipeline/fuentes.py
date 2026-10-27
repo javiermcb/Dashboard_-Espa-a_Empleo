@@ -304,8 +304,11 @@ def sepe_contratos_nivel(desde=2019):
                 print(f"  SEPE contratos por nivel {a}-{m:02d}: se omite ({e})")
     if not filas:
         raise ValueError("SEPE contratos por nivel: ningún mes descargado")
+    filas = con_historial("sepe_contratos_nivel", cab, filas)
     escribir("sepe_contratos_nivel", cab, filas)
-    return [["sepe_contratos_nivel", "OK", len(filas), meses[0], meses[-1], f"{len(meses)} meses"]]
+    guardados = sorted({f[0][:7] for f in filas})
+    return [["sepe_contratos_nivel", "OK", len(filas), guardados[0], guardados[-1],
+             f"{len(guardados)} meses ({len(meses)} descargados ahora)"]]
 
 
 # ------------------------------------------------------------------------------------------------ Seguridad Social
@@ -340,6 +343,20 @@ def parsear_nivel_formativo(t, fecha):
     return filas
 
 
+def con_historial(nombre, cabecera, filas):
+    """Suma a `filas` (los meses descargados ahora) los meses que ya estaban guardados en la última carga y no se han podido
+    descargar esta vez: el SEPE falla a ratos y, sin esto, cada fallo borraría ese mes de la tabla. Ordenado por fecha."""
+    ruta = NORM / f"{nombre}.csv"
+    nuevos = {str(f[0]) for f in filas}
+    previas = []
+    if ruta.exists():
+        with open(ruta, encoding="utf-8", newline="") as fh:
+            lector = csv.reader(fh)
+            if next(lector, None) == cabecera:
+                previas = [f for f in lector if f and f[0] not in nuevos]
+    return sorted(previas + [list(f) for f in filas], key=lambda f: str(f[0]))
+
+
 def sepe_nivel_formativo(desde=2019):
     """SEPE: un fichero nacional por mes (Demandantes_empleo_por_NF_AAAAMM). Los meses sin fichero se omiten."""
     cab = ["fecha", "nivel", "hombres", "mujeres", "espanoles", "extranjeros", "total"]
@@ -359,8 +376,11 @@ def sepe_nivel_formativo(desde=2019):
                 print(f"  SEPE nivel formativo {a}-{m:02d}: se omite ({e})")
     if not filas:
         raise ValueError("SEPE nivel formativo: ningún mes descargado")
+    filas = con_historial("sepe_demandantes_nivel", cab, filas)
     escribir("sepe_demandantes_nivel", cab, filas)
-    return [["sepe_demandantes_nivel", "OK", len(filas), meses[0], meses[-1], f"{len(meses)} meses"]]
+    guardados = sorted({f[0][:7] for f in filas})
+    return [["sepe_demandantes_nivel", "OK", len(filas), guardados[0], guardados[-1],
+             f"{len(guardados)} meses ({len(meses)} descargados ahora)"]]
 
 
 def ss():
