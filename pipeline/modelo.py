@@ -195,6 +195,8 @@ def main():
 
     # 5b) tablas listas para explotar (pipeline/marts.sql)
     con.execute((RAIZ / "pipeline" / "marts.sql").read_text(encoding="utf-8"))
+    if {"fact_sepe_demandantes_municipio", "fact_sepe_contratos_municipio"} <= set(cargadas):  # mart que cruza las dos tablas del SEPE
+        con.execute((RAIZ / "pipeline" / "marts_oportunidad.sql").read_text(encoding="utf-8"))
     marts = [r[0] for r in con.execute(
         "SELECT view_name FROM duckdb_views() WHERE NOT internal AND view_name LIKE 'mart_%' ORDER BY 1").fetchall()]
     (MODELO / "marts").mkdir(exist_ok=True)
