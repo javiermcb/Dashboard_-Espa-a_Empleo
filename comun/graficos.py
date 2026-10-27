@@ -21,6 +21,9 @@ C1, C2, C3 = MARINO, ORO, MARINO_SUAVE
 PALETA = [MARINO, ORO, MARINO_SUAVE, ORO_OSCURO, MARINO_CLARO, ORO_PALIDO]
 ESCALA = ("#e6e9f4", MARINO)  # magnitud (mapas y mapas de calor): del blanco azulado al azul marino
 RAMPA = ["#dfe3f1", MARINO_CLARO, MARINO_SUAVE, "#2f3f85", MARINO]  # categorías ordenadas (edad, estudios): 5 pasos del marino
+# semáforo de la tabla comparativa del Dashboard 2 (petición expresa: verde y rojo, fuera de la paleta de marca) y gris de la media
+VERDE, ROJO, GRIS_MEDIA = "#7cc48a", "#ec8f86", "#d9d9d9"
+ESCALA_SEMAFORO = (VERDE, FONDO_ORO, ROJO)  # mapas de calor de «más es peor» (paro, NEET): verde abajo, rojo arriba; con tres colores el texto va siempre oscuro
 TEXTO, TEXTO_SUAVE = MARINO, "#4a5585"  # azul marino y su versión atenuada (ejes, notas)
 
 
@@ -330,7 +333,7 @@ def mapa_calor(df, fila, columna, val, fmt=",.1f", orden_filas=None, orden_cols=
         oscuro = f"abs(datum['{val}'] - {centro}) > {lejos * 0.55}"
     else:
         escala_c = alt.Scale(range=list(escala))
-        oscuro = f"datum['{val}'] > {medio}"
+        oscuro = f"datum['{val}'] > {medio}" if len(escala) == 2 else "false"  # escala de tres colores: celdas claras, texto oscuro
     base = alt.Chart(df).encode(x=alt.X(f"{columna}:O", sort=orden_cols, title=None, axis=alt.Axis(orient="top", labelAngle=0)),
                                 y=alt.Y(f"{fila}:N", sort=orden_filas, title=None, axis=alt.Axis(labelLimit=_lim(320))))
     rect = base.mark_rect(stroke="white", strokeWidth=1.5).encode(
@@ -362,3 +365,39 @@ def _mapa_geo(d, val, fmt, titulo, clave, nombre, escala):
     ev = st.altair_chart(_cfg(ch), width="stretch", theme=None, on_select="rerun", key=clave, selection_mode="ccaa")
     pts = (ev or {}).get("selection", {}).get("ccaa") or []
     return pts[0].get("territorio_id") if pts else None
+
+
+def _mezcla(c1, c2, t):
+    """Color intermedio entre dos #rrggbb (t = 0: c1; t = 1: c2)."""
+    a, b = [[int(c[i:i + 2], 16) for i in (1, 3, 5)] for c in (c1, c2)]
+    return "#%02x%02x%02x" % tuple(round(x + (y - x) * t) for x, y in zip(a, b))
+
+
+def tabla_semaforo(df, nombre, ref, bajo_es_bueno=()):
+    """Tabla (Styler) con mapa de calor por columna respecto a una fila de referencia (p. ej. la media de España): la fila de
+    referencia va en gris y negrita; el resto, de blanco a verde si está mejor que ella y a rojo si peor, con más intensidad
+    cuanto más se aleja (con tope en el percentil 90 de cada columna). `bajo_es_bueno`: columnas donde un valor más bajo es mejor (el paro).
+    Las cifras se escriben siempre: el color no es la única señal."""
+    cols = [c for c in df.columns if c != nombre]
+    pos = int(df.index[df[nombre] == ref][0])
+
+    def por_columna(col):
+        d = col.astype(float) - float(col.iloc[pos])
+        tope = d.drop(index=d.index[pos]).abs().quantile(0.9)  # el percentil 90, no el máximo: un valor extremo (Melilla) apagaría el resto
+        tope = tope if tope and tope == tope else 1.0
+        est = []
+        for i, x in enumerate(d):
+            if i == pos:
+                est.append(f"background-color:{GRIS_MEDIA};color:{MARINO};font-weight:700")
+            elif x != x:
+                est.append("")
+            else:
+                bueno = x < 0 if col.name in bajo_es_bueno else x > 0
+                est.append(f"background-color:{_mezcla(BLANCO, VERDE if bueno else ROJO, min(abs(x) / tope, 1) * 0.9)};color:{MARINO}")
+        return est
+
+    def fila_ref(col):
+        return [f"background-color:{GRIS_MEDIA};color:{MARINO};font-weight:700" if i == pos else "" for i in range(len(col))]
+
+    return (df.style.apply(por_columna, subset=cols).apply(fila_ref, subset=[nombre])
+            .format(lambda v: pct(v), subset=cols))

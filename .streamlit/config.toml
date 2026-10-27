@@ -18,8 +18,7 @@ orangeTextColor = "#00145A"
 dataframeHeaderBackgroundColor = "#FBF6E9"
 # gráficos nativos de Streamlit (si alguna página los usara): mismas series que comun/graficos.py
 chartCategoricalColors = ["#00145A", "#D9AB42", "#6B79B0", "#9A7312", "#AAB3D8", "#E8CD8E"]
-chartSequentialColors = ["#E6E9F4", "#AAB3D8", "#6B79B0", "#2F3F85", "#00145A"]
-chartDivergingColors = ["#00145A", "#6B79B0", "#AAB3D8", "#FFFFFF", "#E8CD8E", "#D9AB42", "#9A7312"]
+# (chartSequentialColors y chartDivergingColors exigen 10 valores cada una; no se usan y con otro número Streamlit avisa en el log)
 
 [browser]
 gatherUsageStats = false

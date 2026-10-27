@@ -111,7 +111,7 @@ with der:
 # --- recorrer los años ------------------------------------------------------------------------------------------
 st.subheader("Recorre los años")
 st.caption("Mueve el deslizante del gráfico: el ranking de comunidades cambia al instante. En dorado, por encima de la media de "
-           "España de ese año; en marino suave, por debajo; en azul marino, la propia media.")
+           "España de ese año; en marino suave, por debajo; en gris claro, la propia media.")
 im.barras_anuales(ccaa_todas[["nombre", "anyo", "porcentaje"]], "nombre", "porcentaje", "anyo", ref=nac.to_dict(), fmt=",.1f",
                   titulo_val="% jóvenes NEET (15-29)")
 
@@ -120,8 +120,8 @@ st.subheader("Dónde y cuándo: cada comunidad, año a año")
 calor = ccaa_todas.copy()
 orden = act_u.sort_values("porcentaje", ascending=False).nombre.tolist()
 g.mapa_calor(calor, "nombre", "anyo", "porcentaje", fmt=",.1f", orden_filas=orden, titulo="% jóvenes NEET (15-29)",
-             escala=g.ESCALA)
-st.caption(f"Ordenadas por su valor en {ultimo}. Cuanto más oscuro, mayor es la proporción de jóvenes NEET.")
+             escala=g.ESCALA_SEMAFORO)
+st.caption(f"Ordenadas por su valor en {ultimo}. En verde, las proporciones más bajas de jóvenes NEET; en rojo, las más altas.")
 
 # --- quién ha mejorado más --------------------------------------------------------------------------------------
 st.subheader("Quién ha mejorado más")

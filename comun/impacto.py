@@ -13,7 +13,7 @@ import streamlit as st
 from comun import graficos as g
 
 MARINO, ORO = g.MARINO, g.ORO
-TENUE = g.MARINO_CLARO  # extremo «de partida» de las mancuernas y trazos de apoyo
+TENUE = ORO  # extremo «de partida» de las mancuernas: el dorado de la marca (#d9ab42)
 _ids = count()
 
 CSS = """<style>
@@ -31,7 +31,9 @@ CSS = """<style>
 .im-pill.bueno{background:#00145a;color:#ffffff}
 .im-pill.malo{background:#d9ab42;color:#00145a}
 .im-pill.neutro{background:#eef0f8;color:#00145a}
-.im-spark{width:100%;height:42px;display:block;margin-top:0.35rem;overflow:visible}
+.im-sparkw{position:relative;height:42px;margin-top:0.35rem}
+.im-spark{width:100%;height:100%;display:block;overflow:visible}
+.im-dot{position:absolute;width:9px;height:9px;border-radius:50%;border:1.5px solid #fff;box-sizing:content-box;transform:translate(-50%,-50%);animation:im-aparece .4s 1.3s ease-out both}
 .im-spark .l{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:im-traza 1.4s .15s ease-out both}
 .im-spark .a{animation:im-aparece 1.2s .5s ease-out both}
 .im-spark .p{animation:im-aparece .4s 1.3s ease-out both}
@@ -41,12 +43,12 @@ CSS = """<style>
 .im-mitad+.im-mitad{border-top:1px solid #eadfbd}
 .im-mitad .im-t-tit{min-height:0}
 .im-mitad .im-t-val{font-size:1.65rem;margin:0.05rem 0 0.2rem 0}
-.im-mitad .im-spark{height:38px;margin-top:0}
+.im-mitad .im-sparkw{height:38px;margin-top:0}
 .im-lectura{border-left:6px solid #d9ab42;background:linear-gradient(90deg,#fbf6e9,#ffffff);border-radius:10px;padding:0.8rem 1.1rem;margin:0.4rem 0 1.2rem 0}
 .im-lectura h4{margin:0 0 0.35rem 0;color:#00145a;font-size:1.05rem}
 .im-lectura ul{margin:0.1rem 0 0 1.1rem;padding:0}
 .im-lectura li{margin:0.2rem 0;line-height:1.45}
-@media (prefers-reduced-motion:reduce){.im-t,.im-spark .l,.im-spark .a,.im-spark .p{animation:none;stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.im-t,.im-spark .l,.im-spark .a,.im-dot{animation:none;stroke-dashoffset:0}}
 </style>"""
 
 
@@ -59,20 +61,23 @@ def _spark(valores, color):
     v = [float(x) for x in valores if pd.notna(x)]
     if len(v) < 2:
         return ""
-    ancho, alto, pad = 120.0, 36.0, 4.0
+    ancho, alto, pad = 300.0, 36.0, 4.0  # 300 de ancho: parecido al de una tarjeta real, así el estirado del SVG apenas deforma el trazo
     lo, hi = min(v), max(v)
     rango = (hi - lo) or 1.0
     pts = [(pad + i * (ancho - 2 * pad) / (len(v) - 1), pad + (hi - x) / rango * (alto - 2 * pad)) for i, x in enumerate(v)]
     linea = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)
     area = linea + f" L{pts[-1][0]:.1f},{alto} L{pts[0][0]:.1f},{alto} Z"
     gid = f"im-g{next(_ids)}"
-    return (f"<svg class='im-spark' viewBox='0 0 {ancho:.0f} {alto:.0f}' preserveAspectRatio='none' role='img' "
-            "aria-label='Evolución de la serie'>"
+    # el SVG se estira al ancho de la tarjeta (preserveAspectRatio none): el punto final es un elemento aparte porque dentro del
+    # SVG saldría ovalado
+    x, y = pts[-1]
+    return ("<div class='im-sparkw'>"
+            f"<svg class='im-spark' viewBox='0 0 {ancho:.0f} {alto:.0f}' preserveAspectRatio='none' role='img' aria-label='Evolución de la serie'>"
             f"<defs><linearGradient id='{gid}' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='{color}' stop-opacity='.28'/>"
             f"<stop offset='1' stop-color='{color}' stop-opacity='0'/></linearGradient></defs>"
             f"<path class='a' d='{area}' fill='url(#{gid})'/>"
-            f"<path class='l' pathLength='1' d='{linea}' stroke='{color}'/>"
-            f"<circle class='p' cx='{pts[-1][0]:.1f}' cy='{pts[-1][1]:.1f}' r='3.4' fill='{color}' stroke='#fff' stroke-width='1.5'/></svg>")
+            f"<path class='l' pathLength='1' d='{linea}' stroke='{color}'/></svg>"
+            f"<span class='im-dot' style='left:{x / ancho * 100:.2f}%;top:{y / alto * 100:.2f}%;background:{color}'></span></div>")
 
 
 def _pie_y_color(it):
@@ -151,7 +156,7 @@ def delta_rel(actual, previo, d=1):
 def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, alto_fila=24, nombre_ref="España"):
     """Barras por categoría (p. ej. comunidad) con un deslizante de año DENTRO del gráfico: cambia al instante, sin recargar
     la página. df en formato largo (cat, anyo, val). `ref` = serie {año: valor} de referencia (p. ej. la media nacional): se
-    dibuja como una barra más en azul marino y el resto va en dorado si supera la referencia de ese año y en marino suave si no.
+    dibuja como una barra más en gris claro (para que se vea el corte entre las de arriba y las de abajo) y el resto va en dorado si supera la referencia de ese año y en marino suave si no.
     El puesto de cada barra se calcula antes, año a año, para que el ranking se reordene al mover el deslizante."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -166,10 +171,10 @@ def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, al
     anyos = sorted(d[anyo].unique())
     p = alt.param(name="anyo_sel", value=int(anyos[-1]),
                   bind=alt.binding_range(min=int(anyos[0]), max=int(anyos[-1]), step=1, name="Año: "))
-    escala = alt.Scale(domain=["mayor", "menor", "ref", "igual"], range=[ORO, g.MARINO_SUAVE, MARINO, MARINO])
+    escala = alt.Scale(domain=["mayor", "menor", "ref", "igual"], range=[ORO, g.MARINO_SUAVE, g.GRIS_MEDIA, MARINO])
     base = alt.Chart(d).add_params(p).transform_filter(alt.datum[anyo] == p).encode(y=alt.Y("_puesto:O", axis=None, sort="ascending"))
     barras = base.mark_bar(cornerRadiusTopRight=4, cornerRadiusBottomRight=4, size=alto_fila * 0.62).encode(
-        x=alt.X(f"{val}:Q", title=titulo_val, axis=alt.Axis(format=fmt), scale=alt.Scale(domain=[0, float(d[val].max()) * 1.12])),
+        x=alt.X(f"{val}:Q", title=titulo_val, axis=alt.Axis(format=fmt, tickCount=8, labelOverlap=True), scale=alt.Scale(domain=[0, float(d[val].max()) * 1.12])),
         color=alt.Color("_c:N", scale=escala, legend=None),
         tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{anyo}:O", title="Año"), alt.Tooltip(f"{val}:Q", format=fmt, title=titulo_val or val)])
     nombres = base.mark_text(align="right", dx=-8, fontSize=11, color=g.TEXTO_SUAVE).encode(x=alt.value(0), text=f"{cat}:N")
@@ -178,7 +183,7 @@ def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, al
 
 
 def mancuernas(df, cat, v0, v1, e0, e1, fmt=",.1f", titulo=None, alto_fila=24, unidad="p.p."):
-    """Gráfico de mancuernas: cada fila une el valor en el año de partida (`e0`, tenue) con el del año final (`e1`, marino),
+    """Gráfico de mancuernas: cada fila une el valor en el año de partida (`e0`, dorado) con el del año final (`e1`, marino),
     ordenado por el valor final, con la variación escrita al final de la barra."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -199,7 +204,7 @@ def mancuernas(df, cat, v0, v1, e0, e1, fmt=",.1f", titulo=None, alto_fila=24, u
         x=f"{v1}:Q", tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{v0}:Q", format=fmt, title=e0), alt.Tooltip(f"{v1}:Q", format=fmt, title=e1),
                               alt.Tooltip("_txt:N", title="Variación")])
     txt = base.mark_text(align="left", dx=10, fontSize=11, color=g.TEXTO).encode(x="_max:Q", text="_txt:N")
-    # leyenda manual (dos extremos): un punto tenue (año de partida) y uno marino (año final)
+    # leyenda manual (dos extremos): un punto dorado (año de partida) y uno marino (año final)
     leyenda = pd.DataFrame({"e": [str(e0), str(e1)]})
     ley = alt.Chart(leyenda).mark_circle(size=90, opacity=1, clip=True).encode(
         x=alt.value(-60), y=alt.value(-60), color=alt.Color("e:N", scale=alt.Scale(domain=[str(e0), str(e1)], range=[TENUE, MARINO]), legend=alt.Legend(orient="top", title=None)))
