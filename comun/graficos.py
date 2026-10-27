@@ -1,16 +1,27 @@
 """
 graficos.py — Gráficos Altair con un mismo estilo: barras horizontales, líneas y columnas.
 
-Paleta de 12 colores validada para daltonismo (orden fijo, nunca rotado): los gráficos muestran todos los elementos
-que se elijan. Textos en azul marino rgb(0, 20, 90). Números con formato español (1.234,5).
+Colores de marca (Fundación Gi Group): predominan el azul marino y el dorado, sobre blanco. Los otros dos dorados sirven de
+rampa de intensidad y de fondos suaves, no como series distintas (entre sí no se distinguen: ΔE ≈ 5). Para más de dos series
+hay cuatro tonos derivados de los dos principales (marino suave, dorado oscuro, marino claro). Orden fijo, nunca rotado. Con
+más de 6 series la paleta se repite: la leyenda y el tooltip las distinguen. Números con formato español (1.234,5).
+Textos en azul marino. Validado con validate_palette.js (las 6 series): pasa la separación entre series, también con daltonismo;
+NO pasa la banda de luminosidad ni el croma mínimo (el marino es muy oscuro y los tonos derivados, apagados: es propio de la
+marca), y el dorado tiene poco contraste sobre blanco (2,1:1). Por eso se limita a 4-5 series por gráfico y todos llevan
+etiquetas visibles, leyenda y tooltip.
 """
 import altair as alt
 import pandas as pd
 import streamlit as st
 
-C1, C2, C3 = "#2a78d6", "#eb6834", "#1baf7a"
-PALETA = [C1, C2, C3, "#8e5bd6", "#c99a1e", "#d63a6e", "#2fa4c4", "#7f8f1f", "#a0522d", "#e377c2", "#4b5fd0", "#18866b"]
-TEXTO, TEXTO_SUAVE = "#00145A", "#4a5585"  # azul marino y su versión atenuada (ejes, notas)
+MARINO, ORO, ORO_CLARO, ORO_PALIDO, BLANCO = "#00145a", "#d9ab42", "#e1bc68", "#e8cd8e", "#ffffff"  # paleta de marca
+MARINO_SUAVE, ORO_OSCURO, MARINO_CLARO = "#6b79b0", "#9a7312", "#aab3d8"  # derivados: más de dos series, «por debajo de la media»
+FONDO_ORO, BORDE_ORO = "#fbf6e9", "#eadfbd"  # fondos y bordes muy suaves de tarjetas y recuadros (dorado al 15-25 %)
+C1, C2, C3 = MARINO, ORO, MARINO_SUAVE
+PALETA = [MARINO, ORO, MARINO_SUAVE, ORO_OSCURO, MARINO_CLARO, ORO_PALIDO]
+ESCALA = ("#e6e9f4", MARINO)  # magnitud (mapas y mapas de calor): del blanco azulado al azul marino
+RAMPA = ["#dfe3f1", MARINO_CLARO, MARINO_SUAVE, "#2f3f85", MARINO]  # categorías ordenadas (edad, estudios): 5 pasos del marino
+TEXTO, TEXTO_SUAVE = MARINO, "#4a5585"  # azul marino y su versión atenuada (ejes, notas)
 
 
 def es_movil():
@@ -66,7 +77,7 @@ def mostrar(ch):
 
 def barras(df, cat, val, fmt=",.0f", color=None, resaltar=None, tooltip=None, orden_desc=True, alto_fila=22, titulo_val=None,
            orden_cat=None):
-    """Barras horizontales ordenadas. resaltar: serie booleana -> naranja (p. ej. 'por encima de la media').
+    """Barras horizontales ordenadas. resaltar: serie booleana -> dorado (p. ej. 'por encima de la media').
     orden_cat: orden fijo de las categorías (p. ej. tramos de tamaño), en lugar de ordenar por el valor."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -93,7 +104,7 @@ def barras(df, cat, val, fmt=",.0f", color=None, resaltar=None, tooltip=None, or
 def dispersion(df, x, y, etiqueta, ref_x=None, ref_y=None, resaltar=None, fmt_x=",.1f", fmt_y=",.1f", titulo_x=None, titulo_y=None,
                tamano=None, alto=420, etiquetar_todos=False):
     """Puntos con líneas de referencia (p. ej. la media de España) que dividen el gráfico en cuadrantes.
-    resaltar: columna booleana -> naranja; el resto en azul. tamano: columna que da el tamaño del punto."""
+    resaltar: columna booleana -> dorado; el resto en azul marino. tamano: columna que da el tamaño del punto."""
     if df.empty:
         st.info("Sin datos en esta carga.")
         return
@@ -265,7 +276,7 @@ def _contornos():
     return json.loads((Path(__file__).parent / "recursos" / "ccaa.geojson").read_text())["features"]
 
 
-def mapa_ccaa(df, val, fmt=",.1f", titulo=None, clave=None, nombre="nombre", escala=("#dfe6f7", "#00145A")):
+def mapa_ccaa(df, val, fmt=",.1f", titulo=None, clave=None, nombre="nombre", escala=ESCALA):
     """Mapa de CCAA coloreado por `val` (df con territorio_id y `nombre`): geográfico por defecto, o en mosaico si
     st.session_state["vista_mapa"] == "Mosaico" (ya no hay selector en pantalla). Con `clave`, permite hacer clic en una comunidad y devuelve su territorio_id (o None)."""
     d = df[df.territorio_id.isin(MOSAICO)].dropna(subset=[val]).copy()
@@ -298,7 +309,7 @@ def mapa_ccaa(df, val, fmt=",.1f", titulo=None, clave=None, nombre="nombre", esc
     return pts[0].get("territorio_id") if pts else None
 
 
-def mapa_calor(df, fila, columna, val, fmt=",.1f", orden_filas=None, orden_cols=None, titulo=None, escala=("#fff1e6", "#b42318"),
+def mapa_calor(df, fila, columna, val, fmt=",.1f", orden_filas=None, orden_cols=None, titulo=None, escala=ESCALA,
                centro=None, recorte_movil=True):
     """Tabla de calor (p. ej. sector × año) con la cifra en cada celda. Con `centro` la escala es divergente: el primer color
     por debajo del centro, blanco en el centro y el segundo por encima (p. ej. índice con media 100)."""
@@ -312,10 +323,10 @@ def mapa_calor(df, fila, columna, val, fmt=",.1f", orden_filas=None, orden_cols=
             df = df[df[columna].isin(cols)]
             st.caption("En el móvil se muestran las 4 últimas columnas; en el ordenador se ven todas.")
         orden_cols = cols
-    medio = (df[val].min() + df[val].max()) / 2
+    medio = df[val].min() + 0.55 * (df[val].max() - df[val].min())  # a partir de aquí la celda es oscura: texto blanco
     if centro is not None:
         lejos = max(centro - df[val].min(), df[val].max() - centro) or 1
-        escala_c = alt.Scale(domain=[centro - lejos, centro, centro + lejos], range=[escala[0], "#ffffff", escala[1]])
+        escala_c = alt.Scale(domain=[centro - lejos, centro, centro + lejos], range=[escala[0], BLANCO, escala[1]])
         oscuro = f"abs(datum['{val}'] - {centro}) > {lejos * 0.55}"
     else:
         escala_c = alt.Scale(range=list(escala))

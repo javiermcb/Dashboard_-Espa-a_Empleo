@@ -123,7 +123,7 @@ else:
     cc["nombre"] = cc.nombre.map(g.corto)
     izq, der = st.columns([3, 2])
     with izq:
-        g.mapa_ccaa(cc, "pct", fmt=",.1f", titulo="% de los participantes", escala=("#fde8d7", "#b83a0b"))
+        g.mapa_ccaa(cc, "pct", fmt=",.1f", titulo="% de los participantes", escala=g.ESCALA)
     with der:
         g.barras(g.top(cc[["nombre", "pct"]], "pct", 10, "cc")[["nombre", "pct"]], "nombre", "pct", fmt=",.1f", titulo_val="% de los participantes", alto_fila=24)
     st.caption("Comunidad autónoma del participante. Cada comunidad en % del total nacional de participantes; no está "
@@ -131,8 +131,13 @@ else:
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
 st.subheader("03 · Cómo se forma: presencial, teleformación y mixta")
 if not mod.empty:
-    im.apiladas(fecha(mod[mod.valor > 0].assign(serie=lambda x: x.categoria)), "fecha", "serie", "valor", orden_series=["Presencial", "Teleformación", "Mixta", "A distancia"],
-                titulo_y="% de los participantes")
+    izq, der = st.columns([3, 2])
+    with izq:
+        im.apiladas(fecha(mod[mod.valor > 0].assign(serie=lambda x: x.categoria)), "fecha", "serie", "valor", orden_series=["Presencial", "Teleformación", "Mixta", "A distancia"],
+                    titulo_y="% de los participantes", alto=260, cols_leyenda=4)
+    with der:
+        ult = mod[mod.anyo == ultimo]
+        im.rosco(ult, "categoria", "valor", orden=["Presencial", "Teleformación", "Mixta", "A distancia"], centro=str(ultimo), sub="participantes")
     st.caption("Reparto de los participantes por modalidad de impartición, año a año (cada año suma el 100 %). Ojo con 2016: «A distancia» "
                "solo tiene participantes hasta 2015 y «Mixta» cae de 430.154 a 71.221 entre 2015 y 2016, a la vez que suben «Presencial» y "
                "«Teleformación»; parece un cambio de clasificación de FUNDAE (no se ha investigado), así que conviene no comparar antes y "
@@ -153,19 +158,18 @@ im.area_gradiente(fecha(indices[medida].rename("valor").reset_index()), "fecha",
 # --- perfil del participante ------------------------------------------------------------------------------------
 st.subheader("Quién se forma")
 izq, der = st.columns(2)
-RAMPA_AZUL = ["#cfe0f7", "#9ec2ef", "#5f9be3", "#2a78d6", "#12408a"]
 with izq:
     st.markdown("**Por edad**")
     cats = ["De 16 a 25", "De 26 a 35", "De 36 a 45", "De 46 a 55", "Mayores de 55"]
     ed = reparto("01", "Participantes", cats)
     if not ed.empty:
-        im.apiladas(fecha(ed.assign(serie=ed.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=RAMPA_AZUL, titulo_y="% de los participantes", alto=300, cols_leyenda=2, paso_x=4)
+        im.apiladas(fecha(ed.assign(serie=ed.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=g.RAMPA, titulo_y="% de los participantes", alto=300, cols_leyenda=2, paso_x=4)
 with der:
     st.markdown("**Por nivel de estudios**")
     cats = ["Estudios primarios", "Estudios secundarios", "Estudios terciarios", "Otras titulaciones"]
     es_ = reparto("04", "Participantes", cats)
     if not es_.empty:
-        im.apiladas(fecha(es_.assign(serie=es_.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=["#cfe0f7", "#5f9be3", "#12408a", "#b9bfd6"],
+        im.apiladas(fecha(es_.assign(serie=es_.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=[g.RAMPA[0], g.RAMPA[2], g.RAMPA[4], g.ORO_PALIDO],
                     titulo_y="% de los participantes", alto=300, cols_leyenda=2, paso_x=4)
 if not jov.empty:
     st.markdown("**Participantes de 16 a 25 años, en % del total**")
