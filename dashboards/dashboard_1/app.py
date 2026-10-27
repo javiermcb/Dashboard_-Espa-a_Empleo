@@ -14,7 +14,6 @@ base.arrancar(
     titulo="Dashboard 1",
     tablas=["dim_territorio", "mart_neet"],
     icono="📊",
-    mapas=True,
     menu={
         "Dashboard 1": [
             st.Page(str(AQUI / "paginas" / "inicio.py"), title="Inicio", icon=":material/home:", default=True),
