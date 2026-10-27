@@ -88,7 +88,7 @@ if paro is not None and "Tasa de paro" in nac_total:
 im.tarjetas(tarjetas)
 
 # --- 01 por territorio, con el deslizante de año dentro del gráfico ---------------------------------------------
-st.subheader("01 · Por comunidad autónoma, año a año")
+st.subheader("Por comunidad autónoma, año a año")
 indicador = st.radio("Indicador", INDICADORES, horizontal=True, index=0, key="ind_ccaa")
 st.caption("Mueve el deslizante del gráfico para cambiar de año. En dorado, por encima de la media de España de ese año; "
            "en marino suave, por debajo; en azul marino, la propia media.")
@@ -97,7 +97,7 @@ im.barras_anuales(sub[["nombre", "anyo", "tasa"]], "nombre", "tasa", "anyo", ref
                   titulo_val=f"% de la población de {etiqueta}")
 
 # --- 02 evolución de los tres indicadores -----------------------------------------------------------------------
-st.subheader("02 · Evolución de la actividad, el empleo y el paro")
+st.subheader("Evolución de la actividad, el empleo y el paro")
 ev = nac[[i for i in INDICADORES if i in nac]].reset_index().melt(id_vars="anyo", var_name="serie", value_name="tasa").dropna()
 ev["fecha"] = ev.anyo.astype(str) + "-01-01"
 im.lineas_etiquetadas(ev, "fecha", "tasa", "serie", fmt=",.1f", titulo_y=f"% de la población de {etiqueta}", orden_series=[i for i in INDICADORES if i in nac], cero=True)
@@ -142,7 +142,7 @@ g.mapa_calor(calor, "nombre", "anyo", "tasa", fmt=",.0f", orden_filas=orden, ord
 st.caption(f"Ordenadas por su valor en {ultimo}. Cuanto más oscuro, mayor es el paro.")
 
 # --- comparativa territorial: actividad frente a paro, y tabla --------------------------------------------------
-st.subheader("03 · Comparativa territorial")
+st.subheader("Comparativa territorial")
 anyos = sorted(ccaa.anyo.unique(), reverse=True)
 anyo = st.selectbox("Año", anyos, index=0)
 tabla = ccaa[ccaa.anyo == anyo].pivot_table(index="nombre", columns="indicador", values="tasa").reset_index()
@@ -161,7 +161,7 @@ cfg = {k: st.column_config.NumberColumn(k, format="%.1f %%") for k in tabla.colu
 st.dataframe(tabla, hide_index=True, width="stretch", column_config=cfg)
 
 # --- 06 tipo de contrato y jornada, España frente a la UE-27 -------------------------------------------------------
-st.subheader("04 · Temporalidad y jornada parcial")
+st.subheader("Temporalidad y jornada parcial")
 if not eu.empty and eu.serie.isin(["temporalidad_ue", "parcialidad_ue"]).any():
     ind_c = st.radio("Indicador", ["Contrato temporal", "Jornada parcial"], horizontal=True, key="ind_contrato")
     serie_c, tit_c = (("temporalidad_ue", "% de asalariados con contrato temporal") if ind_c == "Contrato temporal"
@@ -180,7 +180,7 @@ else:
 # --- paneles sin fuente -----------------------------------------------------------------------------------------
 st.subheader("Pendientes de fuente")
 p = st.columns(2)
-p[0].info("**05 · Sectores con mayor potencial.** Hace falta una previsión de empleo por sector: las proyecciones de "
+p[0].info("**Sectores con mayor potencial.** Hace falta una previsión de empleo por sector: las proyecciones de "
           "Cedefop (Skills Forecast, España a 2035) son la candidata; falta confirmar que se pueden descargar por sector.")
-p[1].info("**06 · Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
+p[1].info("**Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
           "informes de competencias y necesidades formativas, no una serie de datos.")

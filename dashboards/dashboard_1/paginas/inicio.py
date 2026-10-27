@@ -99,10 +99,10 @@ media = nac.get(anyo)
 
 izq, der = st.columns([3, 2])
 with izq:
-    st.subheader("01 · Jóvenes NEET por comunidad autónoma")
+    st.subheader("Jóvenes NEET por comunidad autónoma")
     g.mapa_ccaa(act, "porcentaje", fmt=",.1f", titulo="% jóvenes NEET (15-29)", escala=g.ESCALA)
 with der:
-    st.subheader("05 · Frente a la media de España")
+    st.subheader("Frente a la media de España")
     if media is not None:
         dv = act[["nombre", "porcentaje"]].assign(diferencia=act.porcentaje - media)
         im.divergentes(dv, "nombre", "diferencia", media, fmt="+.1f", titulo=f"Puntos respecto a la media nacional ({g.pct(media)})")
@@ -136,7 +136,7 @@ if not dumb.empty:
                f"{'la bajada más pequeña' if menos.c < 0 else 'la mayor subida'} es la de {menos.nombre} ({g.es(menos.c, 1)} puntos).")
 
 # --- 04 evolución -----------------------------------------------------------------------------------------------
-st.subheader("04 · Evolución")
+st.subheader("Evolución")
 series = {"Total": nac, **{k: sexo[k].dropna() for k in ("Hombres", "Mujeres") if k in sexo}}
 ev = pd.concat([s.rename("porcentaje").reset_index().assign(serie=k) for k, s in series.items()], ignore_index=True)
 ev["fecha"] = ev.anyo.astype(str) + "-01-01"
@@ -158,7 +158,7 @@ if not nacion.empty:
 NIVELES = ["Primaria y primera etapa de secundaria", "Segunda etapa de secundaria y postsecundaria", "Educación superior"]
 izq, der = st.columns(2)
 with izq:
-    st.subheader("02 · Nivel educativo de los NEET")
+    st.subheader("Nivel educativo de los NEET")
     tasa_n = eu[eu.serie == "neet_nivel"].pivot_table(index="anyo", columns="categoria", values="valor") if not eu.empty else pd.DataFrame()
     pob_n = eu[eu.serie == "poblacion_nivel"].pivot_table(index="anyo", columns="categoria", values="valor") if not eu.empty else pd.DataFrame()
     comunes = [a for a in tasa_n.index if a in pob_n.index and set(NIVELES) <= set(tasa_n.columns) and set(NIVELES) <= set(pob_n.columns)]
@@ -175,7 +175,7 @@ with izq:
     else:
         st.info("Esta carga no incluye todavía el nivel de formación de los NEET.")
 with der:
-    st.subheader("03 · Entorno: ciudad, periferia o rural")
+    st.subheader("Entorno: ciudad, periferia o rural")
     urb = eu[eu.serie == "neet_urbanizacion"] if not eu.empty else pd.DataFrame()
     if not urb.empty:
         orden_u = ["Ciudades", "Pueblos y periferias", "Zonas rurales"]
