@@ -1,4 +1,5 @@
 """Dashboard 2 · pendiente de definir. Arranque en local:  streamlit run dashboards/dashboard_2/app.py"""
+import importlib
 import sys
 from pathlib import Path
 
@@ -6,7 +7,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # raíz del repo: 
 
 import streamlit as st  # noqa: E402
 
-from comun import base  # noqa: E402
+from comun import base, recarga  # noqa: E402
+
+importlib.reload(recarga)  # la lista de módulos a recargar también se actualiza al publicar código nuevo
+recarga.comprobar()
 
 AQUI = Path(__file__).resolve().parent
 
