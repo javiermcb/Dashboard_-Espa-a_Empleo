@@ -100,7 +100,7 @@ st.caption("FUNDAE publica el crédito «dispuesto» (el que las empresas han ut
 anyos = sorted(datos.q("SELECT DISTINCT anyo FROM fact_fundae WHERE serie IN ('14', '30')").anyo.tolist(), reverse=True)
 anyo = st.selectbox("Año de las familias y de las comunidades", anyos, index=0, help="Familias profesionales y comunidades autónomas se publican desde 2019 y 2016.")
 
-st.subheader("01 · Familias formativas más activas")
+st.subheader("Familias formativas más activas")
 fam = datos.q("SELECT categoria, valor FROM fact_fundae WHERE serie = '14' AND medida = 'Participantes' AND anyo = ?", [anyo])
 tot = fam[fam.categoria == "Total"].valor
 fam = fam[fam.categoria != "Total"]
@@ -111,7 +111,7 @@ else:
     g.barras(g.top(fam[["categoria", "pct"]], "pct", 10, "fam")[["categoria", "pct"]], "categoria", "pct", fmt=",.1f", titulo_val="% de los participantes")
 
 # --- 02 distribución por comunidad autónoma ---------------------------------------------------------------------
-st.subheader("02 · Distribución por comunidad autónoma")
+st.subheader("Distribución por comunidad autónoma")
 cc = datos.q("""SELECT f.ccaa_id AS territorio_id, t.nombre, f.valor FROM fact_fundae f
                 LEFT JOIN dim_territorio t ON t.territorio_id = f.ccaa_id
                 WHERE f.serie = '30' AND f.medida = 'Participantes' AND f.anyo = ? AND f.ccaa_id IS NOT NULL""", [anyo])
@@ -129,7 +129,7 @@ else:
     st.caption("Comunidad autónoma del participante. Cada comunidad en % del total nacional de participantes; no está "
                "corregido por población ni por número de trabajadores.")
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
-st.subheader("03 · Cómo se forma: presencial, teleformación y mixta")
+st.subheader("Cómo se forma: presencial, teleformación y mixta")
 if not mod.empty:
     izq, der = st.columns([3, 2])
     with izq:
@@ -144,7 +144,7 @@ if not mod.empty:
                "después de 2016 sin comprobarlo.")
 
 # --- tendencias: base 100 ---------------------------------------------------------------------------------------
-st.subheader("04 · Tendencias y evolución")
+st.subheader("Tendencias y evolución")
 st.markdown(f"**Participantes, horas, crédito y empresas, con {BASE} = 100**")
 indices = {"Participantes": part, "Horas": horas, "Crédito dispuesto": credito, "Empresas formadoras": empresas}
 ev = pd.concat([(s / s[BASE] * 100).rename("indice").reset_index().assign(serie=n) for n, s in indices.items() if BASE in s.index], ignore_index=True)
