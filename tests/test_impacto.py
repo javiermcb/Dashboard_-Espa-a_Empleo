@@ -23,7 +23,8 @@ def test_delta_rel():
 def test_minigrafico():
     assert im._spark([1.0], "#2a78d6") == ""  # una sola cifra no hace línea
     svg = im._spark([3, 1, 2, 5], "#2a78d6")
-    assert svg.startswith("<svg") and "pathLength='1'" in svg and "stop-color='#2a78d6'" in svg
+    assert svg.startswith("<div class='im-sparkw'><svg") and "pathLength='1'" in svg and "stop-color='#2a78d6'" in svg
+    assert "class='im-dot'" in svg and "<circle" not in svg  # el punto final va fuera del SVG para no deformarse
 
 
 def test_etiquetas_finales_no_se_pisan_y_mantienen_el_orden():

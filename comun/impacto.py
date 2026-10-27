@@ -31,7 +31,9 @@ CSS = """<style>
 .im-pill.bueno{background:#00145a;color:#ffffff}
 .im-pill.malo{background:#d9ab42;color:#00145a}
 .im-pill.neutro{background:#eef0f8;color:#00145a}
-.im-spark{width:100%;height:42px;display:block;margin-top:0.35rem;overflow:visible}
+.im-sparkw{position:relative;height:42px;margin-top:0.35rem}
+.im-spark{width:100%;height:100%;display:block;overflow:visible}
+.im-dot{position:absolute;width:9px;height:9px;border-radius:50%;border:1.5px solid #fff;box-sizing:content-box;transform:translate(-50%,-50%);animation:im-aparece .4s 1.3s ease-out both}
 .im-spark .l{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;animation:im-traza 1.4s .15s ease-out both}
 .im-spark .a{animation:im-aparece 1.2s .5s ease-out both}
 .im-spark .p{animation:im-aparece .4s 1.3s ease-out both}
@@ -41,12 +43,12 @@ CSS = """<style>
 .im-mitad+.im-mitad{border-top:1px solid #eadfbd}
 .im-mitad .im-t-tit{min-height:0}
 .im-mitad .im-t-val{font-size:1.65rem;margin:0.05rem 0 0.2rem 0}
-.im-mitad .im-spark{height:38px;margin-top:0}
+.im-mitad .im-sparkw{height:38px;margin-top:0}
 .im-lectura{border-left:6px solid #d9ab42;background:linear-gradient(90deg,#fbf6e9,#ffffff);border-radius:10px;padding:0.8rem 1.1rem;margin:0.4rem 0 1.2rem 0}
 .im-lectura h4{margin:0 0 0.35rem 0;color:#00145a;font-size:1.05rem}
 .im-lectura ul{margin:0.1rem 0 0 1.1rem;padding:0}
 .im-lectura li{margin:0.2rem 0;line-height:1.45}
-@media (prefers-reduced-motion:reduce){.im-t,.im-spark .l,.im-spark .a,.im-spark .p{animation:none;stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.im-t,.im-spark .l,.im-spark .a,.im-dot{animation:none;stroke-dashoffset:0}}
 </style>"""
 
 
@@ -59,20 +61,23 @@ def _spark(valores, color):
     v = [float(x) for x in valores if pd.notna(x)]
     if len(v) < 2:
         return ""
-    ancho, alto, pad = 120.0, 36.0, 4.0
+    ancho, alto, pad = 300.0, 36.0, 4.0  # 300 de ancho: parecido al de una tarjeta real, así el estirado del SVG apenas deforma el trazo
     lo, hi = min(v), max(v)
     rango = (hi - lo) or 1.0
     pts = [(pad + i * (ancho - 2 * pad) / (len(v) - 1), pad + (hi - x) / rango * (alto - 2 * pad)) for i, x in enumerate(v)]
     linea = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)
     area = linea + f" L{pts[-1][0]:.1f},{alto} L{pts[0][0]:.1f},{alto} Z"
     gid = f"im-g{next(_ids)}"
-    return (f"<svg class='im-spark' viewBox='0 0 {ancho:.0f} {alto:.0f}' preserveAspectRatio='none' role='img' "
-            "aria-label='Evolución de la serie'>"
+    # el SVG se estira al ancho de la tarjeta (preserveAspectRatio none): el punto final es un elemento aparte porque dentro del
+    # SVG saldría ovalado
+    x, y = pts[-1]
+    return ("<div class='im-sparkw'>"
+            f"<svg class='im-spark' viewBox='0 0 {ancho:.0f} {alto:.0f}' preserveAspectRatio='none' role='img' aria-label='Evolución de la serie'>"
             f"<defs><linearGradient id='{gid}' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='{color}' stop-opacity='.28'/>"
             f"<stop offset='1' stop-color='{color}' stop-opacity='0'/></linearGradient></defs>"
             f"<path class='a' d='{area}' fill='url(#{gid})'/>"
-            f"<path class='l' pathLength='1' d='{linea}' stroke='{color}'/>"
-            f"<circle class='p' cx='{pts[-1][0]:.1f}' cy='{pts[-1][1]:.1f}' r='3.4' fill='{color}' stroke='#fff' stroke-width='1.5'/></svg>")
+            f"<path class='l' pathLength='1' d='{linea}' stroke='{color}'/></svg>"
+            f"<span class='im-dot' style='left:{x / ancho * 100:.2f}%;top:{y / alto * 100:.2f}%;background:{color}'></span></div>")
 
 
 def _pie_y_color(it):
