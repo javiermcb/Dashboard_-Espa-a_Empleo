@@ -6,6 +6,7 @@ por inactividad y, si ya está dormida, pulsa el botón para despertarla. Lo eje
 Uso: python ops/mantener_activa.py https://<tu-app>.streamlit.app/
 Sale con error (y el workflow avisa) si la app no responde o si solo se ve una pantalla de inicio de sesión de
 Streamlit (app privada: un robot sin cuenta no puede entrar ni mantenerla despierta).
+La app se da por activa cuando pinta su contenedor principal y un título; no depende de textos concretos de las páginas.
 """
 import os, sys
 
@@ -13,7 +14,7 @@ from playwright.sync_api import sync_playwright
 
 URL = sys.argv[1]
 DESPERTAR = ("get this app back up", "Yes, get this app back up")
-SENALES = ("Dashboard", "Email", "Inicio")  # pantalla de entrada o páginas de la app
+SENALES = ("Email",)  # pantalla de entrada de Streamlit (app privada)
 # textos con los que Streamlit muestra un fallo del código de la app (no de la plataforma)
 ERRORES_APP = ("Traceback", "Error running app", "ModuleNotFoundError", "AttributeError", "KeyError", "Oh no.")
 DIAGNOSTICO = "diagnostico_app.txt"  # el workflow lo copia en el aviso
@@ -31,6 +32,15 @@ def _texto(marco):
         return marco.inner_text("body", timeout=5_000)[:2000]
     except Exception:
         return ""
+
+
+def _app_pintada(marco):
+    """La app está activa si su marco tiene el contenedor principal de Streamlit con un título (h1) con texto."""
+    try:
+        return bool(marco.evaluate("""() => { const c = document.querySelector('[data-testid="stMainBlockContainer"]'),
+            h = document.querySelector('h1'); return !!(c && h && h.innerText.trim()); }"""))
+    except Exception:
+        return False
 
 
 def main():
@@ -62,7 +72,7 @@ def main():
                 _diagnostico("CÓDIGO DE LA APP: Streamlit arranca pero la app muestra un error. Texto: "
                              + " ".join(marcos.split())[:400] + " · Revisar el último cambio publicado en la rama principal.")
                 return 1
-            if any(t in marcos for t in SENALES):
+            if any(_app_pintada(f) for f in pag.frames if f.url.startswith("http")) or any(t in marcos for t in SENALES):
                 print("App activa:", URL)
                 return 0
             pag.wait_for_timeout(5_000)
