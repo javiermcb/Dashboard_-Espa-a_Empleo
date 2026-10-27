@@ -16,7 +16,7 @@ AQUI = Path(__file__).resolve().parent
 
 base.arrancar(
     titulo="Dashboard 3",
-    tablas=["dim_territorio", "fact_fundae", "mart_oportunidad_ccaa", "fact_sepe_demandantes_nivel"],
+    tablas=["dim_territorio", "fact_fundae", "mart_oportunidad_ccaa", "fact_sepe_demandantes_nivel", "fact_sepe_contratos_nivel"],
     icono="📊",
     menu={
         "Dashboard 3": [

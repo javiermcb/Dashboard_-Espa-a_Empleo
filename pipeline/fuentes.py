@@ -6,6 +6,7 @@ Cada lector descarga la fuente, la lleva a una tabla limpia y la deja en datos/n
   sepe_paro_municipio       SEPE · paro registrado por municipio y mes (sexo x edad, sector)        [CSV anual]
   sepe_contratos_municipio  SEPE · contratos registrados por municipio y mes (sexo x tipo, sector)  [CSV anual]
   sepe_demandantes_municipio SEPE · demandantes de empleo por municipio y mes (sexo x edad, sector)  [CSV anual]
+  sepe_contratos_nivel      SEPE · contratos registrados por nivel formativo, sexo y tipo (indefinido/temporal) (nacional, un fichero por mes)
   sepe_demandantes_nivel    SEPE · demandantes parados por nivel formativo, sexo y nacionalidad (nacional, un fichero por mes)
   ss_it_detalle             Seguridad Social · IT por mes, régimen, contingencia, sexo y provincia (duración media)
   ss_afiliacion             Seguridad Social · afiliación (PX-Web): provincia/CCAA, régimen, CNAE, contrato, sexo
@@ -55,6 +56,7 @@ MESES_ABR = {"ene": 1, "feb": 2, "mar": 3, "abr": 4, "may": 5, "jun": 6, "jul": 
 
 SEPE = "https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/{}_por_municipios_{}_csv.csv"
 SEPE_NF = "https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/Demandantes_empleo_por_NF_{}_csv.csv"
+SEPE_CNF = "https://sede.sepe.gob.es/es/portaltrabaja/resources/sede/datos_abiertos/datos/Contratos_registrados_por_NF_{}_csv.csv"
 SS_CONSULTAS = {  # consultas guardadas de PX-Web (vistas en datos.gob.es, publicador E05072501)
     "afil_medios_prov_cnae09_regimen": "https://w6.seg-social.es/PXWeb/sq/e7afe15e-d110-4584-907c-b25235dd3f42",
     "afil_ultimo_dia_prov_cnae": "https://w6.seg-social.es/PXWeb/sq/d921596c-f52d-478b-94b8-0998230648a6",
@@ -255,6 +257,55 @@ def sepe(desde, solo=None):
         resultado.append([tabla, "OK", len(filas), min(fechas, default=""), max(fechas, default=""),
                           f"años {anyos}; columnas: {', '.join(cab_valores)}"])
     return resultado
+
+
+def parsear_contratos_nivel(t, fecha):
+    """Texto del CSV del SEPE «Contratos registrados por nivel formativo» de un mes -> filas
+    [fecha, nivel, hombres, mujeres, indefinidos, temporales, total]. Las cifras vienen con punto de millares.
+    Las columnas de jornada no se leen (fijo discontinuo se solapa con las otras dos)."""
+    def n(v):
+        v = str(v).strip().strip('"').replace(".", "")
+        return int(v) if re.fullmatch(r"\d+", v) else None
+    lineas = [l for l in t.splitlines() if l.strip()]
+    if not lineas or "nivel formativo" not in lineas[0].lower() or "contratos" not in lineas[0].lower():
+        raise ValueError("cabecera inesperada (no es el fichero de contratos por nivel formativo)")
+    cab = [c.strip().strip('"').lower() for c in lineas[0].split(";")]
+    idx = {k: next((i for i, c in enumerate(cab) if k in c), None) for k in ("hombres", "mujeres", "indefinidos", "temporales")}
+    if None in idx.values():
+        raise ValueError(f"faltan columnas esperadas: {cab}")
+    filas = []
+    for l in lineas[1:]:
+        c = [x.strip().strip('"') for x in l.split(";")]
+        h, m, i, tm = (n(c[idx[k]]) for k in ("hombres", "mujeres", "indefinidos", "temporales"))
+        if not c[0] or None in (h, m, i, tm):
+            continue
+        filas.append([fecha, c[0], h, m, i, tm, h + m])
+    if len(filas) < 5:
+        raise ValueError(f"solo {len(filas)} niveles")
+    return filas
+
+
+def sepe_contratos_nivel(desde=2019):
+    """SEPE: un fichero nacional por mes (Contratos_registrados_por_NF_AAAAMM). Los meses sin fichero se omiten."""
+    cab = ["fecha", "nivel", "hombres", "mujeres", "indefinidos", "temporales", "total"]
+    filas, meses = [], []
+    hoy = date.today()
+    for a in range(desde, hoy.year + 1):
+        for m in range(1, 13):
+            if (a, m) > (hoy.year, hoy.month):
+                break
+            try:
+                t = texto(descargar(SEPE_CNF.format(f"{a}{m:02d}")))
+                filas += parsear_contratos_nivel(t, f"{a}-{m:02d}-01")
+                meses.append(f"{a}-{m:02d}")
+            except urllib.error.HTTPError:
+                continue
+            except ValueError as e:
+                print(f"  SEPE contratos por nivel {a}-{m:02d}: se omite ({e})")
+    if not filas:
+        raise ValueError("SEPE contratos por nivel: ningún mes descargado")
+    escribir("sepe_contratos_nivel", cab, filas)
+    return [["sepe_contratos_nivel", "OK", len(filas), meses[0], meses[-1], f"{len(meses)} meses"]]
 
 
 # ------------------------------------------------------------------------------------------------ Seguridad Social
@@ -604,6 +655,7 @@ def main():
              ("sepe", "sepe_contratos_municipio", lambda: sepe(a.desde, "sepe_contratos_municipio")),
              ("sepe", "sepe_demandantes_municipio", lambda: sepe(a.desde, "sepe_demandantes_municipio")),
              ("sepe", "sepe_demandantes_nivel", sepe_nivel_formativo),
+             ("sepe", "sepe_contratos_nivel", sepe_contratos_nivel),
              ("ss", "ss_afiliacion", ss), ("ss", "ss_incapacidad_temporal", ss_it), ("ss", "ss_it_detalle", ss_it_detalle),
              ("mites", "mites_cpd_actividad", mites_ett),
              ("mites", "mites_convenios", mites_cct), ("mites", "mites_accidentes", mites_atr),
