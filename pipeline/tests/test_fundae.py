@@ -74,3 +74,16 @@ def test_contenidos_formativos():  # rptSeries13: contenido en filas, medida en 
     assert {(f[2], f[4], f[8]): f[9] for f in r if f[4] == "Idiomas" and f[8] == "Participantes"} == {
         (2025, "Idiomas", "Participantes"): 100.0, (2024, "Idiomas", "Participantes"): 90.0, (2020, "Idiomas", "Participantes"): 80.0}
     assert {f[3] for f in r} == {"Contenidos formativos"}
+
+
+def test_orden_de_carga_primero_lo_que_falta_y_lo_mas_viejo(tmp_path):
+    import os
+    series = list(fundae.SERIES)
+    for i, serie in enumerate(series[:-1]):  # todas con copia salvo la última, de más vieja a más nueva en el orden de SERIES
+        p = tmp_path / f"rptSeries{serie}.csv"
+        p.write_text("x")
+        os.utime(p, (1000 + i, 1000 + i))
+    orden = fundae.orden_de_carga(tmp_path)
+    assert orden[0] == series[-1]  # la que no tiene copia va la primera
+    assert orden[1:] == series[:-1]  # y después, de la copia más antigua a la más reciente
+    assert sorted(orden) == sorted(series)

@@ -28,13 +28,15 @@ Flujo de los datos: `webs oficiales → carga diaria → rama datos-modelo → l
 
 ## 1. Estado de partida (lo que ya está hecho)
 
-- Los cuatro PRs están fusionados en `main`: pipeline, capa común, y los tres dashboards.
-- Los dashboards son públicos: no tienen acceso con email ni registro de visitas (el código antiguo de acceso está
-  apartado en `_apartado/acceso/`).
-- La carga diaria corre en `main` y **ya ha publicado** la rama `datos-modelo` (23/10/2026, 07:00 UTC): 46 tablas, con
-  ERE/ERTE y 16 de las 18 series de FUNDAE (faltan la 07 y la 02, que los dashboards no usan).
+- Pipeline, capa común y los tres dashboards están fusionados en `main`.
+- Los dashboards son públicos: no tienen acceso con email ni registro de visitas (el código antiguo de acceso se
+  borró del repositorio; sigue en el historial de git).
+- La carga diaria corre en `main` y publica la rama `datos-modelo` (la fecha de la última carga se ve en la barra lateral de
+  cada app y en `modelo/metadatos.json`). Incluye ERE/ERTE, las 19 series de FUNDAE que se leen (si el servidor de FUNDAE no
+  deja leerlas todas en una carga, se mantiene la última copia buena y las que faltan o están más viejas van primero en la
+  siguiente) y los indicadores de Eurostat.
 - La cuota de almacenamiento de Actions está resuelta (sección 3).
-- **Falta**: crear las apps en Streamlit y configurar los avisos (secciones 4 a 6).
+- Las tres apps están creadas en Streamlit Community Cloud desde `main` (26/10/2026) y vigiladas cada 4 horas (sección 6).
 
 ---
 
@@ -204,51 +206,37 @@ Streamlit duerme las apps sin visitas. Un aviso automático las abre cada 4 hora
 Abre cada URL en el navegador (también en el móvil) y comprueba:
 
 **Dashboard 1 — jóvenes NEET**
-- [ ] Cifra «% jóvenes NEET (15-29)» con variación frente al año anterior.
-- [ ] Mapa por comunidades (geográfico).
-- [ ] Selector de año y comparativa por comunidad.
-- [ ] Evolución 2015-2025 y desglose por nacionalidad.
-- [ ] Dos recuadros azules «Pendientes de fuente» (nivel educativo y urbano/rural): es lo esperado.
+- [ ] Tarjetas de población 16-29, tasa de empleo 15-29 y NEET, con variación frente al año anterior.
+- [ ] Mapa por comunidades, selector de año y comparativa por comunidad.
+- [ ] Evolución 2015-2025, desglose por nacionalidad, por nivel educativo y urbano/rural.
 
 **Dashboard 2 — empleo y actividad juvenil**
-- [ ] Tres cifras (actividad, empleo, paro) y selector de grupo de edad (16-24, 16-19, 20-24).
-- [ ] Barras de actividad por comunidad, con España en naranja, y gráfico de evolución.
-- [ ] Tabla comparativa territorial.
-- [ ] Tres recuadros «Pendientes de fuente» (sectores, competencias, contrato): esperado.
+- [ ] Tarjetas de actividad, empleo y paro y selector de grupo de edad.
+- [ ] Tabla comparativa territorial como mapa de calor (España en gris).
+- [ ] España frente a la UE-27 (selector Paro/Empleo), paro joven por estudios, dónde trabajan los jóvenes, temporalidad y jornada parcial.
+- [ ] Dos recuadros «Pendientes de fuente» (sectores con potencial y competencias): es lo esperado.
 
-**Dashboard 3 — FUNDAE**
-- [ ] Cifras de participantes, crédito dispuesto y horas.
-- [ ] Familias formativas, modalidad, mapa por comunidad y tres gráficos de evolución.
-- [ ] Si faltan datos, aparece un aviso (la web de FUNDAE falla a veces; se completa en las cargas siguientes).
+**Dashboard 3 — FUNDAE y oportunidades**
+- [ ] Oportunidades por comunidad (demandantes menores de 25, contratos y formación) y nivel de estudios de las personas paradas.
+- [ ] Contratos por nivel de estudios (aparece cuando el SEPE tiene publicado el fichero del mes).
+- [ ] Familias formativas, contenidos formativos (serie 13), modalidad, mapa por comunidad y gráficos de evolución.
+- [ ] Si faltan datos de alguna serie de FUNDAE, esa sección no aparece (la web de FUNDAE falla a veces; se completa en las cargas siguientes).
 
 **En todos**: menú «Datos» → «Estado de los datos» (qué fuentes se actualizaron) y «Datos y descargas».
 
 ---
 
-## 8. Dar a Claude acceso a las fuentes que faltan (red del entorno)
+## 8. Paneles que siguen pendientes de fuente
 
-Para localizar y descargar las fuentes de los paneles «pendientes de fuente», el entorno de trabajo de Claude necesita
-poder acceder a estos dominios: `servicios.ine.es`, `www.ine.es`, `rplumber.ilo.org`, `ec.europa.eu`,
-`www.injuve.es`, `datos.gob.es`.
+Desde el entorno de trabajo de Claude solo se alcanza Eurostat; INE, SEPE, FUNDAE y datos.gob.es se leen desde GitHub Actions
+(el pipeline y los workflows manuales). Lo que queda sin fuente abierta que se actualice sola:
 
-1. En la sesión de Claude Code (web), abre el **menú del entorno en la barra de título**.
-2. Pulsa **Edit**.
-3. En **Network access** elige un nivel más amplio, o (con nivel «Limited») añade los dominios en
-   **Allowed domains**. Deja marcada la casilla de gestores de paquetes.
-4. Guarda y empieza una sesión nueva si hace falta.
-
-Documentación: `https://code.claude.com/docs/en/cloud-environments#network-access`.
-
-Después, pide a Claude que continúe con los paneles pendientes:
-
-| Dashboard | Panel pendiente | Qué se busca |
+| Dashboard | Panel pendiente | Situación |
 |---|---|---|
-| 1 | 02 Nivel educativo de los NEET | La tabla del INE de NEET por nivel de formación |
-| 1 | 03 Urbano / rural | Eurostat `edat_lfse_36` (o equivalente) para España |
-| 1 | Población, actividad y empleo | Cifras de Injuve (16-29) o una tabla del INE con ese grupo |
-| 2 | 02 comparación con la UE-27 | Eurostat `une_rt_a` o `yth_empl_020` |
-| 2 | 04 Sectores con potencial | Previsión de Cedefop (Skills Forecast) por sector |
-| 2 | 05 Competencias, 06 Tipo de contrato | Fuente abierta por localizar |
+| 1 | Cifras 16-29 de los NEET | El INE solo publica 15-29 |
+| 2 | Sectores con potencial | Hace falta una previsión por sector (p. ej. Cedefop Skills Forecast), sin localizar |
+| 2 | Competencias demandadas | Fuente abierta por localizar |
+| 3 | Formación subvencionada para desempleados | FUNDAE solo la publica en PDF por convocatoria y en informes de Power BI sin descarga; se descartó depender de PDFs |
 
 ---
 
@@ -265,14 +253,12 @@ Después, pide a Claude que continúe con los paneles pendientes:
 
 ## 10. Limpiezas pendientes (cuando quieras)
 
-- **Borrar ramas ya fusionadas** (no se pudo hacer desde la sesión de Claude: GitHub devolvió 403). En el repositorio →
-  pestaña **Branches** → papelera junto a cada una, o por terminal `git push origin --delete <rama>`:
-  - `Dashboard_-Espa-a_Empleo`: `claude/calidad-primera-vez`, `claude/dashboard-1-fuentes`, `claude/dashboard-2`,
-    `claude/dashboard-3`, `claude/dashboards-base`, `claude/guia-y-retencion`, `claude/limpieza-auditoria`
-    (cuando se fusione). Conserva `datos-modelo` (son los datos) y `main`.
-  - `Datos_INE`: `claude/artefacto-no-bloqueante` (fusionada). Las demás ramas de ese repo son tuyas: no las toco.
-- Borrar `_apartado/acceso/` (código de acceso con email que ya no se usa) cuando confirmes que no hace falta.
-- Revisar y fusionar las propuestas automáticas de Dependabot (actualizaciones mensuales de librerías).
+- **Borrar ramas ya fusionadas** (las sesiones de Claude no pueden: GitHub o el sistema de permisos lo deniegan). En el
+  repositorio → pestaña **Branches** → papelera junto a cada una, o por terminal `git push origin --delete <rama>`. Se pueden
+  borrar todas las `claude/*` y `dependabot/*` cuyo PR esté fusionado o cerrado. Conserva `main`, `datos-modelo` (son los
+  datos) y `calidad` (informes de calidad).
+- Revisar y fusionar las propuestas automáticas de Dependabot (actualizaciones mensuales de librerías). Sin adoptar:
+  DuckDB 2.0 (versión mayor) y Playwright 1.64.
 - *Decidido (26/10/2026)*: `Datos_INE` y este repositorio son proyectos distintos y mantienen cada uno su propia carga.
 
 ---
@@ -311,9 +297,6 @@ no tienen acceso ni registro.
 
 ## Orden recomendado (resumen de una página)
 
-1. Esperar a que la carga de `main` termine y compruebe que existe la rama `datos-modelo` (sección 2).
-2. Decidir si el repositorio es público o privado (sección 4) y, si es privado, crear el token.
-3. Crear las 3 apps en Streamlit con sus Secrets (sección 5) y comprobar cada una (sección 7).
-4. Crear las variables `APP_URL_1..3` y probar «Mantener las apps activas» (sección 6).
-5. Borrar artefactos antiguos de `Datos_INE` según el listado (sección 3).
-6. Ampliar la red del entorno de Claude y pedirle que complete los paneles pendientes (sección 8).
+Hecho: 1) carga de `main` publicando `datos-modelo`, 2) repositorio público, 3) las 3 apps en Streamlit, 4) variables
+`APP_URL_1..3` y «Mantener las apps activas». Pendiente por tu parte: borrar las ramas fusionadas y los artefactos antiguos de
+`Datos_INE` (secciones 3 y 10). Los paneles sin fuente están en la sección 8.
