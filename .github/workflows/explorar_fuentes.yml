@@ -5,6 +5,11 @@ name: Explorar fuentes (FUNDAE y SEPE)
 # el resultado queda en el log y en el resumen del job.
 on:
   workflow_dispatch:
+    inputs:
+      volcar:
+        description: "Opcional: solo vuelca la estructura de estas series de FUNDAE (números separados por espacios, p. ej. «11 12 13 16»)"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -21,4 +26,7 @@ jobs:
       - name: Dependencias
         run: pip install -r pipeline/requirements.txt
       - name: Explorar
-        run: python ops/explorar_fuentes.py --fundae-max-min 14
+        env:
+          VOLCAR: ${{ inputs.volcar }}
+        run: |
+          if [ -n "$VOLCAR" ]; then python ops/explorar_fuentes.py --volcar $VOLCAR; else python ops/explorar_fuentes.py --fundae-max-min 14; fi

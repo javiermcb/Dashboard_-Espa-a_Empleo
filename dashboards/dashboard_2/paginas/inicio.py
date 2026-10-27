@@ -120,6 +120,23 @@ if indicadores_ue:
                    f"en la UE-27: {g.es(abs(u_ue.loc[a_ue, 'España'] - u_ue.loc[a_ue, 'UE-27']), 1)} puntos de diferencia. Fuente: Eurostat (encuesta de población activa). "
                    "Eurostat usa 15-24 y 15-29, no los grupos de la EPA del INE de arriba.")
 
+# --- el paro joven según el nivel de estudios (Eurostat, 15-24) -----------------------------------------------------
+est = eu[eu.serie == "paro_estudios_ue"] if not eu.empty else pd.DataFrame()
+if not est.empty:
+    st.subheader("El paro joven según el nivel de estudios")
+    CORTO_N = {"Primaria y primera etapa de secundaria": "Hasta 1.ª etapa de secundaria", "Segunda etapa de secundaria y postsecundaria": "2.ª etapa de secundaria",
+               "Educación superior": "Educación superior"}
+    a_est = int(est.anyo.max())
+    d_est = est[est.anyo == a_est].assign(nivel=lambda x: x.categoria.map(CORTO_N)).dropna(subset=["nivel"])
+    g.barras_grupo(d_est, "nivel", "zona", "valor", fmt=",.1f", orden_series=["España", "UE-27"], orden_cat=list(CORTO_N.values()),
+                   titulo_val=f"Tasa de paro, 15-24 años, {a_est} (%)", alto_fila=64)
+    v_es, v_ue = (d_est[d_est.zona == z].set_index("nivel").valor for z in ("España", "UE-27"))
+    bajo, alto = CORTO_N["Primaria y primera etapa de secundaria"], CORTO_N["Educación superior"]
+    if {bajo, alto} <= set(v_es.index) and {bajo, alto} <= set(v_ue.index):
+        st.caption(f"En {a_est}, el paro de los jóvenes de 15-24 años con estudios hasta la primera etapa de secundaria es del {g.pct(v_es[bajo])} en España y del "
+                   f"{g.pct(v_ue[bajo])} en la UE-27 ({g.es(v_es[bajo] - v_ue[bajo], 1)} puntos de diferencia); con educación superior, del {g.pct(v_es[alto])} y del "
+                   f"{g.pct(v_ue[alto])} ({g.es(v_es[alto] - v_ue[alto], 1)} puntos). Fuente: Eurostat (encuesta de población activa); solo hay el grupo 15-24.")
+
 # --- la brecha de edad ------------------------------------------------------------------------------------------
 st.subheader("La brecha de edad: el paro según la edad")
 ORDEN_E = ["De 16 a 19 años", "De 20 a 24 años", "De 25 a 54 años", "De 55 y más años", "Total"]

@@ -11,6 +11,7 @@ Tabla (formato largo): serie; anyo; sexo; categoria; valor; unidad; estado; zona
   poblacion_nivel     personas de 15 a 29 años por nivel de formación (lfsa_pganedm, miles × 1000)
   neet_urbanizacion   % de NEET (15-29) según el grado de urbanización: ciudades, pueblos y periferias, zonas rurales (edat_lfse_29)
   empleo_ue           tasa de empleo 15-29, España y UE-27 (lfsa_ergan)
+  paro_estudios_ue    tasa de paro 15-24 por nivel de formación, España y UE-27 (lfsa_urgaed)
   paro_ue             tasa de paro, España y UE-27, por grupo de edad: 15-24, 15-29 y 15-74 (une_rt_a)
   temporalidad_ue     asalariados con contrato temporal, % del total de asalariados, España y UE-27: 15-29 y 15-64 (lfsa_etpgan)
   parcialidad_ue      ocupados a tiempo parcial, % del total de ocupados, España y UE-27: 15-29 y 15-64 (lfsa_eppga)
@@ -41,6 +42,8 @@ SERIES = {
     "neet_urbanizacion": ("edat_lfse_29", {"geo": "ES", "sex": "T", "age": "Y15-29", "deg_urb": list(URBANIZACION), "unit": "PC"},
                           "deg_urb", URBANIZACION, "%", 1),
     "empleo_ue": ("lfsa_ergan", {"geo": list(ZONAS), "sex": "T", "age": "Y15-29", "citizen": "TOTAL", "unit": "PC"}, "age", {"Y15-29": "15-29"}, "%", 1),
+    "paro_estudios_ue": ("lfsa_urgaed", {"geo": list(ZONAS), "sex": "T", "age": "Y15-24", "isced11": list(NIVELES), "unit": "PC"},
+                         "isced11", NIVELES, "%", 1),
     "paro_ue": ("une_rt_a", {"geo": list(ZONAS), "sex": "T", "age": list(EDADES_UE), "unit": "PC_ACT"}, "age", EDADES_UE, "%", 1),
     "temporalidad_ue": ("lfsa_etpgan", {"geo": list(ZONAS), "sex": "T", "age": list(EDADES_CONTRATO), "citizen": "TOTAL", "unit": "PC"},
                         "age", EDADES_CONTRATO, "%", 1),

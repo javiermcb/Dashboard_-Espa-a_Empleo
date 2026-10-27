@@ -60,3 +60,17 @@ def test_filas_sin_medida():  # rptSeries41: año solo en una fila, organizació
     r = fundae.leer("41", x)
     assert len(r) == 6 and all(f[2] == 2025 and f[8] == "Empresas formadoras" for f in r)
     assert [f[9] for f in r if f[4] == "Formación Agrupada" and f[6] == "Más de 249"] == [1.0]
+
+
+def test_contenidos_formativos():  # rptSeries13: contenido en filas, medida en la segunda columna, años en columnas con huecos
+    x = _excel([[], [None, "Número de participantes formados y horas de formación por contenidos formativos. Formación bonificada"], [],
+                [None, None, None, "2025", "2024", None, None, "2020"], [None, "Contenidos formativos"],
+                [None, "Acabado de cueros", "Participantes ", 290, 8, None, None, 639],
+                [None, None, "Horas de formación", 1669, 40, None, None, 5537],
+                [None, "Idiomas", "Participantes ", 100, 90, None, None, 80],
+                [None, None, "Horas de formación", 1000, 900, None, None, 800], [None, "NOTAS:"]], "rptSeries13")
+    r = fundae.leer("13", x)
+    assert len(r) == 12
+    assert {(f[2], f[4], f[8]): f[9] for f in r if f[4] == "Idiomas" and f[8] == "Participantes"} == {
+        (2025, "Idiomas", "Participantes"): 100.0, (2024, "Idiomas", "Participantes"): 90.0, (2020, "Idiomas", "Participantes"): 80.0}
+    assert {f[3] for f in r} == {"Contenidos formativos"}

@@ -28,7 +28,7 @@ def salida(linea=""):
             f.write(linea + "\n")
 
 
-def titulo_serie(nn, ctx):
+def titulo_serie(nn, ctx, volcar=False):
     """Título (primera celda con texto) del Excel de rptSeriesNN, o motivo por el que no se ha podido leer."""
     import openpyxl
     visor = f"{fundae.BASE}publicaciones/visor?reportPath=rptSeries{nn}"
@@ -54,7 +54,22 @@ def titulo_serie(nn, ctx):
         return f"(la exportación no es un Excel; FileName={nombre})"
     ws = openpyxl.load_workbook(io.BytesIO(datos), read_only=True, data_only=True).worksheets[0]
     titulo = next((str(v) for f in ws.iter_rows(max_row=6, values_only=True) for v in f if v), "")
+    if volcar:  # primeras filas del Excel, para ver su estructura
+        for i, f in enumerate(ws.iter_rows(max_row=16, values_only=True)):
+            salida("    " + " | ".join("" if v is None else str(v)[:34] for v in f[:12]))
     return f"[{ws.title}] {titulo[:230]}"
+
+
+def volcar_fundae(ids):
+    salida("## FUNDAE: estructura de las series pedidas (el visor a veces devuelve otra: manda el nombre de la hoja)")
+    ctx = contexto("www.fundae.es")
+    for nn in ids:
+        try:
+            salida(f"- pedida rptSeries{nn}:")
+            salida(f"  resultado: {titulo_serie(nn, ctx, volcar=True)}")
+        except Exception as e:
+            salida(f"  ERROR {type(e).__name__}: {str(e)[:120]}")
+        time.sleep(2)
 
 
 def explorar_fundae(max_min):
@@ -131,7 +146,11 @@ def explorar_sepe():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--fundae-max-min", type=int, default=12)
+    ap.add_argument("--volcar", nargs="*", help="solo vuelca la estructura de estas series de FUNDAE (p. ej. 11 12 13 16)")
     a = ap.parse_args()
+    if a.volcar:
+        volcar_fundae([f"{int(n):02d}" for n in a.volcar])
+        return 0
     for f in (lambda: explorar_sepe(), lambda: explorar_fundae(a.fundae_max_min)):
         try:
             f()
