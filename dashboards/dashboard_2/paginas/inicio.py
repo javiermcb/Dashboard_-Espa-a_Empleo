@@ -138,8 +138,8 @@ im.lineas_etiquetadas(bg, "fecha", "tasa", "serie", fmt=",.1f", titulo_y=f"{sel_
 st.subheader(f"Dónde y cuándo: paro de los {etiqueta}, comunidad a comunidad")
 calor = ccaa[ccaa.indicador == "Tasa de paro"].dropna(subset=["tasa"])
 orden = calor[calor.anyo == ultimo].sort_values("tasa", ascending=False).nombre.tolist()
-g.mapa_calor(calor, "nombre", "anyo", "tasa", fmt=",.0f", orden_filas=orden, orden_cols=sorted(calor.anyo.unique()), titulo="Tasa de paro (%)", escala=g.ESCALA)
-st.caption(f"Ordenadas por su valor en {ultimo}. Cuanto más oscuro, mayor es el paro.")
+g.mapa_calor(calor, "nombre", "anyo", "tasa", fmt=",.0f", orden_filas=orden, orden_cols=sorted(calor.anyo.unique()), titulo="Tasa de paro (%)", escala=g.ESCALA_SEMAFORO)
+st.caption(f"Ordenadas por su valor en {ultimo}. En verde, el paro más bajo; en rojo, el más alto.")
 
 # --- comparativa territorial: actividad frente a paro, y tabla --------------------------------------------------
 st.subheader("Comparativa territorial")

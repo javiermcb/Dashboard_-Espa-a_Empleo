@@ -13,7 +13,7 @@ import streamlit as st
 from comun import graficos as g
 
 MARINO, ORO = g.MARINO, g.ORO
-TENUE = g.MARINO_CLARO  # extremo «de partida» de las mancuernas y trazos de apoyo
+TENUE = ORO  # extremo «de partida» de las mancuernas: el dorado de la marca (#d9ab42)
 _ids = count()
 
 CSS = """<style>
@@ -178,7 +178,7 @@ def barras_anuales(df, cat, val, anyo, ref=None, fmt=",.1f", titulo_val=None, al
 
 
 def mancuernas(df, cat, v0, v1, e0, e1, fmt=",.1f", titulo=None, alto_fila=24, unidad="p.p."):
-    """Gráfico de mancuernas: cada fila une el valor en el año de partida (`e0`, tenue) con el del año final (`e1`, marino),
+    """Gráfico de mancuernas: cada fila une el valor en el año de partida (`e0`, dorado) con el del año final (`e1`, marino),
     ordenado por el valor final, con la variación escrita al final de la barra."""
     if df.empty:
         st.info("Sin datos en esta carga.")
@@ -199,7 +199,7 @@ def mancuernas(df, cat, v0, v1, e0, e1, fmt=",.1f", titulo=None, alto_fila=24, u
         x=f"{v1}:Q", tooltip=[alt.Tooltip(f"{cat}:N", title=""), alt.Tooltip(f"{v0}:Q", format=fmt, title=e0), alt.Tooltip(f"{v1}:Q", format=fmt, title=e1),
                               alt.Tooltip("_txt:N", title="Variación")])
     txt = base.mark_text(align="left", dx=10, fontSize=11, color=g.TEXTO).encode(x="_max:Q", text="_txt:N")
-    # leyenda manual (dos extremos): un punto tenue (año de partida) y uno marino (año final)
+    # leyenda manual (dos extremos): un punto dorado (año de partida) y uno marino (año final)
     leyenda = pd.DataFrame({"e": [str(e0), str(e1)]})
     ley = alt.Chart(leyenda).mark_circle(size=90, opacity=1, clip=True).encode(
         x=alt.value(-60), y=alt.value(-60), color=alt.Color("e:N", scale=alt.Scale(domain=[str(e0), str(e1)], range=[TENUE, MARINO]), legend=alt.Legend(orient="top", title=None)))

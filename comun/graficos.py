@@ -23,6 +23,7 @@ ESCALA = ("#e6e9f4", MARINO)  # magnitud (mapas y mapas de calor): del blanco az
 RAMPA = ["#dfe3f1", MARINO_CLARO, MARINO_SUAVE, "#2f3f85", MARINO]  # categorías ordenadas (edad, estudios): 5 pasos del marino
 # semáforo de la tabla comparativa del Dashboard 2 (petición expresa: verde y rojo, fuera de la paleta de marca) y gris de la media
 VERDE, ROJO, GRIS_MEDIA = "#7cc48a", "#ec8f86", "#d9d9d9"
+ESCALA_SEMAFORO = (VERDE, FONDO_ORO, ROJO)  # mapas de calor de «más es peor» (paro, NEET): verde abajo, rojo arriba; con tres colores el texto va siempre oscuro
 TEXTO, TEXTO_SUAVE = MARINO, "#4a5585"  # azul marino y su versión atenuada (ejes, notas)
 
 
@@ -332,7 +333,7 @@ def mapa_calor(df, fila, columna, val, fmt=",.1f", orden_filas=None, orden_cols=
         oscuro = f"abs(datum['{val}'] - {centro}) > {lejos * 0.55}"
     else:
         escala_c = alt.Scale(range=list(escala))
-        oscuro = f"datum['{val}'] > {medio}"
+        oscuro = f"datum['{val}'] > {medio}" if len(escala) == 2 else "false"  # escala de tres colores: celdas claras, texto oscuro
     base = alt.Chart(df).encode(x=alt.X(f"{columna}:O", sort=orden_cols, title=None, axis=alt.Axis(orient="top", labelAngle=0)),
                                 y=alt.Y(f"{fila}:N", sort=orden_filas, title=None, axis=alt.Axis(labelLimit=_lim(320))))
     rect = base.mark_rect(stroke="white", strokeWidth=1.5).encode(
