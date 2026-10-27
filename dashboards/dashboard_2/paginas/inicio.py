@@ -103,15 +103,21 @@ ev["fecha"] = ev.anyo.astype(str) + "-01-01"
 im.lineas_etiquetadas(ev, "fecha", "tasa", "serie", fmt=",.1f", titulo_y=f"% de la población de {etiqueta}", orden_series=[i for i in INDICADORES if i in nac], cero=True)
 
 # --- España frente a la UE-27 ---------------------------------------------------------------------------------------
-if not eu.empty and (eu.serie == "paro_ue").any():
-    st.subheader("España frente a la UE-27: el paro joven")
-    ed_ue = st.radio("Grupo de edad (Eurostat)", ["15-24", "15-29"], horizontal=True, key="ed_ue")
-    d_ue = comparar("paro_ue", [ed_ue], f"Tasa de paro, {ed_ue} años (%)", alto=280)
+indicadores_ue = [n for n, serie in (("Paro", "paro_ue"), ("Empleo", "empleo_ue")) if not eu.empty and (eu.serie == serie).any()]
+if indicadores_ue:
+    st.subheader("España frente a la UE-27: paro y empleo joven")
+    ind_ue = st.radio("Indicador (Eurostat)", indicadores_ue, horizontal=True, key="ind_ue") if len(indicadores_ue) > 1 else indicadores_ue[0]
+    if ind_ue == "Paro":
+        ed_ue = st.radio("Grupo de edad", ["15-24", "15-29"], horizontal=True, key="ed_ue")
+        serie_ue, tit_ue, palabra = "paro_ue", f"Tasa de paro, {ed_ue} años (%)", "el paro"
+    else:
+        ed_ue, serie_ue, tit_ue, palabra = "15-29", "empleo_ue", "Tasa de empleo, 15-29 años (%)", "la tasa de empleo"
+    d_ue = comparar(serie_ue, [ed_ue], tit_ue, alto=280)
     if not d_ue.empty:
         u_ue = d_ue.pivot_table(index="anyo", columns="zona", values="valor")
         a_ue = int(u_ue.dropna().index.max())
-        st.caption(f"En {a_ue}, el paro de los jóvenes de {ed_ue} años es del {g.pct(u_ue.loc[a_ue, 'España'])} en España y del {g.pct(u_ue.loc[a_ue, 'UE-27'])} "
-                   f"en la UE-27: {g.es(u_ue.loc[a_ue, 'España'] - u_ue.loc[a_ue, 'UE-27'], 1)} puntos de diferencia. Fuente: Eurostat (encuesta de población activa). "
+        st.caption(f"En {a_ue}, {palabra} de los jóvenes de {ed_ue} años es del {g.pct(u_ue.loc[a_ue, 'España'])} en España y del {g.pct(u_ue.loc[a_ue, 'UE-27'])} "
+                   f"en la UE-27: {g.es(abs(u_ue.loc[a_ue, 'España'] - u_ue.loc[a_ue, 'UE-27']), 1)} puntos de diferencia. Fuente: Eurostat (encuesta de población activa). "
                    "Eurostat usa 15-24 y 15-29, no los grupos de la EPA del INE de arriba.")
 
 # --- la brecha de edad ------------------------------------------------------------------------------------------
