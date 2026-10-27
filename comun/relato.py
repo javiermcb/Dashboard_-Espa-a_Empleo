@@ -17,7 +17,7 @@ CSS = """<style>
 .rr-resumen{border-left:4px solid #00145A;background:#f5f6fb;border-radius:8px;padding:0.6rem 1rem;margin:0.2rem 0 1rem 0}
 .rr-resumen ul{margin:0.1rem 0 0 1.1rem;padding:0}
 .rr-resumen li{margin:0.15rem 0;line-height:1.4}
-.rr-pie{border-top:1px solid #eadfbd;margin-top:2rem;padding-top:0.6rem;color:#4a5585;font-size:0.8rem;line-height:1.9}
+.rr-pie{border-top:1px solid #eadfbd;margin-top:-0.4rem;padding-top:0.6rem;color:#4a5585;font-size:0.8rem;line-height:1.9}
 .rr-pie span{display:inline-block;border:1px solid #eadfbd;border-radius:999px;padding:0 0.55rem;margin:0 0.25rem 0.25rem 0;background:#fff;white-space:nowrap}
 .rr-pie b{color:#00145A;font-weight:600}
 </style>"""
