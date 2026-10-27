@@ -11,11 +11,11 @@ tabla_id;punto;punto_nombre;tema;nota;operacion_cod;operacion;tabla_nombre;organ
 6063;2;Coste laboral y absentismo;ETCL: tiempo de trabajo por trabajador y mes, CCAA;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6063;OK;2008-01-01;2026-04-01
 6056;2;Coste laboral y absentismo;ETCL: percepciones por día de IT y coste de despido;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6056;OK;2008-01-01;2026-04-01
 6064;2;Coste laboral y absentismo;ETCL: vacantes por CCAA;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6064;OK;2013-07-01;2026-04-01
-65345;3;Mercado de talento;EPA: población por relación con la actividad, sexo y provincia;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65345;OK;2002-01-01;2026-04-01
-65354;3;Mercado de talento;EPA: ocupados por sector y provincia;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65354;OK;2008-01-01;2026-04-01
+65345;3;Mercado de talento;EPA: población por relación con la actividad, sexo y provincia;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65345;OK;2002-01-01;2026-07-01
+65354;3;Mercado de talento;EPA: ocupados por sector y provincia;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65354;OK;2008-01-01;2026-07-01
 66031;3;Mercado de talento;EPA: tasa de empleo por sexo, edad y CCAA;también pestaña Exploración · Dashboard 02;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66031;OK;2006-01-01;2025-01-01
 66055;3;Mercado de talento;EPA: tasa de paro por sexo, edad y CCAA;también pestaña Exploración · Dashboard 02;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66055;OK;2006-01-01;2025-01-01
-66266;3;Mercado de talento;EFPA: flujos entre empleo, paro e inactividad por CCAA;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66266;OK;2005-04-01;2026-04-01
+66266;3;Mercado de talento;EFPA: flujos entre empleo, paro e inactividad por CCAA;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66266;OK;2005-04-01;2026-07-01
 37630;4;Revisión salarial;IPT: índices por CCAA;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/37630;OK;2008-01-01;2024-01-01
 37624;4;Revisión salarial;IPT: índices por ocupación;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/37624;OK;2008-01-01;2024-01-01
 76134;4;Revisión salarial;IPC: tasa de variación del índice general nacional;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76134;OK;;2026-09-01
@@ -28,8 +28,8 @@ tabla_id;punto;punto_nombre;tema;nota;operacion_cod;operacion;tabla_nombre;organ
 6048;3;Mercado de talento;ETCL: vacantes por sección CNAE;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6048;OK;2013-07-01;2026-04-01
 65805;3;Mercado de talento;EPA: asalariados contratados a través de ETT, por sexo y CCAA (personas);anual;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65805;OK;2006-01-01;2025-01-01
 65809;3;Mercado de talento;EPA: asalariados temporales por motivo de la temporalidad, sexo y CCAA;anual;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65809;OK;2021-01-01;2025-01-01
-65212;2;Coste laboral y absentismo;EPA: asalariados que hacen horas extra (pagadas o no), por sexo y sección CNAE;trimestral;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65212;OK;2008-01-01;2026-04-01
-65304;3;Mercado de talento;EPA: ocupados por CCAA, sexo, edad y sector;trimestral;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65304;OK;2008-01-01;2026-04-01
+65212;2;Coste laboral y absentismo;EPA: asalariados que hacen horas extra (pagadas o no), por sexo y sección CNAE;trimestral;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65212;OK;2008-01-01;2026-07-01
+65304;3;Mercado de talento;EPA: ocupados por CCAA, sexo, edad y sector;trimestral;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65304;OK;2008-01-01;2026-07-01
 65776;2;Coste laboral y absentismo;EPA: teletrabajo (días en el domicilio), por sexo y CCAA (porcentaje);anual;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65776;OK;2006-01-01;2025-01-01
 36858;1;Benchmark salarial;EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/36858;OK;2022-01-01;2022-01-01
 36861;1;Benchmark salarial;EES 2022: salario medio por CCAA, sexo, sector y antigüedad;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/36861;OK;2022-01-01;2022-01-01
@@ -50,9 +50,9 @@ tabla_id;punto;punto_nombre;tema;nota;operacion_cod;operacion;tabla_nombre;organ
 82000;6;Contexto de mercado;Contabilidad Regional: empleo total (personas) por CCAA y provincia;anual · productividad = PIB / empleo;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/82000;OK;2000-01-01;2025-01-01
 81998;6;Contexto de mercado;Contabilidad Regional: remuneración de los asalariados por CCAA;anual;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/81998;OK;2000-01-01;2025-01-01
 82001;6;Contexto de mercado;Contabilidad Regional: empleo asalariado (personas) por CCAA y provincia;anual · remuneración por asalariado;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/82001;OK;2000-01-01;2025-01-01
-65309;3;Mercado de talento;EPA: ocupados por nacionalidad, sexo y CCAA;trimestral · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65309;OK;2002-01-01;2026-04-01
-79285;3;Mercado de talento;EPA: ocupados por nacionalidad, sexo y sector;trimestral · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/79285;OK;2026-01-01;2026-04-01
+65309;3;Mercado de talento;EPA: ocupados por nacionalidad, sexo y CCAA;trimestral · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65309;OK;2002-01-01;2026-07-01
+79285;3;Mercado de talento;EPA: ocupados por nacionalidad, sexo y sector;trimestral · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/79285;OK;2026-01-01;2026-07-01
 67567;3;Mercado de talento;EPA: tasa de paro por nivel de formación y CCAA;anual · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/67567;OK;2021-01-01;2025-01-01
-79304;3;Mercado de talento;EPA: ocupados subempleados por situación profesional, sexo y sector;trimestral · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/79304;OK;2026-01-01;2026-04-01
-65135;3;Mercado de talento;EPA: ocupados por grupo de edad, sexo y ocupación;trimestral · relevo generacional;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65135;OK;2011-01-01;2026-04-01
-65343;3;Mercado de talento;EPA: inactivos por clase principal de inactividad (estudiante, jubilado, labores del hogar…), sexo y CCAA;trimestral · Mercado de trabajo (inactivos y jubilados);;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65343;OK;2002-01-01;2026-04-01
+79304;3;Mercado de talento;EPA: ocupados subempleados por situación profesional, sexo y sector;trimestral · subinforme perfiles;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/79304;OK;2026-01-01;2026-07-01
+65135;3;Mercado de talento;EPA: ocupados por grupo de edad, sexo y ocupación;trimestral · relevo generacional;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65135;OK;2011-01-01;2026-07-01
+65343;3;Mercado de talento;EPA: inactivos por clase principal de inactividad (estudiante, jubilado, labores del hogar…), sexo y CCAA;trimestral · Mercado de trabajo (inactivos y jubilados);;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/65343;OK;2002-01-01;2026-07-01

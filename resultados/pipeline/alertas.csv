@@ -1,11 +1,21 @@
 tipo;indicador;territorio;periodo;valor;referencia;mensaje;nivel
+novedad;ine:65135;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:65212;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:65304;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:65309;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:65343;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:65345;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:65354;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:66266;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:79285;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
+novedad;ine:79304;;2026-07-01;;;Nuevo periodo 2026-07-01 (antes: 2026-04-01);novedad
 indicador;Convenios vs IPC;N00;convenios 2026 hasta mes 9 · IPC 2026-09-01;3.05;4.9;Subida pactada 3,05 % frente a IPC interanual 4,90 % (-1,85 puntos);aviso
 indicador;Coste laboral por trabajador (interanual) vs IPC;N00;2026-04-01;4.04;3.2;Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %);info
-indicador;Paro EPA: subida interanual;P04 Almería;2026-04-01;22.76;51.4;"Almería: 63,1 mil parados, +22,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
-indicador;Paro EPA: subida interanual;P50 Zaragoza;2026-04-01;18.75;38.4;"Zaragoza: 45,6 mil parados, +18,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
-indicador;Paro EPA: subida interanual;P48 Bizkaia;2026-04-01;15.05;41.2;"Bizkaia: 47,4 mil parados, +15,0 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
-indicador;Paro EPA: subida interanual;P29 Málaga;2026-04-01;9.52;119.8;"Málaga: 131,2 mil parados, +9,5 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";info
-indicador;Paro EPA: subida interanual;P33 Asturias;2026-04-01;5.58;41.2;"Asturias: 43,5 mil parados, +5,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";info
+indicador;Paro EPA: subida interanual;P21 Huelva;2026-07-01;34.35;29.4;"Huelva: 39,5 mil parados, +34,4 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
+indicador;Paro EPA: subida interanual;P31 Navarra;2026-07-01;31.58;24.7;"Navarra: 32,5 mil parados, +31,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
+indicador;Paro EPA: subida interanual;P17 Girona;2026-07-01;25.56;26.6;"Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
+indicador;Paro EPA: subida interanual;P48 Bizkaia;2026-07-01;25.18;40.9;"Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
+indicador;Paro EPA: subida interanual;P15 A Coruña;2026-07-01;19.67;36.6;"A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
 indicador;Horas no trabajadas / pactadas;C08 Castilla-La Mancha;2026-04-01;15.58;1.56;Castilla-La Mancha: 15,6 % de las horas pactadas no se trabajan (+1,56 puntos interanual);aviso
 indicador;Horas no trabajadas / pactadas;C10 Comunitat Valenciana;2026-04-01;15.08;1.28;Comunitat Valenciana: 15,1 % de las horas pactadas no se trabajan (+1,28 puntos interanual);aviso
 indicador;Horas no trabajadas / pactadas;C12 Galicia;2026-04-01;16.5;1.09;Galicia: 16,5 % de las horas pactadas no se trabajan (+1,09 puntos interanual);aviso

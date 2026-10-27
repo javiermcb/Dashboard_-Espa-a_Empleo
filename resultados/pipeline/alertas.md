@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-10-26 17:48 UTC
+# Alertas RRHH 360 · 2026-10-27 09:41 UTC
 
 ## Avisos
 
@@ -8,16 +8,29 @@
 - **Horas no trabajadas / pactadas** · Galicia: 16,5 % de las horas pactadas no se trabajan (+1,09 puntos interanual)
 - **Horas no trabajadas / pactadas** · Madrid: 14,1 % de las horas pactadas no se trabajan (+1,04 puntos interanual)
 - **Horas no trabajadas / pactadas** · Illes Balears: 12,7 % de las horas pactadas no se trabajan (+0,96 puntos interanual)
-- **Paro EPA: subida interanual** · Almería: 63,1 mil parados, +22,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-- **Paro EPA: subida interanual** · Zaragoza: 45,6 mil parados, +18,8 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-- **Paro EPA: subida interanual** · Bizkaia: 47,4 mil parados, +15,0 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+- **Paro EPA: subida interanual** · Huelva: 39,5 mil parados, +34,4 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+- **Paro EPA: subida interanual** · Navarra: 32,5 mil parados, +31,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+- **Paro EPA: subida interanual** · Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+- **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+- **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+
+## Datos nuevos
+
+- **ine:65135** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:65212** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:65304** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:65309** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:65343** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:65345** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:65354** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:66266** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:79285** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
+- **ine:79304** · Nuevo periodo 2026-07-01 (antes: 2026-04-01)
 
 ## Seguimiento
 
 - **CPD acumulados del año** · 2.732.469 contratos de puesta a disposición, +7,1 % frente al mismo periodo de 2025
 - **Coste laboral por trabajador (interanual) vs IPC** · Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %)
-- **Paro EPA: subida interanual** · Málaga: 131,2 mil parados, +9,5 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-- **Paro EPA: subida interanual** · Asturias: 43,5 mil parados, +5,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Vacantes** · 151.736 vacantes, +1,3 % interanual
 - **Índice de incidencia de accidentes** · Huesca: índice de incidencia 308,9 (acumulado enero-2026-08)
 - **Índice de incidencia de accidentes** · Guadalajara: índice de incidencia 294,8 (acumulado enero-2026-08)
