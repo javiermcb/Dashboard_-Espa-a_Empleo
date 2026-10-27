@@ -156,7 +156,8 @@ def main():
                "mites_ett_actividad": "fact_ett_actividad", "mites_ett_resumen": "fact_ett_resumen", "mites_convenios_detalle": "fact_convenios_detalle",
                "mites_accidentes_detalle": "fact_accidentes_detalle", "mites_regulacion_empleo": "fact_regulacion_empleo",
                "ss_incapacidad_temporal": "fact_incapacidad_temporal", "ss_it_detalle": "fact_it_detalle",
-               "fundae_formacion": "fact_fundae", "eurostat_indicadores": "fact_eurostat", "sepe_demandantes_nivel": "fact_sepe_demandantes_nivel"}
+               "fundae_formacion": "fact_fundae", "eurostat_indicadores": "fact_eurostat", "sepe_demandantes_nivel": "fact_sepe_demandantes_nivel",
+               "sepe_contratos_nivel": "fact_sepe_contratos_nivel"}
     con.execute("ALTER TABLE dim_territorio ADD COLUMN provincia_id VARCHAR")
     con.execute("UPDATE dim_territorio SET provincia_id = territorio_id WHERE nivel = 'Provincia'")
     cargadas = []

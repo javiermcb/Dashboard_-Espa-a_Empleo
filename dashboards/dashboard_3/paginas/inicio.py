@@ -186,6 +186,31 @@ if not nf.empty:
                "a nivel nacional: el SEPE no publica este dato por edad ni por comunidad (para los jóvenes, ver el paro por estudios del Dashboard 2). "
                "No se muestra el grupo «Indeterminado» (menos del 0,1 %).")
 
+# --- contratos frente a parados, por nivel de estudios (SEPE, nacional) ----------------------------------------
+cn = (datos.q("SELECT fecha, nivel, indefinidos, temporales, total FROM fact_sepe_contratos_nivel")
+      if datos.hay("fact_sepe_contratos_nivel") else pd.DataFrame())
+if not nf.empty and not cn.empty:
+    cn["fecha"] = pd.to_datetime(cn.fecha)
+    mes_c = min(cn.fecha.max(), nf.fecha.max())  # último mes con las dos fuentes
+    dn = nf[(nf.fecha == mes_c) & (nf.nivel != "Indeterminado")].set_index("nivel")
+    ct = cn[(cn.fecha == mes_c) & (cn.nivel != "Indeterminado")].set_index("nivel")
+    niv = [n for n in dn.index if n in ct.index]
+    if niv:
+        st.subheader("Qué nivel de estudios encuentra empleo")
+        cruce = pd.DataFrame({"nivel": niv, "por_100": [ct.total[n] / dn.total[n] * 100 for n in niv],
+                              "indef": [ct.indefinidos[n] / ct.total[n] * 100 for n in niv]})
+        izq, der = st.columns(2)
+        with izq:
+            st.markdown("**Contratos del mes por cada 100 parados**")
+            g.barras(cruce, "nivel", "por_100", fmt=",.0f", orden_cat=niv, titulo_val="contratos / 100 parados", alto_fila=32)
+        with der:
+            st.markdown("**% de contratos indefinidos**")
+            g.barras(cruce, "nivel", "indef", fmt=",.0f", orden_cat=niv, titulo_val="% indefinidos", alto_fila=32)
+        alto_, bajo_ = cruce.sort_values("por_100").iloc[[-1, 0]].nivel.tolist()
+        st.caption(f"SEPE, {mes_c.strftime('%m/%Y')}, a nivel nacional. Compara los contratos registrados en el mes con los parados registrados ese mes, "
+                   f"por nivel de estudios: {alto_} es el nivel con más contratos por parado y {bajo_} el que menos. Un contrato no es una persona "
+                   "(una persona puede firmar varios), y el SEPE no publica este cruce por edad ni por comunidad. No se muestra el grupo «Indeterminado».")
+
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
 st.subheader("Cómo se forma: presencial, teleformación y mixta")
 if not mod.empty:
