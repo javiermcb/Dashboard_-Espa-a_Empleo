@@ -183,10 +183,29 @@ if not eu.empty and eu.serie.isin(["temporalidad_ue", "parcialidad_ue"]).any():
 else:
     st.info("Esta carga no incluye todavía los datos de contrato y jornada.")
 
+# --- dónde trabajan los jóvenes hoy (EPA: solo cuatro grandes sectores) ---------------------------------------------
+oc = (datos.q("SELECT anyo, periodo, edad, sector, miles_ocupados FROM mart_ocupados_ccaa WHERE territorio_id = 'N00' AND sexo = 'Ambos sexos'")
+      if datos.hay("mart_ocupados_ccaa") else pd.DataFrame())
+if not oc.empty and (oc.sector == "Servicios").any():
+    st.subheader("Dónde trabajan los jóvenes")
+    jovenes = {"Menores de 25 años": ["De 16 a 19 años", "De 20 a 24 años"], "De 16 a 19 años": ["De 16 a 19 años"], "De 20 a 24 años": ["De 20 a 24 años"]}[edad]
+    trimestres = oc.groupby("anyo").periodo.nunique()
+    a_oc = int(trimestres[trimestres == 4].index.max())  # último año con los cuatro trimestres
+    medio = (oc[(oc.anyo == a_oc) & (oc.sector != "Total")].groupby(["edad", "sector"]).miles_ocupados.mean())  # media anual, en miles
+    jov, todos = medio.loc[medio.index.get_level_values("edad").isin(jovenes)].groupby("sector").sum(), medio.xs("Total", level="edad")
+    SECTORES = ["Servicios", "Industria", "Construcción", "Agricultura"]
+    reparto_oc = pd.concat([(jov / jov.sum() * 100).rename("pct").reset_index().assign(grupo=f"Ocupados de {etiqueta}"),
+                            (todos / todos.sum() * 100).rename("pct").reset_index().assign(grupo="Todas las edades")], ignore_index=True)
+    g.barras_grupo(reparto_oc, "sector", "grupo", "pct", fmt=",.1f", orden_series=[f"Ocupados de {etiqueta}", "Todas las edades"], orden_cat=SECTORES, alto_fila=64,
+                   titulo_val="% de los ocupados")
+    st.caption(f"En {a_oc}, el {g.pct(jov['Servicios'] / jov.sum() * 100)} de los ocupados de {etiqueta} trabaja en servicios, frente al "
+               f"{g.pct(todos['Servicios'] / todos.sum() * 100)} del conjunto de los ocupados. Fuente: INE, EPA (media de los cuatro trimestres). "
+               "La EPA reparte los ocupados en cuatro grandes sectores; el detalle por rama (logística, hostelería…) no está en esta fuente.")
+
 # --- paneles sin fuente -----------------------------------------------------------------------------------------
 st.subheader("Pendientes de fuente")
 p = st.columns(2)
-p[0].info("**Sectores con mayor potencial.** Hace falta una previsión de empleo por sector: las proyecciones de "
+p[0].info("**Sectores con mayor potencial.** Hace falta una previsión de empleo por sector (no solo la situación actual): las proyecciones de "
           "Cedefop (Skills Forecast, España a 2035) son la candidata; falta confirmar que se pueden descargar por sector.")
 p[1].info("**Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
           "informes de competencias y necesidades formativas, no una serie de datos.")
