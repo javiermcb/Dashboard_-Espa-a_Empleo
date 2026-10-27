@@ -13,7 +13,10 @@ from playwright.sync_api import sync_playwright
 URL = sys.argv[1]
 DESPERTAR = ("get this app back up", "Yes, get this app back up")
 MEDIR = """() => { const s = document.querySelector('[data-testid="stSidebar"]');
-  return s ? {ancho: Math.round(s.getBoundingClientRect().width), texto: s.innerText.replace(/\\s+/g, ' ').trim().slice(0, 80)} : null; }"""
+  const c = document.querySelector('[data-testid="stMainBlockContainer"]'), h = document.querySelector('h1'), pie = document.querySelector('.rr-pie');
+  return s ? {ancho: Math.round(s.getBoundingClientRect().width), texto: s.innerText.replace(/\\s+/g, ' ').trim().slice(0, 80),
+    relleno: c ? getComputedStyle(c).paddingTop : null, titulo: h ? Math.round(h.getBoundingClientRect().top) : null,
+    pie_margen: pie ? getComputedStyle(pie).marginTop : null} : null; }"""
 
 
 def medir(pag):
@@ -55,6 +58,7 @@ def main():
             return 1
         nueva = r["ancho"] <= 100
         print(f"{URL}: barra de {r['ancho']} px ({r['ancho'] / 37.8:.1f} cm) → {'BARRA NUEVA' if nueva else 'BARRA ANTIGUA'} · texto: «{r['texto']}»")
+        print(f"   cabecera: relleno superior {r['relleno']} (nuevo: 48px, antiguo: 96px) · título a {r['titulo']} px · margen del pie {r['pie_margen']} (nuevo: -6.4px)")
         return 0 if nueva else 1
 
 
