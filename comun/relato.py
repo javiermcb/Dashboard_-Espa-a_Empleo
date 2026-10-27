@@ -50,15 +50,6 @@ def resumen(puntos):
         st.markdown(f"<div class='rr-resumen'><b>En resumen</b><ul>{lis}</ul></div>", unsafe_allow_html=True)
 
 
-def pie_periodos(periodos):
-    """Pie de todas las páginas: hasta qué periodo llega cada fuente."""
-    if not periodos:
-        return
-    chips = "".join(f"<span>{escape(n)}: <b>{escape(p)}</b></span>" for n, p in periodos)
-    st.markdown("<div class='rr-pie'>Datos actualizados hasta el último periodo publicado por cada fuente. "
-                f"Cada cifra corresponde al periodo de su fuente:<br>{chips}</div>", unsafe_allow_html=True)
-
-
 def lista(items):
     """['a', 'b', 'c'] -> 'a, b y c'."""
     items = [str(i) for i in items if i]

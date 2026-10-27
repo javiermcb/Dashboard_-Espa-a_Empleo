@@ -63,12 +63,12 @@ def test_solo_carga_sus_tablas(dashboard):
 
 @pytest.mark.parametrize("dashboard", DASHBOARDS)
 def test_barra_lateral_minima(dashboard):
-    """La barra lateral solo lleva la fecha de los datos; la atribución de las fuentes y los enlaces a las páginas van en el pie."""
-    from comun import base
+    """La barra lateral solo lleva la fecha de los datos y el pie solo dice día y hora de la actualización."""
     at = _abrir(dashboard)
     _sin_errores(at, dashboard)
     lateral = " ".join(m.value for m in at.sidebar.markdown)
     assert "bl-fecha" in lateral and "Datos" in lateral
     assert not at.sidebar.radio and not at.sidebar.caption, f"{dashboard}: la barra lateral lleva más que la fecha"
-    cuerpo = " ".join(m.value for m in at.markdown)
-    assert "Elaboración propia con datos extraídos" in cuerpo or base.AVISO_FUENTES[:40] in cuerpo, f"{dashboard}: falta el aviso de fuentes"
+    pie = [m.value for m in at.markdown if m.value.startswith("<div class='rr-pie'>")]
+    assert len(pie) == 1 and "Datos actualizados el" in pie[0] and "UTC" in pie[0], f"{dashboard}: el pie debe decir solo cuándo se actualizó"
+    assert not at.get("page_link"), f"{dashboard}: no debe haber enlaces de navegación"
