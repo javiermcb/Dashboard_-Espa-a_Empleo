@@ -1,6 +1,6 @@
 """
 base.py — Arranque común de los dashboards: página, menú, barra lateral mínima con la fecha de los datos y pie de página
-(periodos de cada fuente, avisos de atribución y enlaces a «Estado de los datos» y «Datos y descargas»).
+(solo día y hora de la carga). Las páginas «Estado de los datos» y «Datos y descargas» siguen en el menú, sin enlaces visibles.
 
 Cada dashboards/<nombre>/app.py solo declara su título y su menú y llama a arrancar(). Los datos y los gráficos
 son los de comun/; lo único propio de cada dashboard son sus páginas (dashboards/<nombre>/paginas/).
@@ -34,51 +34,35 @@ CSS_BARRA_MINIMA = """<style>
 .bl-fecha b { color: #00145A; font-weight: 600; display: block; margin-bottom: 0.15rem; }
 </style>"""
 
-AVISO_FUENTES = ("Elaboración propia con datos extraídos del sitio web del INE (www.ine.es), del SEPE, de la Seguridad Social, "
-                 "del Ministerio de Trabajo y Economía Social y de FUNDAE. Los indicadores calculados (cocientes, acumulados, "
-                 "aproximaciones) son elaboración propia, no cifras oficiales. Estos organismos no participan en esta "
-                 "herramienta ni la respaldan. Periodo y fecha de cada fuente: «Estado de los datos».")
-AVISO_PERSONAS = ("Datos agregados de territorios y sectores: describen colectivos, no personas. No deben aplicarse a un "
-                  "candidato o trabajador concreto para seleccionarlo, perfilarlo o tomar decisiones sobre él.")
-
-
 def comun(nombre, titulo, icono):
     """Página de comun/paginas/ (estado de los datos, descargas) para incluirla en el menú de cualquier dashboard."""
     return st.Page(str(PAGINAS_COMUNES / f"{nombre}.py"), title=titulo, icon=icono, url_path=nombre)
 
 
-def _fecha_corta(carga):
-    """'2026-10-26 17:49 UTC' -> ('26/10/26', '17:49 UTC') (año con 2 cifras: cabe en la barra); si el formato no es ese, (texto, '')."""
+def _fecha_corta(carga, anyo_largo=False):
+    """'2026-10-26 17:49 UTC' -> ('26/10/26', '17:49 UTC'), o con año de 4 cifras ('26/10/2026', ...) si anyo_largo; si el formato no
+    es ese, (texto, '')."""
     try:
         dia, hora = carga.split(" ", 1)
         a, m, d = dia.split("-")
-        return f"{d}/{m}/{a[-2:]}", hora
+        return f"{d}/{m}/{a if anyo_largo else a[-2:]}", hora
     except ValueError:
         return carga, ""
 
 
-def _pie_legal(menu, carga, faltan):
-    """Pie de todas las páginas: enlaces a las páginas del menú, fecha de la carga, avisos de atribución de las fuentes y
-    tablas que faltan. Antes estaban en la barra lateral."""
-    paginas = [p for lista in menu.values() for p in lista]
-    if len(paginas) > 1:
-        cols = st.columns(len(paginas) + 2)
-        for c, p in zip(cols, paginas):
-            c.page_link(p)
-    notas = []
-    if carga:
-        notas.append(f"Datos de la carga del {carga}.")
-    if faltan:
-        notas.append(f"Tablas no disponibles en esta carga: {', '.join(faltan)}.")
-    notas += [AVISO_FUENTES, AVISO_PERSONAS]
-    st.markdown("<div class='rr-pie'>" + "<br>".join(escape(n) for n in notas) + "</div>", unsafe_allow_html=True)
+def _pie_fecha(carga):
+    """Pie de todas las páginas: solo día y hora de la carga de los datos."""
+    if not carga:
+        return
+    dia, hora = _fecha_corta(carga, anyo_largo=True)
+    st.markdown(f"<div class='rr-pie'>Datos actualizados el {escape(dia)} a las {escape(hora)}.</div>", unsafe_allow_html=True)
 
 
 def arrancar(titulo, icono, menu, pantalla_completa=False, tablas=None):
     """
     titulo  nombre del dashboard (pestaña del navegador)
-    menu    {sección: [st.Page, ...]}; la primera página con default=True es la de entrada. La navegación no se pinta en la barra
-            lateral: las páginas se enlazan desde el pie
+    menu    {sección: [st.Page, ...]}; la primera página con default=True es la de entrada. La navegación no se pinta (ni barra
+            lateral ni enlaces): las páginas siguen disponibles por su dirección (/estado, /datos_descarga)
     tablas  nombres de las tablas del modelo que usa el dashboard (sin ruta): solo se descargan y abren esas (None: todas)
     pantalla_completa   True: deja el botón «Fullscreen» de gráficos y tablas (por defecto se oculta)
     """
@@ -114,7 +98,5 @@ def arrancar(titulo, icono, menu, pantalla_completa=False, tablas=None):
 
     nav.run()
 
-    # pie de todas las páginas: hasta qué periodo llega cada fuente (evita mezclar datos de fechas distintas sin saberlo)
     relato.estilo()
-    relato.pie_periodos(datos.periodos())
-    _pie_legal(menu, carga, faltan)
+    _pie_fecha(carga)
