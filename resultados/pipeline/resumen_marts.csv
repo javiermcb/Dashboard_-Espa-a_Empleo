@@ -12,6 +12,7 @@ mart_limites_deciles;190;2006-01-01;2024-01-01
 mart_neet;304;2015-01-01;2025-01-01
 mart_ocupados_ccaa;99131;2008-01-01;2026-07-01
 mart_ocupados_sector;19761;2008-01-01;2026-07-01
+mart_oportunidad_ccaa;1748;2019-01-01;2026-09-01
 mart_poblacion_actividad;94220;2002-01-01;2026-07-01
 mart_precios;36778;1970-02-01;2026-09-01
 mart_salarios_eaes;5508;2008-01-01;2024-01-01

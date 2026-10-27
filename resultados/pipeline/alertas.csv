@@ -1,4 +1,7 @@
 tipo;indicador;territorio;periodo;valor;referencia;mensaje;nivel
+carga;mites_accidentes;;;;;No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-27 16:10 UTC);aviso
+carga;mites_accidentes_detalle;;;;;No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-27 16:10 UTC);aviso
+carga;mites_regulacion_empleo;;;;;No actualizada en esta carga: TimeoutError: www.mites.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-10-27 16:10 UTC);aviso
 indicador;Convenios vs IPC;N00;convenios 2026 hasta mes 9 · IPC 2026-09-01;3.05;4.9;Subida pactada 3,05 % frente a IPC interanual 4,90 % (-1,85 puntos);aviso
 indicador;Coste laboral por trabajador (interanual) vs IPC;N00;2026-04-01;4.04;3.2;Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %);info
 indicador;Paro EPA: subida interanual;P21 Huelva;2026-07-01;34.35;29.4;"Huelva: 39,5 mil parados, +34,4 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
