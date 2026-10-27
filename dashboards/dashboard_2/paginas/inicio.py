@@ -32,6 +32,23 @@ nac_total = todo[(todo.edad == "Total") & (todo.sexo == "Ambos sexos") & (todo.t
     index="anyo", columns="indicador", values="tasa").sort_index()
 primero = int(nac.index.min())
 
+# Eurostat (tabla opcional): España frente a la UE-27. «zona» solo está en las cargas posteriores a esta función
+eu = datos.q("SELECT * FROM fact_eurostat") if datos.hay("fact_eurostat") else pd.DataFrame()
+eu = eu if "zona" in eu.columns else pd.DataFrame()
+
+
+def comparar(serie, edades, titulo_y, alto=300, resaltar=None):
+    """Líneas España / UE-27 de una serie de Eurostat para las edades pedidas; devuelve el DataFrame largo (vacío si no hay datos)."""
+    d = eu[(eu.serie == serie) & eu.categoria.isin(edades)].dropna(subset=["valor"]).copy()
+    if d.empty:
+        return d
+    d["serie_"] = d.zona + ", " + d.categoria
+    d["fecha"] = d.anyo.astype(str) + "-01-01"
+    orden = [f"{z}, {e}" for e in edades for z in ("España", "UE-27") if f"{z}, {e}" in set(d.serie_)]
+    im.lineas_etiquetadas(d.rename(columns={"valor": "tasa"})[["fecha", "tasa", "serie_"]], "fecha", "tasa", "serie_", fmt=",.1f", titulo_y=titulo_y,
+                          orden_series=orden, resaltar=resaltar or orden[0], alto=alto)
+    return d
+
 # --- la respuesta en una frase ----------------------------------------------------------------------------------
 paro = nac.get("Tasa de paro")
 puntos = []
@@ -84,7 +101,18 @@ st.subheader("02 · Evolución de la actividad, el empleo y el paro")
 ev = nac[[i for i in INDICADORES if i in nac]].reset_index().melt(id_vars="anyo", var_name="serie", value_name="tasa").dropna()
 ev["fecha"] = ev.anyo.astype(str) + "-01-01"
 im.lineas_etiquetadas(ev, "fecha", "tasa", "serie", fmt=",.1f", titulo_y=f"% de la población de {etiqueta}", orden_series=[i for i in INDICADORES if i in nac], cero=True)
-st.caption("Falta la serie de la UE-27 para compararla (Eurostat, sin descargar todavía).")
+
+# --- España frente a la UE-27 ---------------------------------------------------------------------------------------
+if not eu.empty and (eu.serie == "paro_ue").any():
+    st.subheader("España frente a la UE-27: el paro joven")
+    ed_ue = st.radio("Grupo de edad (Eurostat)", ["15-24", "15-29"], horizontal=True, key="ed_ue")
+    d_ue = comparar("paro_ue", [ed_ue], f"Tasa de paro, {ed_ue} años (%)", alto=280)
+    if not d_ue.empty:
+        u_ue = d_ue.pivot_table(index="anyo", columns="zona", values="valor")
+        a_ue = int(u_ue.dropna().index.max())
+        st.caption(f"En {a_ue}, el paro de los jóvenes de {ed_ue} años es del {g.pct(u_ue.loc[a_ue, 'España'])} en España y del {g.pct(u_ue.loc[a_ue, 'UE-27'])} "
+                   f"en la UE-27: {g.es(u_ue.loc[a_ue, 'España'] - u_ue.loc[a_ue, 'UE-27'], 1)} puntos de diferencia. Fuente: Eurostat (encuesta de población activa). "
+                   "Eurostat usa 15-24 y 15-29, no los grupos de la EPA del INE de arriba.")
 
 # --- la brecha de edad ------------------------------------------------------------------------------------------
 st.subheader("La brecha de edad: el paro según la edad")
@@ -132,12 +160,27 @@ tabla = tabla.rename(columns={"nombre": "Territorio"})[["Territorio", "Tasa de a
 cfg = {k: st.column_config.NumberColumn(k, format="%.1f %%") for k in tabla.columns[1:]}
 st.dataframe(tabla, hide_index=True, width="stretch", column_config=cfg)
 
+# --- 06 tipo de contrato y jornada, España frente a la UE-27 -------------------------------------------------------
+st.subheader("04 · Temporalidad y jornada parcial")
+if not eu.empty and eu.serie.isin(["temporalidad_ue", "parcialidad_ue"]).any():
+    ind_c = st.radio("Indicador", ["Contrato temporal", "Jornada parcial"], horizontal=True, key="ind_contrato")
+    serie_c, tit_c = (("temporalidad_ue", "% de asalariados con contrato temporal") if ind_c == "Contrato temporal"
+                      else ("parcialidad_ue", "% de ocupados a tiempo parcial"))
+    d_c = comparar(serie_c, ["15-29", "15-64"], tit_c, alto=320, resaltar="España, 15-29")
+    if not d_c.empty:
+        u_c = d_c[d_c.anyo == d_c.anyo.max()].set_index(["zona", "categoria"]).valor
+        a_c = int(d_c.anyo.max())
+        if {("España", "15-29"), ("España", "15-64"), ("UE-27", "15-29")} <= set(u_c.index):
+            st.caption(f"En {a_c}, el {g.pct(u_c[('España', '15-29')])} de los jóvenes de 15 a 29 años en España ({'asalariados con contrato temporal' if serie_c == 'temporalidad_ue' else 'ocupados a tiempo parcial'}), "
+                       f"frente al {g.pct(u_c[('España', '15-64')])} de los de 15 a 64 años y al {g.pct(u_c[('UE-27', '15-29')])} de los jóvenes de la UE-27. "
+                       "Fuente: Eurostat (encuesta de población activa).")
+else:
+    st.info("Esta carga no incluye todavía los datos de contrato y jornada.")
+
 # --- paneles sin fuente -----------------------------------------------------------------------------------------
 st.subheader("Pendientes de fuente")
-p = st.columns(3)
-p[0].info("**04 · Sectores con mayor potencial.** Hace falta una previsión de empleo por sector: las proyecciones de "
+p = st.columns(2)
+p[0].info("**05 · Sectores con mayor potencial.** Hace falta una previsión de empleo por sector: las proyecciones de "
           "Cedefop (Skills Forecast, España a 2035) son la candidata; falta confirmar que se pueden descargar por sector.")
-p[1].info("**05 · Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
+p[1].info("**06 · Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
           "informes de competencias y necesidades formativas, no una serie de datos.")
-p[2].info("**06 · Empleo por tipo de contrato.** No hay en el modelo una tabla de contrato indefinido, temporal y parcial por "
-          "grupo de edad.")
