@@ -30,7 +30,7 @@ CSS_BARRA_MINIMA = """<style>
 }
 [data-testid="stSidebarHeader"], [data-testid="stSidebarCollapseButton"], [data-testid="stSidebarCollapsedControl"],
 [data-testid="stSidebarResizeHandle"], [data-testid="stSidebarNav"], [data-testid="stExpandSidebarButton"] { display: none !important; }
-[data-testid="stMainBlockContainer"] { padding-top: 3rem !important; padding-bottom: 3.5rem !important; }  /* arriba, de 6 rem: el título queda a unos 3 cm del borde; abajo, 56 px (incrustado eran 16) para que el pie no quede pegado al borde */
+[data-testid="stMainBlockContainer"] { padding-top: 1.5rem !important; padding-bottom: 3.5rem !important; }  /* arriba, de 6 rem: el título queda a unos 3 cm del borde; abajo, 56 px (incrustado eran 16) para que el pie no quede pegado al borde */
 [data-testid="stElementContainer"]:has([data-testid="stMarkdownContainer"] > style:only-child) { display: none; }  /* los bloques que solo traen CSS ocupaban 16 px cada uno */
 .bl-fecha { color: #4a5585; font-size: 0.64rem; line-height: 1.35; text-align: center; word-break: keep-all; }
 .bl-fecha b { color: #00145A; font-weight: 600; display: block; margin-bottom: 0.15rem; }
