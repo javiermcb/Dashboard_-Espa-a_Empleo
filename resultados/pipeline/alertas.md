@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-10-27 19:37 UTC
+# Alertas RRHH 360 · 2026-10-27 20:26 UTC
 
 ## Avisos
 
@@ -13,9 +13,7 @@
 - **Paro EPA: subida interanual** · Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-- **mites_accidentes** · No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-27 16:10 UTC)
-- **mites_accidentes_detalle** · No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-27 16:10 UTC)
-- **mites_regulacion_empleo** · No actualizada en esta carga: TimeoutError: www.mites.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-10-27 16:10 UTC)
+- **fundae_formacion** · Control de calidad: 5 series actualizadas hoy, 13 de cargas anteriores, sin datos: 13
 
 ## Seguimiento
 
