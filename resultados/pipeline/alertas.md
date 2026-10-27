@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-10-27 10:36 UTC
+# Alertas RRHH 360 · 2026-10-27 12:47 UTC
 
 ## Avisos
 
@@ -70,6 +70,9 @@
 - **ine:81998** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-27 09:30 UTC)
 - **ine:82000** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-27 09:30 UTC)
 - **ine:82001** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-27 09:30 UTC)
+- **mites_accidentes** · No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-27 10:36 UTC)
+- **mites_accidentes_detalle** · No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-10-27 10:36 UTC)
+- **mites_regulacion_empleo** · No actualizada en esta carga: TimeoutError: www.mites.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-10-27 10:36 UTC)
 
 ## Seguimiento
 
