@@ -1,0 +1,36 @@
+name: Comprobar el despliegue de la barra lateral
+
+# Solo a mano («Run workflow»): abre cada dashboard desplegado y mide el ancho de su barra lateral para saber si ya está
+# publicada la versión con la barra mínima (~76 px). URLs: variables del repositorio APP_URL_1 … APP_URL_3.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Navegador
+        run: |
+          pip install playwright==1.63.0
+          python -m playwright install --with-deps chromium
+      - name: Medir la barra lateral de cada app
+        env:
+          APP_URL_1: ${{ vars.APP_URL_1 }}
+          APP_URL_2: ${{ vars.APP_URL_2 }}
+          APP_URL_3: ${{ vars.APP_URL_3 }}
+        run: |
+          fallo=0
+          for v in APP_URL_1 APP_URL_2 APP_URL_3; do
+            url="${!v}"
+            [ -n "$url" ] || { echo "$v sin definir: se salta"; continue; }
+            python ops/comprobar_despliegue.py "$url" | tee -a "$GITHUB_STEP_SUMMARY" || fallo=1
+          done
+          exit $fallo
