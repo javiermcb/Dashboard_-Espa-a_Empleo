@@ -44,3 +44,9 @@ def test_rosco_reparte_en_porcentajes_y_ordena():
     datos = d["datasets"][d["layer"][0]["data"]["name"]]
     assert [r["c"] for r in sorted(datos, key=lambda r: r["_ord"])] == ["C", "B", "A"]  # la categoría con 0 no entra
     assert abs(sum(r["_pct"] for r in datos) - 1) < 1e-9
+
+
+def test_tarjeta_doble_apila_las_dos_partes_en_un_solo_hueco():
+    html = "".join(im._mitad(p) for p in [dict(titulo="Hombres, 2025", valor="11,4 %", delta="▼ -0,5 p.p.", bueno=True, serie=[3, 2, 1]),
+                                           dict(titulo="Mujeres, 2025", valor="11,5 %", serie=[3, 2, 1])])
+    assert html.count("class='im-mitad'") == 2 and "Hombres, 2025" in html and "Mujeres, 2025" in html

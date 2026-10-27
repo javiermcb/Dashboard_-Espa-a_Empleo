@@ -36,6 +36,12 @@ CSS = """<style>
 .im-spark .a{animation:im-aparece 1.2s .5s ease-out both}
 .im-spark .p{animation:im-aparece .4s 1.3s ease-out both}
 .im-rango{display:flex;justify-content:space-between;color:#7a84ad;font-size:0.7rem;margin-top:0.1rem}
+.im-t.im-doble{padding:0;display:flex;flex-direction:column}
+.im-mitad{flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:0.5rem;align-items:center;padding:0.55rem 1rem}
+.im-mitad+.im-mitad{border-top:1px solid #eadfbd}
+.im-mitad .im-t-tit{min-height:0}
+.im-mitad .im-t-val{font-size:1.65rem;margin:0.05rem 0 0.2rem 0}
+.im-mitad .im-spark{height:38px;margin-top:0}
 .im-lectura{border-left:6px solid #d9ab42;background:linear-gradient(90deg,#fbf6e9,#ffffff);border-radius:10px;padding:0.8rem 1.1rem;margin:0.4rem 0 1.2rem 0}
 .im-lectura h4{margin:0 0 0.35rem 0;color:#00145a;font-size:1.05rem}
 .im-lectura ul{margin:0.1rem 0 0 1.1rem;padding:0}
@@ -69,21 +75,37 @@ def _spark(valores, color):
             f"<circle class='p' cx='{pts[-1][0]:.1f}' cy='{pts[-1][1]:.1f}' r='3.4' fill='{color}' stroke='#fff' stroke-width='1.5'/></svg>")
 
 
+def _pie_y_color(it):
+    """(pie con la variación y la nota, color del minigráfico) de una cifra."""
+    clase = {True: "bueno", False: "malo"}.get(it.get("bueno"), "neutro")
+    pie = ""
+    if it.get("delta"):
+        pie += f"<span class='im-pill {clase}'>{escape(it['delta'])}</span>"
+    if it.get("nota"):
+        pie += f"<span>{escape(it['nota'])}</span>"
+    return pie, {True: MARINO, False: ORO}.get(it.get("bueno"), MARINO)
+
+
+def _mitad(it):
+    """Una mitad de tarjeta doble: rótulo, cifra y variación a la izquierda; minigráfico a la derecha."""
+    pie, color = _pie_y_color(it)
+    return (f"<div class='im-mitad'><div><div class='im-t-tit'>{escape(it['titulo'])}</div><div class='im-t-val'>{escape(it['valor'])}</div>"
+            f"<div class='im-t-pie'>{pie}</div></div>{_spark(it.get('serie') or [], color)}</div>")
+
+
 def tarjetas(items):
     """Fila de tarjetas de cifra. Cada item es un dict: titulo, valor (texto ya formateado), delta (texto, opcional),
     bueno (True/False/None: color de la variación, pastilla marino si mejora y dorada si empeora; la flecha y el signo van siempre, no solo el color), nota (texto tras
-    la variación), serie (lista de números para el minigráfico), desde / hasta (rótulos bajo el minigráfico)."""
+    la variación), serie (lista de números para el minigráfico), desde / hasta (rótulos bajo el minigráfico).
+    Un item con `partes` (lista de dicts como los anteriores) es una tarjeta doble: ocupa el hueco de una y se divide por la
+    mitad horizontal, una parte encima de otra (p. ej. hombres y mujeres)."""
     estilo()
     html = []
     for i, it in enumerate(items):
-        delta = it.get("delta")
-        clase = {True: "bueno", False: "malo"}.get(it.get("bueno"), "neutro")
-        pie = ""
-        if delta:
-            pie += f"<span class='im-pill {clase}'>{escape(delta)}</span>"
-        if it.get("nota"):
-            pie += f"<span>{escape(it['nota'])}</span>"
-        color = {True: MARINO, False: ORO}.get(it.get("bueno"), MARINO)  # mejora: marino; empeora: dorado (la flecha y el signo van siempre)
+        if it.get("partes"):
+            html.append(f"<div class='im-t im-doble' style='animation-delay:{i * 0.08:.2f}s'>{''.join(_mitad(p) for p in it['partes'])}</div>")
+            continue
+        pie, color = _pie_y_color(it)  # mejora: marino; empeora: dorado (la flecha y el signo van siempre)
         rango = ""
         if it.get("serie") is not None and it.get("desde") is not None:
             rango = f"<div class='im-rango'><span>{escape(str(it['desde']))}</span><span>{escape(str(it.get('hasta', '')))}</span></div>"

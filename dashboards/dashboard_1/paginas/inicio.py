@@ -62,12 +62,15 @@ r.respuesta(f"El {g.pct(nac[ultimo])} de los jóvenes de 15 a 29 años ni estudi
 # --- cifras clave con su evolución ------------------------------------------------------------------------------
 tarjetas = [dict(titulo=f"Jóvenes NEET (15-29), {ultimo}", valor=g.pct(nac[ultimo]), delta=im.delta_pp(nac[ultimo], previo), bueno=(nac[ultimo] <= previo) if previo is not None else None,
                  nota=f"frente a {ultimo - 1}", serie=nac.tolist(), desde=primero, hasta=ultimo)]
+partes = []
 for categoria in ("Hombres", "Mujeres"):
     if categoria in sexo and ultimo in sexo.index:
-        s = sexo[categoria].dropna()
-        p = s.get(ultimo - 1)
-        tarjetas.append(dict(titulo=f"{categoria}, {ultimo}", valor=g.pct(s[ultimo]), delta=im.delta_pp(s[ultimo], p),
-                             bueno=(s[ultimo] <= p) if p is not None else None, nota=f"frente a {ultimo - 1}", serie=s.tolist(), desde=int(s.index.min()), hasta=ultimo))
+        s_ = sexo[categoria].dropna()
+        p = s_.get(ultimo - 1)
+        partes.append(dict(titulo=f"{categoria}, {ultimo}", valor=g.pct(s_[ultimo]), delta=im.delta_pp(s_[ultimo], p),
+                           bueno=(s_[ultimo] <= p) if p is not None else None, serie=s_.tolist()))
+if partes:
+    tarjetas.append(dict(partes=partes))
 if len(act_u) > 1:
     brecha = (act_u.porcentaje.max() - act_u.porcentaje.min())
     tarjetas.append(dict(titulo=f"Distancia entre comunidades, {ultimo}", valor=g.es(brecha, 1, " p.p."),
