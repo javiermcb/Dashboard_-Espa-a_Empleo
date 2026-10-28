@@ -183,6 +183,33 @@ def leer(serie, datos, url=""):
     return out
 
 
+RX_NOTA = re.compile(r"actualiz|provisional|definitiv|cerrad|a fecha|fecha de|datos a\b", re.I)
+
+
+def notas(datos):
+    """Textos del Excel de una serie que hablan de la fecha o del estado de los datos (p. ej. «Última actualización…»,
+    «datos provisionales»). Sirve para saber si el último año publicado está cerrado. Hasta 3, de 160 caracteres como máximo."""
+    import openpyxl
+    ws = openpyxl.load_workbook(io.BytesIO(datos), read_only=True, data_only=True).worksheets[0]
+    vistas = []
+    for f in ws.iter_rows(values_only=True):
+        for v in f:
+            t = " ".join(str(v).split()) if isinstance(v, str) else ""
+            if t and RX_NOTA.search(t) and t[:160] not in vistas:
+                vistas.append(t[:160])
+    return vistas[:3]
+
+
+def notas_guardadas(carpeta):
+    """Notas de todas las series (de hoy o de cargas anteriores), sin repetir."""
+    out = []
+    for serie in SERIES:
+        p = carpeta / f"rptSeries{serie}.notas.txt"
+        if p.exists():
+            out += [l for l in p.read_text(encoding="utf-8").splitlines() if l and l not in out]
+    return out
+
+
 def orden_de_carga(carpeta):
     """Series por orden de prioridad: primero las que no tienen copia guardada y luego las de copia más antigua. Así, si el
     tiempo no alcanza para todas (el servidor es lento), ninguna serie se queda sin actualizar de forma permanente."""
@@ -205,9 +232,14 @@ def cargar(contexto, carpeta, limite_s=420, pausa=1.0):
             continue
         url = f"{BASE}publicaciones/visor?reportPath=rptSeries{serie}"
         try:
-            filas_s = leer(serie, exportar(serie, contexto), url)
+            datos = exportar(serie, contexto)
+            filas_s = leer(serie, datos, url)
             with open(carpeta / f"rptSeries{serie}.csv", "w", newline="", encoding="utf-8") as fh:
                 w = csv.writer(fh); w.writerow(CABECERA); w.writerows(filas_s)
+            try:  # las notas son información extra: si no se pueden leer, la serie se carga igual
+                (carpeta / f"rptSeries{serie}.notas.txt").write_text("\n".join(notas(datos)), encoding="utf-8")
+            except Exception:
+                pass
             estado[serie] = "hoy"
         except Exception as e:
             errores[serie] = f"{type(e).__name__}: {e}"[:200]

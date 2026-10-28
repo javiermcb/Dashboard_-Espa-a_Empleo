@@ -1,3 +1,39 @@
+def _sepe_mensual(nombre, url_patron, parsear, cab, desde):
+    """SEPE: un fichero nacional por mes. Los meses sin fichero se omiten (se conservan los ya guardados). Para saber por qué
+    falta un mes, se anota el código de error de los últimos 7 meses (los más recientes pueden no estar publicados aún)."""
+    filas, meses, fallos = [], [], {}
+    hoy = date.today()
+    reciente = (hoy.year * 12 + hoy.month) - 7
+    for a in range(desde, hoy.year + 1):
+        for m in range(1, 13):
+            if (a, m) > (hoy.year, hoy.month):
+                break
+            try:
+                t = texto(descargar(url_patron.format(f"{a}{m:02d}")))
+                filas += parsear(t, f"{a}-{m:02d}-01")
+                meses.append(f"{a}-{m:02d}")
+            except Exception as e:
+                if a * 12 + m >= reciente:
+                    fallos[f"{a}-{m:02d}"] = f"HTTP {e.code}" if isinstance(e, urllib.error.HTTPError) else type(e).__name__
+                if not isinstance(e, urllib.error.HTTPError):
+                    print(f"  SEPE {nombre} {a}-{m:02d}: se omite ({type(e).__name__}: {e})")
+    if not filas:
+        raise ValueError(f"SEPE {nombre}: ningún mes descargado")
+    filas = con_historial(nombre, cab, filas)
+    escribir(nombre, cab, filas)
+    guardados = sorted({f[0][:7] for f in filas})
+    detalle = f"{len(guardados)} meses ({len(meses)} descargados ahora)"
+    if fallos:
+        detalle += " · sin fichero: " + ", ".join(f"{k} ({v})" for k, v in fallos.items())
+    return [[nombre, "OK", len(filas), guardados[0], guardados[-1], detalle]]
+
+
+def sepe_nivel_formativo(desde=2019):
+    """SEPE · demandantes parados por nivel formativo (Demandantes_empleo_por_NF_AAAAMM)."""
+    cab = ["fecha", "nivel", "hombres", "mujeres", "espanoles", "extranjeros", "total"]
+    return _sepe_mensual("sepe_demandantes_nivel", SEPE_NF, parsear_nivel_formativo, cab, desde)
+
+
 #!/usr/bin/env python3
 """
 pipeline/fuentes.py — Fase 2: lectores de SEPE, Seguridad Social y Ministerio de Trabajo.
@@ -286,29 +322,9 @@ def parsear_contratos_nivel(t, fecha):
 
 
 def sepe_contratos_nivel(desde=2019):
-    """SEPE: un fichero nacional por mes (Contratos_registrados_por_NF_AAAAMM). Los meses sin fichero se omiten."""
+    """SEPE · contratos registrados por nivel formativo (Contratos_registrados_por_NF_AAAAMM)."""
     cab = ["fecha", "nivel", "hombres", "mujeres", "indefinidos", "temporales", "total"]
-    filas, meses = [], []
-    hoy = date.today()
-    for a in range(desde, hoy.year + 1):
-        for m in range(1, 13):
-            if (a, m) > (hoy.year, hoy.month):
-                break
-            try:
-                t = texto(descargar(SEPE_CNF.format(f"{a}{m:02d}")))
-                filas += parsear_contratos_nivel(t, f"{a}-{m:02d}-01")
-                meses.append(f"{a}-{m:02d}")
-            except urllib.error.HTTPError:
-                continue
-            except ValueError as e:
-                print(f"  SEPE contratos por nivel {a}-{m:02d}: se omite ({e})")
-    if not filas:
-        raise ValueError("SEPE contratos por nivel: ningún mes descargado")
-    filas = con_historial("sepe_contratos_nivel", cab, filas)
-    escribir("sepe_contratos_nivel", cab, filas)
-    guardados = sorted({f[0][:7] for f in filas})
-    return [["sepe_contratos_nivel", "OK", len(filas), guardados[0], guardados[-1],
-             f"{len(guardados)} meses ({len(meses)} descargados ahora)"]]
+    return _sepe_mensual("sepe_contratos_nivel", SEPE_CNF, parsear_contratos_nivel, cab, desde)
 
 
 # ------------------------------------------------------------------------------------------------ Seguridad Social
@@ -652,6 +668,8 @@ def fundae():
     cuenta = {k: [s for s, v in est.items() if v == k] for k in ("hoy", "anterior", "sin datos")}
     detalle = (f"{len(cuenta['hoy'])} series actualizadas hoy, {len(cuenta['anterior'])} de cargas anteriores"
                + (f", sin datos: {', '.join(cuenta['sin datos'])}" if cuenta["sin datos"] else ""))
+    notas = fundae_lector.notas_guardadas(NORM / "fundae")
+    detalle += " · notas de fecha de los Excel: " + (" | ".join(notas)[:300] if notas else "ninguna")
     return [["fundae_formacion", "OK" if not cuenta["sin datos"] else "AVISO", len(filas), anyos[0], anyos[-1], detalle]]
 
 

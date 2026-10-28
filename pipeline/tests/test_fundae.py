@@ -87,3 +87,27 @@ def test_orden_de_carga_primero_lo_que_falta_y_lo_mas_viejo(tmp_path):
     assert orden[0] == series[-1]  # la que no tiene copia va la primera
     assert orden[1:] == series[:-1]  # y después, de la copia más antigua a la más reciente
     assert sorted(orden) == sorted(series)
+
+
+def _excel_simple(filas):
+    import io, openpyxl
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    for f in filas:
+        ws.append(f)
+    b = io.BytesIO()
+    wb.save(b)
+    return b.getvalue()
+
+
+def test_notas_de_fecha_del_excel_simple():
+    datos = _excel_simple([["Título de la serie"], ["Año", 2024, 2025], ["Total", 1, 2],
+                    ["Fuente: FUNDAE   Última actualización de los datos a: 31/03/2026"], ["Datos provisionales 2025"], ["nota sin interés"]])
+    assert fundae.notas(datos) == ["Fuente: FUNDAE Última actualización de los datos a: 31/03/2026", "Datos provisionales 2025"]
+    assert fundae.notas(_excel_simple([["Título"], ["Total", 1]])) == []
+
+
+def test_notas_guardadas_sin_repetir(tmp_path):
+    (tmp_path / "rptSeries01.notas.txt").write_text("a\nb")
+    (tmp_path / "rptSeries02.notas.txt").write_text("b\nc")
+    assert fundae.notas_guardadas(tmp_path) == ["a", "b", "c"]

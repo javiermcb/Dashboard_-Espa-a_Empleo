@@ -46,3 +46,4 @@ def test_un_mes_que_falla_no_borra_los_ya_guardados(tmp_path, monkeypatch):
         meses = sorted({l.split(",")[0] for l in fh.read().splitlines()[1:]})
     assert meses == ["2026-04-01", "2026-05-01"]  # abril se conserva y mayo se añade
     assert res[0][3:5] == ["2026-04", "2026-05"]
+    assert "sin fichero" in res[0][5] and "(HTTP 404)" in res[0][5]  # se anota qué meses recientes fallan y por qué
