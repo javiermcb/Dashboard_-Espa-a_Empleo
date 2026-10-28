@@ -192,9 +192,9 @@ Estado de los hallazgos de arriba tras las últimas fusiones (PR #32 a #50) y lo
 |---|---|
 | H4 · tablas por dashboard | Cerrado: cada app declara las suyas (D3 incluye ahora `fact_sepe_demandantes_nivel` y `fact_sepe_contratos_nivel`, opcionales) |
 | H6 · paneles sin fuente | Reducido: D1 (nivel educativo, urbano/rural, población, empleo) y D2 (UE-27, paro por estudios, tipo de contrato, sectores de ocupación) ya cargan Eurostat/EPA. Siguen sin fuente: sectores con potencial y competencias (D2) y 16-29 para los NEET (D1) |
-| H7 · año de FUNDAE | Sin confirmar en la metodología de FUNDAE. Dato a favor: en la carga publicada, los participantes de 2025 (13,52 M) están por encima de los de 2024 (13,11 M); un año parcial habría mostrado una caída |
+| H7 · año de FUNDAE | Sin confirmar en la metodología de FUNDAE. Desde el 28/10 la carga anota en `fuentes_carga.csv` las notas de fecha que traigan los Excel de FUNDAE (o «ninguna»). Dato a favor: en la carga publicada, los participantes de 2025 (13,52 M) están por encima de los de 2024 (13,11 M); un año parcial habría mostrado una caída |
 | H8 · atribución | Cerrado por diseño: la barra lateral y el pie solo muestran la fecha de la carga; cada gráfico cita su fuente en el texto de debajo |
-| H9 · pruebas de cifras | Abierto: las pruebas abren todas las páginas y validan lectores y marts con ficheros reales, pero no comparan cifras con datos oficiales |
+| H9 · pruebas de cifras | Parcial: desde el 28/10 el control de publicación comprueba la coherencia interna de las cifras (`pipeline/coherencia.py`: tasas EPA, partes que suman el total en FUNDAE, españoles + extranjeros, porcentajes en 0-100…) y rechaza la carga si algo no cuadra. Sigue sin haber comparación con cifras oficiales externas |
 | H11 · ensayo en ramas | Se mantiene a propósito: un push a `claude/**` que toca `pipeline/` lanza la carga completa de ensayo, que se usa como comprobación antes de fusionar |
 | H13 · ramas | Abierto, depende de ti: quedan unas 40 ramas `claude/*` y 3 `dependabot/*` ya fusionadas o sustituidas (las sesiones de Claude no pueden borrarlas; ver sección 10 de la guía) |
 | H16 · SEPE cortado | El control de publicación está; en la carga publicada las tres tablas de SEPE por municipio llegan a 2026-09 |
