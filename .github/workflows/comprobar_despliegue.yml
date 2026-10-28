@@ -31,13 +31,16 @@ jobs:
         env:
           APP_URL_2: ${{ vars.APP_URL_2 }}
           TEXTO: ${{ inputs.texto_d2 }}
-        run: python ops/comprobar_despliegue.py "$APP_URL_2" --texto "$TEXTO" | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          set -o pipefail  # sin esto, «| tee» oculta el fallo del script y el paso saldría verde aunque el texto no se vea
+          python ops/comprobar_despliegue.py "$APP_URL_2" --texto "$TEXTO" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Medir la barra lateral de cada app
         env:
           APP_URL_1: ${{ vars.APP_URL_1 }}
           APP_URL_2: ${{ vars.APP_URL_2 }}
           APP_URL_3: ${{ vars.APP_URL_3 }}
         run: |
+          set -o pipefail  # el fallo del script no debe quedar oculto por «| tee»
           fallo=0
           for v in APP_URL_1 APP_URL_2 APP_URL_3; do
             url="${!v}"
