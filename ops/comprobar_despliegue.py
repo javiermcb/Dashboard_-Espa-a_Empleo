@@ -3,7 +3,8 @@
 ops/comprobar_despliegue.py — Mide en la app DESPLEGADA el ancho de la barra lateral para saber si ya está publicada la
 versión con la barra mínima (unos 76 px; la antigua mide ~300 px). Lo ejecuta, a mano, comprobar_despliegue.yml.
 
-Uso: python ops/comprobar_despliegue.py https://<tu-app>.streamlit.app/
+Uso: python ops/comprobar_despliegue.py https://<tu-app>.streamlit.app/ [--texto "un texto que debe verse en la página" ...]
+Con --texto (repetible) comprueba además que cada texto aparece en la app desplegada (p. ej. el título de una sección nueva).
 Sale con 0 si la barra es la mínima, con 1 si es la antigua o si no se puede medir.
 """
 import os, sys
@@ -11,6 +12,7 @@ import os, sys
 from playwright.sync_api import sync_playwright
 
 URL = sys.argv[1]
+TEXTOS = [sys.argv[i + 1] for i, a in enumerate(sys.argv) if a == "--texto" and i + 1 < len(sys.argv)]
 DESPERTAR = ("get this app back up", "Yes, get this app back up")
 MEDIR = """() => { const s = document.querySelector('[data-testid="stSidebar"]');
   const c = document.querySelector('[data-testid="stMainBlockContainer"]'), h = document.querySelector('h1'), pie = document.querySelector('.rr-pie');
@@ -29,6 +31,20 @@ def medir(pag):
         if r:
             return r
     return None
+
+
+def faltan(pag, textos):
+    """Textos que no aparecen en ningún marco de la página (se miran con el texto tal como lo ve el usuario)."""
+    visto = " ".join(" ".join(f.inner_text("body").split()) for f in pag.frames if f.url.startswith("http") and _ok(f))
+    return [t for t in textos if " ".join(t.split()) not in visto]
+
+
+def _ok(f):
+    try:
+        f.inner_text("body", timeout=3_000)
+        return True
+    except Exception:
+        return False
 
 
 def main():
@@ -60,7 +76,17 @@ def main():
         nueva = r["ancho"] <= 100
         print(f"{URL}: barra de {r['ancho']} px ({r['ancho'] / 37.8:.1f} cm) → {'BARRA NUEVA' if nueva else 'BARRA ANTIGUA'} · texto: «{r['texto']}»")
         print(f"   cabecera: relleno superior {r['relleno']} (nuevo: 48px, antiguo: 96px) · título a {r['titulo']} px · margen del pie {r['pie_margen']} (nuevo: -6.4px) · relleno inferior {r['relleno_inf']} (nuevo: 56px; incrustado antes: 16px)")
-        return 0 if nueva else 1
+        ausentes = []
+        if TEXTOS:
+            ausentes = TEXTOS
+            for _ in range(12):  # la sección puede tardar en pintarse: hasta 60 s
+                ausentes = faltan(pag, TEXTOS)
+                if not ausentes:
+                    break
+                pag.wait_for_timeout(5_000)
+            for t in TEXTOS:
+                print(f"   texto «{t}»: {'NO SE VE' if t in ausentes else 'se ve'}")
+        return 0 if nueva and not ausentes else 1
 
 
 if __name__ == "__main__":
