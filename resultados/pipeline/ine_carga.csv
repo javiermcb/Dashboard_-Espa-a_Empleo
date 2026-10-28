@@ -1,58 +1,58 @@
 tabla_id;punto;tema;estado;series;datos;fecha_min;fecha_max;tiempo;error
-36846;1;EES 2022: salario por sexo y gran grupo de ocupación (CNO-11);OK;3762;3762;2022-01-01;2022-01-01;11s;
-70688;1;EES 2018: salario por sexo y gran grupo de ocupación (CNO-11);OK;3762;3762;2018-01-01;2018-01-01;10s;
-28191;1;EAES: medias y percentiles por sexo y CCAA;OK;324;5508;2008-01-01;2024-01-01;6s;
-66238;1;EPA decil: salarios medios por jornada, sexo y decil;OK;99;1881;2006-01-01;2024-01-01;3s;
-66241;1;EPA decil: salarios medios por jornada, CCAA y decil;OK;660;12540;2006-01-01;2024-01-01;7s;
+36846;1;EES 2022: salario por sexo y gran grupo de ocupación (CNO-11);OK;3762;3762;2022-01-01;2022-01-01;9s;
+70688;1;EES 2018: salario por sexo y gran grupo de ocupación (CNO-11);OK;3762;3762;2018-01-01;2018-01-01;9s;
+28191;1;EAES: medias y percentiles por sexo y CCAA;OK;324;5508;2008-01-01;2024-01-01;4s;
+66238;1;EPA decil: salarios medios por jornada, sexo y decil;OK;99;1881;2006-01-01;2024-01-01;2s;
+66241;1;EPA decil: salarios medios por jornada, CCAA y decil;OK;660;12540;2006-01-01;2024-01-01;6s;
 66244;1;EPA decil: salarios medios por jornada, ocupación y decil;OK;363;5082;2011-01-01;2024-01-01;4s;
 66252;1;EPA decil: salarios medios y límite inferior de cada decil;OK;20;380;2006-01-01;2024-01-01;2s;
-6061;2;ETCL: coste laboral por trabajador, CCAA y sector;OK;504;37296;2008-01-01;2026-04-01;14s;
-6062;2;ETCL: coste laboral por hora efectiva, CCAA y sector;OK;288;21312;2008-01-01;2026-04-01;9s;
-6063;2;ETCL: tiempo de trabajo por trabajador y mes, CCAA;OK;1080;79920;2008-01-01;2026-04-01;28s;
-6056;2;ETCL: percepciones por día de IT y coste de despido;OK;44;3256;2008-01-01;2026-04-01;2s;
+6061;2;ETCL: coste laboral por trabajador, CCAA y sector;OK;504;37296;2008-01-01;2026-04-01;12s;
+6062;2;ETCL: coste laboral por hora efectiva, CCAA y sector;OK;288;21312;2008-01-01;2026-04-01;8s;
+6063;2;ETCL: tiempo de trabajo por trabajador y mes, CCAA;OK;1080;79920;2008-01-01;2026-04-01;25s;
+6056;2;ETCL: percepciones por día de IT y coste de despido;OK;44;3256;2008-01-01;2026-04-01;3s;
 6064;2;ETCL: vacantes por CCAA;OK;18;936;2013-07-01;2026-04-01;2s;
-65345;3;EPA: población por relación con la actividad, sexo y provincia;OK;954;94446;2002-01-01;2026-07-01;32s;
-65354;3;EPA: ocupados por sector y provincia;OK;265;19875;2008-01-01;2026-07-01;8s;
+65345;3;EPA: población por relación con la actividad, sexo y provincia;OK;954;94446;2002-01-01;2026-07-01;27s;
+65354;3;EPA: ocupados por sector y provincia;OK;265;19875;2008-01-01;2026-07-01;9s;
 66031;3;EPA: tasa de empleo por sexo, edad y CCAA;OK;420;8400;2006-01-01;2025-01-01;5s;
-66055;3;EPA: tasa de paro por sexo, edad y CCAA;OK;420;8400;2006-01-01;2025-01-01;5s;
-66266;3;EFPA: flujos entre empleo, paro e inactividad por CCAA;OK;400;34400;2005-04-01;2026-07-01;13s;
+66055;3;EPA: tasa de paro por sexo, edad y CCAA;OK;420;8400;2006-01-01;2025-01-01;4s;
+66266;3;EFPA: flujos entre empleo, paro e inactividad por CCAA;OK;400;34400;2005-04-01;2026-07-01;11s;
 37630;4;IPT: índices por CCAA;OK;36;612;2008-01-01;2024-01-01;2s;
-37624;4;IPT: índices por ocupación;ANTERIOR;18;306;2008-01-01;2024-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-76134;4;IPC: tasa de variación del índice general nacional;ANTERIOR;3;2342;;2026-09-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-76140;4;IPC: tasa de variación del índice general por CCAA;ANTERIOR;60;33545;1978-01-01;2026-09-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-10888;5;MYH: brecha salarial de género por edad;ANTERIOR;6;90;2009-01-01;2023-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-10891;5;MYH: brecha salarial de género por tipo de jornada;ANTERIOR;2;30;2009-01-01;2023-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-39374;6;DIRCE: empresas por provincia y estrato de asalariados;ANTERIOR;689;4134;2020-01-01;2025-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-6043;2;ETCL: tiempo de trabajo por sección CNAE (incluye horas no trabajadas por IT y por vacaciones);ANTERIOR;399;29526;2008-01-01;2026-04-01;19s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-6032;2;ETCL: coste laboral por trabajador y componente, por sección CNAE;ANTERIOR;228;16872;2008-01-01;2026-04-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-6048;3;ETCL: vacantes por sección CNAE;ANTERIOR;19;988;2013-07-01;2026-04-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65805;3;EPA: asalariados contratados a través de ETT, por sexo y CCAA (personas);ANTERIOR;240;4800;2006-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65809;3;EPA: asalariados temporales por motivo de la temporalidad, sexo y CCAA;ANTERIOR;360;1800;2021-01-01;2025-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65212;2;EPA: asalariados que hacen horas extra (pagadas o no), por sexo y sección CNAE;ANTERIOR;396;29700;2008-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65304;3;EPA: ocupados por CCAA, sexo, edad y sector;ANTERIOR;1500;112500;2008-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65776;2;EPA: teletrabajo (días en el domicilio), por sexo y CCAA (porcentaje);ANTERIOR;300;6000;2006-01-01;2025-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-36858;1;EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato;ANTERIOR;684;684;2022-01-01;2022-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-36861;1;EES 2022: salario medio por CCAA, sexo, sector y antigüedad;ANTERIOR;1596;1596;2022-01-01;2022-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-49508;7;ODS 8.6.1: jóvenes de 15 a 24 años que ni estudian ni trabajan, por sexo (%);ANTERIOR;3;18;2020-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-59513;7;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por sexo (%);ANTERIOR;3;33;2015-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-59514;7;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por nacionalidad (%);ANTERIOR;3;33;2015-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-62285;7;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por CCAA (%);ANTERIOR;20;220;2015-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-66023;7;EPA media anual: tasa de actividad por edad, sexo y CCAA;ANTERIOR;420;8400;2006-01-01;2025-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-66028;7;EPA media anual: tasa de actividad por nacionalidad, sexo y CCAA;ANTERIOR;300;6000;2006-01-01;2025-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-66036;7;EPA media anual: tasa de empleo por nacionalidad, sexo y CCAA;ANTERIOR;300;6000;2006-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-66057;7;EPA media anual: tasa de paro por nacionalidad, sexo y CCAA;ANTERIOR;300;6000;2006-01-01;2025-01-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-66061;7;EPA media anual: parados por tiempo de búsqueda de empleo, sexo y CCAA (% del total de cada comunidad);ANTERIOR;480;9600;2006-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-79659;2;ETCL: tiempo de trabajo por trabajador y mes por CCAA, tipo de jornada y sector (tabla nueva: se comprueba si trae horas no trabajadas por IT);ANTERIOR;1080;79920;2008-01-01;2026-04-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-6042;2;ETCL: tiempo de trabajo por trabajador y mes, tipo de jornada y sector;ANTERIOR;84;6216;2008-01-01;2026-04-01;17s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-13913;6;Sociedades mercantiles constituidas por CCAA y provincia;ANTERIOR;160;37088;1995-01-01;2026-08-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-13915;6;Sociedades mercantiles disueltas por CCAA y provincia;ANTERIOR;80;18544;1995-01-01;2026-08-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-80109;6;Contabilidad Regional: PIB a precios corrientes por CCAA y provincia;ANTERIOR;192;4799;2000-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-82000;6;Contabilidad Regional: empleo total (personas) por CCAA y provincia;ANTERIOR;64;1621;2000-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-81998;6;Contabilidad Regional: remuneración de los asalariados por CCAA;ANTERIOR;21;546;2000-01-01;2025-01-01;19s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-82001;6;Contabilidad Regional: empleo asalariado (personas) por CCAA y provincia;ANTERIOR;64;1621;2000-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65309;3;EPA: ocupados por nacionalidad, sexo y CCAA;ANTERIOR;300;29700;2002-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-79285;3;EPA: ocupados por nacionalidad, sexo y sector;ANTERIOR;120;360;2026-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-67567;3;EPA: tasa de paro por nivel de formación y CCAA;ANTERIOR;80;398;2021-01-01;2025-01-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-79304;3;EPA: ocupados subempleados por situación profesional, sexo y sector;ANTERIOR;60;180;2026-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65135;3;EPA: ocupados por grupo de edad, sexo y ocupación;ANTERIOR;429;27027;2011-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-65343;3;EPA: inactivos por clase principal de inactividad (estudiante, jubilado, labores del hogar…), sexo y CCAA;ANTERIOR;420;41580;2002-01-01;2026-07-01;18s;HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
+37624;4;IPT: índices por ocupación;OK;18;306;2008-01-01;2024-01-01;2s;
+76134;4;IPC: tasa de variación del índice general nacional;OK;3;2342;;2026-09-01;2s;
+76140;4;IPC: tasa de variación del índice general por CCAA;OK;60;33545;1978-01-01;2026-09-01;11s;
+10888;5;MYH: brecha salarial de género por edad;OK;6;90;2009-01-01;2023-01-01;2s;
+10891;5;MYH: brecha salarial de género por tipo de jornada;OK;2;30;2009-01-01;2023-01-01;2s;
+39374;6;DIRCE: empresas por provincia y estrato de asalariados;OK;689;4134;2020-01-01;2025-01-01;4s;
+6043;2;ETCL: tiempo de trabajo por sección CNAE (incluye horas no trabajadas por IT y por vacaciones);OK;399;29526;2008-01-01;2026-04-01;11s;
+6032;2;ETCL: coste laboral por trabajador y componente, por sección CNAE;OK;228;16872;2008-01-01;2026-04-01;6s;
+6048;3;ETCL: vacantes por sección CNAE;OK;19;988;2013-07-01;2026-04-01;3s;
+65805;3;EPA: asalariados contratados a través de ETT, por sexo y CCAA (personas);OK;240;4800;2006-01-01;2025-01-01;3s;
+65809;3;EPA: asalariados temporales por motivo de la temporalidad, sexo y CCAA;OK;360;1800;2021-01-01;2025-01-01;3s;
+65212;2;EPA: asalariados que hacen horas extra (pagadas o no), por sexo y sección CNAE;OK;396;29700;2008-01-01;2026-07-01;11s;
+65304;3;EPA: ocupados por CCAA, sexo, edad y sector;OK;1500;112500;2008-01-01;2026-07-01;32s;
+65776;2;EPA: teletrabajo (días en el domicilio), por sexo y CCAA (porcentaje);OK;300;6000;2006-01-01;2025-01-01;4s;
+36858;1;EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato;OK;684;684;2022-01-01;2022-01-01;3s;
+36861;1;EES 2022: salario medio por CCAA, sexo, sector y antigüedad;OK;1596;1596;2022-01-01;2022-01-01;5s;
+49508;7;ODS 8.6.1: jóvenes de 15 a 24 años que ni estudian ni trabajan, por sexo (%);OK;3;18;2020-01-01;2025-01-01;2s;
+59513;7;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por sexo (%);OK;3;33;2015-01-01;2025-01-01;3s;
+59514;7;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por nacionalidad (%);OK;3;33;2015-01-01;2025-01-01;2s;
+62285;7;Jóvenes de 15 a 29 años que ni estudian ni trabajan, por CCAA (%);OK;20;220;2015-01-01;2025-01-01;3s;
+66023;7;EPA media anual: tasa de actividad por edad, sexo y CCAA;OK;420;8400;2006-01-01;2025-01-01;4s;
+66028;7;EPA media anual: tasa de actividad por nacionalidad, sexo y CCAA;OK;300;6000;2006-01-01;2025-01-01;4s;
+66036;7;EPA media anual: tasa de empleo por nacionalidad, sexo y CCAA;OK;300;6000;2006-01-01;2025-01-01;4s;
+66057;7;EPA media anual: tasa de paro por nacionalidad, sexo y CCAA;OK;300;6000;2006-01-01;2025-01-01;4s;
+66061;7;EPA media anual: parados por tiempo de búsqueda de empleo, sexo y CCAA (% del total de cada comunidad);OK;480;9600;2006-01-01;2025-01-01;7s;
+79659;2;ETCL: tiempo de trabajo por trabajador y mes por CCAA, tipo de jornada y sector (tabla nueva: se comprueba si trae horas no trabajadas por IT);OK;1080;79920;2008-01-01;2026-04-01;25s;
+6042;2;ETCL: tiempo de trabajo por trabajador y mes, tipo de jornada y sector;OK;84;6216;2008-01-01;2026-04-01;4s;
+13913;6;Sociedades mercantiles constituidas por CCAA y provincia;OK;160;37088;1995-01-01;2026-08-01;12s;
+13915;6;Sociedades mercantiles disueltas por CCAA y provincia;OK;80;18544;1995-01-01;2026-08-01;7s;
+80109;6;Contabilidad Regional: PIB a precios corrientes por CCAA y provincia;OK;192;4799;2000-01-01;2025-01-01;3s;
+82000;6;Contabilidad Regional: empleo total (personas) por CCAA y provincia;OK;64;1621;2000-01-01;2025-01-01;2s;
+81998;6;Contabilidad Regional: remuneración de los asalariados por CCAA;OK;21;546;2000-01-01;2025-01-01;2s;
+82001;6;Contabilidad Regional: empleo asalariado (personas) por CCAA y provincia;OK;64;1621;2000-01-01;2025-01-01;2s;
+65309;3;EPA: ocupados por nacionalidad, sexo y CCAA;OK;300;29700;2002-01-01;2026-07-01;10s;
+79285;3;EPA: ocupados por nacionalidad, sexo y sector;OK;120;360;2026-01-01;2026-07-01;2s;
+67567;3;EPA: tasa de paro por nivel de formación y CCAA;OK;80;398;2021-01-01;2025-01-01;2s;
+79304;3;EPA: ocupados subempleados por situación profesional, sexo y sector;OK;60;180;2026-01-01;2026-07-01;2s;
+65135;3;EPA: ocupados por grupo de edad, sexo y ocupación;OK;429;27027;2011-01-01;2026-07-01;10s;
+65343;3;EPA: inactivos por clase principal de inactividad (estudiante, jubilado, labores del hogar…), sexo y CCAA;OK;420;41580;2002-01-01;2026-07-01;14s;
