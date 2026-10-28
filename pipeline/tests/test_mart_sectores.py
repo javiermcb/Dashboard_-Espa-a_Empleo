@@ -34,3 +34,11 @@ def test_solo_total_españa_total_regimenes_y_cnae_2009():
     ruido = (_anyo(2025, "A", 5.0, territorio="C01") + _anyo(2025, "A", 7.0, regimen="REGIMEN GENERAL")
              + _anyo(2025, "A", 9.0, consulta="afil_medios_ccaa_cnae25_regimen"))
     assert _filas(_anyo(2025, "A", 110.0) + ruido) == [(2025, "A", 110.0, None, None)]
+
+
+def test_todos_los_marts_de_la_muestra_tienen_fecha():
+    """modelo.py resume cada mart con min(fecha)/max(fecha): un mart sin esa columna rompe la carga entera (ocurrió con este)."""
+    marts = sorted((RAIZ / "resultados" / "dev_modelo" / "marts").glob("*.parquet"))
+    assert marts
+    sin = [m.name for m in marts if "fecha" not in [r[0] for r in duckdb.sql(f"DESCRIBE SELECT * FROM '{m.as_posix()}'").fetchall()]]
+    assert sin == []

@@ -10,11 +10,14 @@ Comprueba, con datos/publicar/modelo/metadatos.json (publicacion.py) y el de la 
   3. Ninguna tabla pierde más del 50 % de sus filas frente a la carga publicada (un fichero cortado o un cambio de formato).
   4. Las tablas mensuales de SEPE (que solo crecen) no pierden más del 5 % de sus filas: un CSV anual cortado quitaba meses sin llegar al 50 %.
   5. El último periodo de una tabla con fecha no retrocede frente a la carga publicada (si esa carga ya lo registra).
+  6. Las cifras son coherentes entre sí (pipeline/coherencia.py): las partes suman el total, las tasas cuadran, los porcentajes están en 0-100.
 Salida: datos/qa/control_publicacion.md · código 1 si no se debe publicar.
 Uso:    python pipeline/control_publicacion.py [--caida-max 0.5]
 """
 import argparse, ast, json, sys
 from pathlib import Path
+
+from coherencia import revisar_modelo
 
 RAIZ = Path(__file__).resolve().parent.parent
 NUEVO = RAIZ / "datos" / "publicar" / "modelo" / "metadatos.json"
@@ -77,6 +80,7 @@ def main():
     else:
         previo = json.loads(PREVIO.read_text(encoding="utf-8")) if PREVIO.exists() else None
         problemas = revisar(json.loads(NUEVO.read_text(encoding="utf-8")), previo, tablas_app(), a.caida_max)
+        problemas += revisar_modelo(NUEVO.parent)
     SALIDA.parent.mkdir(parents=True, exist_ok=True)
     if problemas:
         texto = ["### No se han publicado los datos de hoy: no superan el control de calidad", "",

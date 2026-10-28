@@ -18,7 +18,7 @@ flowchart LR
 
 | Carpeta | Qué contiene |
 |---|---|
-| `pipeline/` | Descarga, modelo, control de calidad y publicación (idéntico a `Datos_INE`). Configuración en `pipeline/config/` |
+| `pipeline/` | Descarga, modelo, control de calidad (incluida la coherencia interna de las cifras, `coherencia.py`) y publicación (idéntico a `Datos_INE`). Configuración en `pipeline/config/` |
 | `comun/` | Código compartido por todos los dashboards: lectura de datos (`datos.py`), gráficos, arranque (`base.py`) y páginas comunes (`paginas/`: estado de los datos, descargas). Cada dashboard declara en `arrancar(..., tablas=[...])` las tablas que usa y solo descarga esas |
 | `dashboards/dashboard_1` … `dashboard_3` | Un dashboard cada uno: `app.py` (título y menú) y `paginas/` (lo propio). El 1 (jóvenes NEET), el 2 (empleo, actividad y sectores) y el 3 (FUNDAE) están hechos en lo que cubren los datos |
 | `tests/` | Abre todas las páginas de todos los dashboards con la muestra `resultados/dev_modelo` (o con los datos publicados, si `RRHH_DATOS` apunta a ellos); comprueba además que cada dashboard carga solo sus tablas y que oculta el botón «Fullscreen» |
