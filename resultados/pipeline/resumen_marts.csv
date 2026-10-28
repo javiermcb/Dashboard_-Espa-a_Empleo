@@ -18,6 +18,7 @@ mart_precios;36778;1970-02-01;2026-09-01
 mart_salarios_eaes;5508;2008-01-01;2024-01-01
 mart_salarios_ees;5862;2018-01-01;2022-01-01
 mart_salarios_ees_detalle;1823;2022-01-01;2022-01-01
+mart_sectores_empleo;374;2009-01-01;2025-01-01
 mart_tasas_epa;25174;2006-01-01;2025-01-01
 mart_teletrabajo;5914;2006-01-01;2025-01-01
 mart_temporalidad_motivo;1642;2021-01-01;2025-01-01
