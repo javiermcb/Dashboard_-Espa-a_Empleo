@@ -4,6 +4,11 @@ name: Comprobar el despliegue de la barra lateral
 # publicada la versión con la barra mínima (~76 px). URLs: variables del repositorio APP_URL_1 … APP_URL_3.
 on:
   workflow_dispatch:
+    inputs:
+      texto_d2:
+        description: "Opcional: texto que debe verse en el Dashboard 2 desplegado (p. ej. el título de una sección nueva)"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -21,6 +26,12 @@ jobs:
         run: |
           pip install playwright==1.63.0
           python -m playwright install --with-deps chromium
+      - name: Comprobar un texto en el Dashboard 2 desplegado
+        if: ${{ inputs.texto_d2 != '' }}
+        env:
+          APP_URL_2: ${{ vars.APP_URL_2 }}
+          TEXTO: ${{ inputs.texto_d2 }}
+        run: python ops/comprobar_despliegue.py "$APP_URL_2" --texto "$TEXTO" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Medir la barra lateral de cada app
         env:
           APP_URL_1: ${{ vars.APP_URL_1 }}
