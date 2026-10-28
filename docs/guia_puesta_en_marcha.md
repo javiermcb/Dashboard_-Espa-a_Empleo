@@ -214,7 +214,7 @@ Abre cada URL en el navegador (también en el móvil) y comprueba:
 - [ ] Tarjetas de actividad, empleo y paro y selector de grupo de edad.
 - [ ] Tabla comparativa territorial como mapa de calor (España en gris).
 - [ ] España frente a la UE-27 (selector Paro/Empleo), paro joven por estudios, dónde trabajan los jóvenes, temporalidad y jornada parcial.
-- [ ] Dos recuadros «Pendientes de fuente» (sectores con potencial y competencias): es lo esperado.
+- [ ] «Dónde crece más el empleo» (afiliados por sector, Seguridad Social) y un recuadro «Pendiente de fuente» (competencias): es lo esperado.
 
 **Dashboard 3 — FUNDAE y oportunidades**
 - [ ] Oportunidades por comunidad (demandantes menores de 25, contratos y formación) y nivel de estudios de las personas paradas.
@@ -234,7 +234,7 @@ Desde el entorno de trabajo de Claude solo se alcanza Eurostat; INE, SEPE, FUNDA
 | Dashboard | Panel pendiente | Situación |
 |---|---|---|
 | 1 | Cifras 16-29 de los NEET | El INE solo publica 15-29 |
-| 2 | Sectores con potencial | Hace falta una previsión por sector (p. ej. Cedefop Skills Forecast), sin localizar |
+| 2 | Previsión de empleo por sector | Se muestra dónde crece más el empleo (afiliación, hechos observados); una previsión (p. ej. Cedefop Skills Forecast) sigue sin localizarse |
 | 2 | Competencias demandadas | Fuente abierta por localizar |
 | 3 | Formación subvencionada para desempleados | FUNDAE solo la publica en PDF por convocatoria y en informes de Power BI sin descarga; se descartó depender de PDFs |
 

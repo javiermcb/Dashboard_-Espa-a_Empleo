@@ -191,7 +191,7 @@ Estado de los hallazgos de arriba tras las últimas fusiones (PR #32 a #50) y lo
 | Hallazgo | Estado a 27/10/2026 |
 |---|---|
 | H4 · tablas por dashboard | Cerrado: cada app declara las suyas (D3 incluye ahora `fact_sepe_demandantes_nivel` y `fact_sepe_contratos_nivel`, opcionales) |
-| H6 · paneles sin fuente | Reducido: D1 (nivel educativo, urbano/rural, población, empleo) y D2 (UE-27, paro por estudios, tipo de contrato, sectores de ocupación) ya cargan Eurostat/EPA. Siguen sin fuente: sectores con potencial y competencias (D2) y 16-29 para los NEET (D1) |
+| H6 · paneles sin fuente | Reducido: D1 (nivel educativo, urbano/rural, población, empleo) y D2 (UE-27, paro por estudios, tipo de contrato, sectores de ocupación) ya cargan Eurostat/EPA. Desde el 28/10 D2 muestra dónde crece más el empleo por sector (afiliación a la Seguridad Social, no es una previsión). Siguen sin fuente: previsión por sector y competencias (D2) y 16-29 para los NEET (D1) |
 | H7 · año de FUNDAE | Sin confirmar en la metodología de FUNDAE. Dato a favor: en la carga publicada, los participantes de 2025 (13,52 M) están por encima de los de 2024 (13,11 M); un año parcial habría mostrado una caída |
 | H8 · atribución | Cerrado por diseño: la barra lateral y el pie solo muestran la fecha de la carga; cada gráfico cita su fuente en el texto de debajo |
 | H9 · pruebas de cifras | Abierto: las pruebas abren todas las páginas y validan lectores y marts con ficheros reales, pero no comparan cifras con datos oficiales |

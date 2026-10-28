@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 import streamlit as st
 
@@ -225,10 +227,23 @@ if not oc.empty and (oc.sector == "Servicios").any():
                f"{g.pct(todos['Servicios'] / todos.sum() * 100)} del conjunto de los ocupados. Fuente: INE, EPA (media de los cuatro trimestres). "
                "La EPA reparte los ocupados en cuatro grandes sectores; el detalle por rama (logística, hostelería…) no está en esta fuente.")
 
+# --- dónde crece más el empleo (afiliación a la Seguridad Social por sección CNAE, todas las edades) ----------------
+sec = (datos.q("SELECT anyo, seccion_cnae, afiliados, variacion, variacion_pct FROM mart_sectores_empleo WHERE seccion_cnae <> 'TODAS LAS SECCIONES'")
+       if datos.hay("mart_sectores_empleo") else pd.DataFrame())
+if not sec.empty and sec.variacion.notna().any():
+    st.subheader("Dónde crece más el empleo")
+    a_s = int(sec[sec.variacion.notna()].anyo.max())
+    top = sec[(sec.anyo == a_s) & sec.variacion.notna()].nlargest(8, "variacion").copy()
+    top["sector"] = top.seccion_cnae.map(lambda x: re.split(r"[;.] ", re.sub(r"^[A-Z]\.\s*", "", x))[0].capitalize())
+    top["miles"] = top.variacion / 1000
+    g.barras(top[["sector", "miles"]], "sector", "miles", fmt=",.1f", titulo_val=f"Miles de afiliados más que en {a_s - 1}")
+    m = top.iloc[0]
+    st.caption(f"Afiliados medios a la Seguridad Social (régimen general y autónomos), {a_s} frente a {a_s - 1}. Es donde más crece el empleo hoy, "
+               f"no una previsión: {m.sector.lower()} suma {g.es(m.variacion)} afiliados ({g.pct(m.variacion_pct)} más). La afiliación por sector no se publica por edad, "
+               "así que son todas las edades, no solo los jóvenes (para los jóvenes, ver «Dónde trabajan los jóvenes»). Fuente: Seguridad Social, "
+               "afiliados medios por sección de actividad (CNAE 2009), último año completo.")
+
 # --- paneles sin fuente -----------------------------------------------------------------------------------------
-st.subheader("Pendientes de fuente")
-p = st.columns(2)
-p[0].info("**Sectores con mayor potencial.** Hace falta una previsión de empleo por sector (no solo la situación actual): las proyecciones de "
-          "Cedefop (Skills Forecast, España a 2035) son la candidata; falta confirmar que se pueden descargar por sector.")
-p[1].info("**Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
-          "informes de competencias y necesidades formativas, no una serie de datos.")
+st.subheader("Pendiente de fuente")
+st.info("**Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
+        "informes de competencias y necesidades formativas, no una serie de datos.")

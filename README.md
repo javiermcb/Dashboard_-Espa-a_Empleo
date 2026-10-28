@@ -118,7 +118,7 @@ las dos versiones y las pruebas pasan con ambas, pero falta ejecutar una carga c
 ## Pendiente de decidir
 
 - Dashboard 1: cifras 16-29 para los NEET (el INE solo publica 15-29; ver `docs/dashboard_1_fuentes.md`).
-- Dashboard 2: sectores con potencial (previsión) y competencias demandadas: no hay una fuente abierta que se actualice sola.
+- Dashboard 2: competencias demandadas (no hay una fuente abierta que se actualice sola) y una previsión de empleo por sector (hoy se muestra dónde crece más el empleo, no una previsión).
 - Dashboard 3: sin crédito asignado/disponible (FUNDAE solo publica el «dispuesto») y sin formación subvencionada para desempleados
   (FUNDAE solo la publica en PDF por convocatoria y en informes de Power BI sin descarga; se descartó depender de PDFs).
 
