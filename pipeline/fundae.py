@@ -183,7 +183,8 @@ def leer(serie, datos, url=""):
     return out
 
 
-RX_NOTA = re.compile(r"actualiz|provisional|definitiv|cerrad|a fecha|fecha de|datos a\b", re.I)
+# solo frases que hablan de la fecha o del estado de los datos; «Actualización en docencia», por ejemplo, es una etiqueta de una categoría
+RX_NOTA = re.compile(r"[uú]ltima actualizaci[oó]n|fecha de actualizaci[oó]n|actualizad[oa]s? a|datos a:?\s*\d|a fecha|provisional|definitiv|datos cerrados", re.I)
 
 
 def notas(datos):

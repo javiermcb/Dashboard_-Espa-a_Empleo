@@ -111,3 +111,9 @@ def test_notas_guardadas_sin_repetir(tmp_path):
     (tmp_path / "rptSeries01.notas.txt").write_text("a\nb")
     (tmp_path / "rptSeries02.notas.txt").write_text("b\nc")
     assert fundae.notas_guardadas(tmp_path) == ["a", "b", "c"]
+
+
+def test_el_filtro_de_notas_no_confunde_etiquetas_con_fechas():
+    datos = _excel_simple([["Título"], ["Actualización en docencia", 10], ["Participantes", 3],
+                           ["Última actualización de los datos a: 31/03/2026"]])
+    assert fundae.notas(datos) == ["Última actualización de los datos a: 31/03/2026"]
