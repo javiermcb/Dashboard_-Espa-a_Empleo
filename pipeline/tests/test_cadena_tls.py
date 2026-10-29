@@ -45,3 +45,16 @@ def test_sin_raiz_conocida_o_sin_intermedios():
     _, intermedio, _ = _cadena()
     assert not cadena_confiable([intermedio], [])
     assert not cadena_confiable([], [intermedio])
+
+
+def test_raiz_fuera_del_sistema_pero_fijada_por_huella():
+    from catalogo_fuentes import huellas
+    raiz, intermedio, _ = _cadena()
+    assert not cadena_confiable([intermedio, raiz], [])
+    assert cadena_confiable([intermedio, raiz], [], {huellas(raiz)[0]})
+
+
+def test_huella_de_otra_raiz_no_vale():
+    from catalogo_fuentes import huellas
+    raiz, intermedio, falso = _cadena()
+    assert not cadena_confiable([intermedio, raiz], [], {huellas(falso)[0]})

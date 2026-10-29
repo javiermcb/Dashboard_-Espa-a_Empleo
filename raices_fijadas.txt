@@ -1,0 +1,3 @@
+# Huellas SHA-256 (hexadecimal) de raíces de confianza adicionales para descargar fuentes oficiales.
+# Añade una huella solo después de compararla con la que publica la entidad (p. ej. la FNMT en su sede electrónica).
+# El log de «Fuentes fase 2» imprime «::warning::… SHA-256 …» para cada raíz pendiente de fijar.
