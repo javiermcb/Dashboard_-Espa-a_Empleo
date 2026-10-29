@@ -108,9 +108,9 @@ da por bueno.
   (27 commits, 13 ramas) y en los ficheros: sin coincidencias, ni ficheros sensibles versionados. El correo personal con
   el que se firmaron los commits es visible.
 - Los dashboards son públicos y sin acceso: es lo pedido. Los datos son agregados por territorio y sector.
-- Revisar: `catalogo_fuentes.py` completa la cadena TLS del Ministerio descargando un certificado intermedio por HTTP
-  desde `cert.fnmt.es`. No se ha revisado en profundidad; conviene confirmar que la cadena se valida contra raíces de
-  confianza.
+- Corregido (29/10/2026): `catalogo_fuentes.py` ya no confía en el certificado intermedio descargado por HTTP por sí solo: solo
+  lo añade si su firma enlaza con una raíz que el sistema ya conoce (`cadena_confiable`, con pruebas). Además, la conexión
+  DuckDB de las apps queda limitada a la carpeta de los datos y bloqueada tras crear las vistas (`comun/datos._blindar`).
 
 ### Baja
 

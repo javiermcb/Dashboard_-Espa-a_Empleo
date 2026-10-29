@@ -77,9 +77,33 @@ PUBLICADORES = re.compile(r"Servicio P[úu]blico de Empleo|SEPE|Seguridad Social
 _CTX = {}
 
 
+def cadena_confiable(intermedios, raices):
+    """True si `intermedios` (de abajo arriba: el emisor del certificado del servidor, su emisor…) forman una cadena firmada
+    y la última la firma una raíz de `raices` (o es una de ellas). Un intermedio descargado por HTTP no se acepta si no
+    termina en una raíz que el sistema ya conoce."""
+    if not intermedios:
+        return False
+    try:
+        for hijo, padre in zip(intermedios, intermedios[1:]):
+            hijo.verify_directly_issued_by(padre)
+        ultimo = intermedios[-1]
+        for raiz in raices:
+            if raiz == ultimo:
+                return True
+            try:
+                ultimo.verify_directly_issued_by(raiz)
+                return True
+            except Exception:
+                continue
+    except Exception:
+        return False
+    return False
+
+
 def contexto(host):
     """Contexto TLS verificado. Si el servidor no envía su certificado intermedio (le pasa a mites.gob.es),
-    se descarga desde la URL 'CA Issuers' (AIA) del propio certificado y se añade. La verificación sigue activa."""
+    se descarga desde la URL 'CA Issuers' (AIA) del propio certificado, pero solo se añade si su cadena termina en una raíz
+    que el sistema ya considera de confianza (firma comprobada): lo bajado por HTTP no se confía por sí solo."""
     if host in _CTX:
         return _CTX[host]
     ctx = ssl.create_default_context()
@@ -91,22 +115,23 @@ def contexto(host):
             from cryptography import x509
             from cryptography.hazmat.primitives.serialization import Encoding
             from cryptography.x509.oid import AuthorityInformationAccessOID, ExtensionOID
+            raices = [x509.load_der_x509_certificate(c) for c in ctx.get_ca_certs(binary_form=True)]
             cert = x509.load_pem_x509_certificate(ssl.get_server_certificate((host, 443)).encode())
+            intermedios = []
             for _ in range(3):  # sube hasta 3 niveles de intermedios
                 aia = cert.extensions.get_extension_for_oid(ExtensionOID.AUTHORITY_INFORMATION_ACCESS).value
                 url = next(d.access_location.value for d in aia if d.access_method == AuthorityInformationAccessOID.CA_ISSUERS)
                 with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
                     datos = r.read()
                 cert = x509.load_der_x509_certificate(datos) if not datos.startswith(b"-----") else x509.load_pem_x509_certificate(datos)
-                ctx.load_verify_locations(cadata=cert.public_bytes(Encoding.PEM).decode())
-                print(f"  {host}: añadido intermedio {cert.subject.rfc4514_string()} ({url})")
-                if cert.issuer == cert.subject:
+                intermedios.append(cert)
+                if cadena_confiable(intermedios, raices):
+                    for c in intermedios:
+                        ctx.load_verify_locations(cadata=c.public_bytes(Encoding.PEM).decode())
+                        print(f"  {host}: añadido intermedio {c.subject.rfc4514_string()}")
                     break
-                try:
-                    with ssl.create_connection((host, 443), timeout=20) as sock, ctx.wrap_socket(sock, server_hostname=host):
-                        break
-                except ssl.SSLCertVerificationError:
-                    continue
+            else:
+                print(f"  {host}: el intermedio descargado no termina en una raíz de confianza; no se añade")
         except Exception as e:
             print(f"  {host}: no se pudo completar la cadena TLS: {type(e).__name__}: {e}")
     except Exception:

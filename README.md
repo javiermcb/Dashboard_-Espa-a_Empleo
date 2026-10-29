@@ -106,10 +106,8 @@ las dos versiones y las pruebas pasan con ambas, pero falta ejecutar una carga c
 - El código oculta el botón «Fullscreen» de la barra que sale al pasar el ratón por un gráfico (CSS en `comun/base.py`;
   `arrancar(..., pantalla_completa=True)` lo restaura). Depende de un atributo interno de Streamlit: revisarlo al
   actualizar de versión (lo vigila `tests/test_dashboards.py::test_sin_boton_pantalla_completa`).
-- La barra «Built with Streamlit / Fullscreen» del pie la añade Streamlit Community Cloud alrededor de la app y no se
-  puede quitar desde el código. Se puede recortar visualmente añadiendo al `style` del iframe
-  `clip-path:inset(0 0 32px 0);margin-bottom:-32px;` (ajustar el valor a la altura real de la barra; recorta también el
-  final del contenido y puede incumplir las condiciones de Streamlit).
+- La barra «Built with Streamlit / Fullscreen» del pie la añade Streamlit Community Cloud alrededor de la app y no se oculta ni se recorta (no se ha verificado que
+  las condiciones de Streamlit lo permitan). Si hay que quitarla, la vía es alojar la app en otro sitio.
 
 ## Licencia
 

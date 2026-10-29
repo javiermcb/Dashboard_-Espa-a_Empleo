@@ -157,6 +157,17 @@ def _limpiar_cache(ver):
             shutil.rmtree(d, ignore_errors=True)
 
 
+def _blindar(con, carpetas):
+    """Tras crear las vistas, la conexión solo puede leer las carpetas de los datos: sin acceso a otros ficheros ni a la red, y
+    sin poder volver a abrirlo con SET. Si un Parquet descargado viniera manipulado, tendría menos margen."""
+    try:
+        con.execute("SET allowed_directories = [" + ", ".join("'" + c.replace("'", "''") + "'" for c in sorted(carpetas)) + "]")
+        con.execute("SET enable_external_access = false")
+        con.execute("SET lock_configuration = true")
+    except duckdb.Error:  # una versión de DuckDB sin estos ajustes: la app sigue funcionando sin el blindaje
+        pass
+
+
 @st.cache_resource(ttl=TTL, show_spinner="Cargando los datos…")
 def _conexion(firma):  # sin «_» delante: Streamlit no usa en la clave los argumentos que empiezan por «_»
     base = origen()
@@ -185,6 +196,7 @@ def _conexion(firma):  # sin «_» delante: Streamlit no usa en la clave los arg
         con.execute(f"CREATE VIEW alertas AS SELECT * FROM read_csv('{p.as_posix()}', delim=';', header=true, all_varchar=true)")
         disponibles.append("alertas")
     _ERRORES.clear(); _ERRORES.update(errores)
+    _blindar(con, {str(Path(rutas[r][0]).parent) for r in rels if rutas[r][0]} | ({str(CACHE)} if alertas else set()))
     return con, disponibles, faltan
 
 
