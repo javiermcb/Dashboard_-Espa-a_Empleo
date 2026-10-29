@@ -8,7 +8,8 @@ from comun import datos, graficos as g, impacto as im, relato as r
 r.estilo()
 st.title("Empleo, actividad y sectores con más oportunidad")
 st.caption("Tasas de actividad, empleo y paro de la población joven por comunidad autónoma. Fuente: INE, Encuesta de Población "
-           "Activa (medias anuales). La EPA no publica el grupo 16-29: se usan sus grupos de edad más jóvenes.")
+           "Activa (medias anuales). La EPA no publica el grupo 16-29: se usan sus grupos de edad más jóvenes. "
+           "Es una encuesta: su paro no coincide con el paro registrado del SEPE (Dashboard 3), que cuenta a los inscritos como demandantes.")
 
 if not datos.hay("mart_tasas_epa"):
     st.info("Esta carga no incluye todavía las tasas de la EPA.")
@@ -164,7 +165,7 @@ st.subheader(f"Dónde y cuándo: paro de los {etiqueta}, comunidad a comunidad")
 calor = ccaa[ccaa.indicador == "Tasa de paro"].dropna(subset=["tasa"])
 orden = calor[calor.anyo == ultimo].sort_values("tasa", ascending=False).nombre.tolist()
 g.mapa_calor(calor, "nombre", "anyo", "tasa", fmt=",.0f", orden_filas=orden, orden_cols=sorted(calor.anyo.unique()), titulo="Tasa de paro (%)", escala=g.ESCALA_SEMAFORO)
-st.caption(f"Ordenadas por su valor en {ultimo}. En verde, el paro más bajo; en rojo, el más alto.")
+st.caption(f"Ordenadas por su valor en {ultimo}. En verde, el paro más bajo; en rojo, el más alto. Las tasas por comunidad vienen de una encuesta: en las comunidades pequeñas y en grupos de edad estrechos el error muestral puede ser grande, y diferencias de pocas décimas o un cambio de puesto no son significativos.")
 
 # --- comparativa territorial: actividad frente a paro, y tabla --------------------------------------------------
 st.subheader("Comparativa territorial")
@@ -238,7 +239,7 @@ if not sec.empty and sec.variacion.notna().any():
     top["miles"] = top.variacion / 1000
     g.barras(top[["sector", "miles"]], "sector", "miles", fmt=",.1f", titulo_val=f"Miles de afiliados más que en {a_s - 1}")
     m = top.iloc[0]
-    st.caption(f"Afiliados medios a la Seguridad Social (régimen general y autónomos), {a_s} frente a {a_s - 1}. Es donde más crece el empleo hoy, "
-               f"no una previsión: {m.sector.lower()} suma {g.es(m.variacion)} afiliados ({g.pct(m.variacion_pct)} más). La afiliación por sector no se publica por edad, "
+    st.caption(f"Afiliados medios a la Seguridad Social (régimen general y autónomos), {a_s} frente a {a_s - 1}. Es donde más ha crecido el empleo, "
+               f"no una previsión ni una medida de oportunidad para los jóvenes: {m.sector.lower()} suma {g.es(m.variacion)} afiliados ({g.pct(m.variacion_pct)} más). La afiliación por sector no se publica por edad, "
                "así que son todas las edades, no solo los jóvenes (para los jóvenes, ver «Dónde trabajan los jóvenes»). Fuente: Seguridad Social, "
                "afiliados medios por sección de actividad (CNAE 2009), último año completo.")

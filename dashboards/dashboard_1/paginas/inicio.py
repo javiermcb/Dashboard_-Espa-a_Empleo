@@ -133,7 +133,7 @@ if not dumb.empty:
     cam = dumb.assign(c=dumb.ahora - dumb.antes).sort_values("c")
     mas, menos = cam.iloc[0], cam.iloc[-1]
     st.caption(f"Entre {base_a} y {ultimo}, la mayor bajada es la de {mas.nombre} ({g.es(mas.c, 1)} puntos); "
-               f"{'la bajada más pequeña' if menos.c < 0 else 'la mayor subida'} es la de {menos.nombre} ({g.es(menos.c, 1)} puntos).")
+               f"{'la bajada más pequeña' if menos.c < 0 else 'la mayor subida'} es la de {menos.nombre} ({g.es(menos.c, 1)} puntos). Son datos de una encuesta: en las comunidades pequeñas las diferencias de pocos puntos pueden deberse al azar de la muestra.")
 
 # --- 04 evolución -----------------------------------------------------------------------------------------------
 st.subheader("Evolución")

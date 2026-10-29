@@ -53,11 +53,11 @@ def _fecha_corta(carga, anyo_largo=False):
 
 
 def _pie_fecha(carga):
-    """Pie de todas las páginas: solo día y hora de la carga de los datos."""
+    """Pie de todas las páginas: día y hora de la última carga (no del periodo de los datos)."""
     if not carga:
         return
     dia, hora = _fecha_corta(carga, anyo_largo=True)
-    st.markdown(f"<div class='rr-pie'>Datos actualizados el {escape(dia)} a las {escape(hora)}.</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='rr-pie'>Última carga de datos: {escape(dia)} a las {escape(hora)}. Es la fecha en que el sistema descargó las fuentes; el periodo de cada dato figura en su gráfico y en «Estado de los datos».</div>", unsafe_allow_html=True)
 
 
 def arrancar(titulo, icono, menu, pantalla_completa=False, tablas=None):
@@ -87,7 +87,7 @@ def arrancar(titulo, icono, menu, pantalla_completa=False, tablas=None):
     with st.sidebar:
         if carga:
             dia, hora = _fecha_corta(carga)
-            st.markdown(f"<div class='bl-fecha'><b>Datos</b>{escape(dia)}<br>{escape(hora)}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='bl-fecha'><b>Carga</b>{escape(dia)}<br>{escape(hora)}</div>", unsafe_allow_html=True)
 
     errores = datos.errores_descarga()
     if errores and not disponibles:
