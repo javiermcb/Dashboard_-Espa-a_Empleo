@@ -253,10 +253,10 @@ Desde el entorno de trabajo de Claude solo se alcanza Eurostat; INE, SEPE, FUNDA
 
 ## 10. Limpiezas pendientes (cuando quieras)
 
-- **Borrar ramas ya fusionadas** (las sesiones de Claude no pueden: GitHub o el sistema de permisos lo deniegan). En el
-  repositorio → pestaña **Branches** → papelera junto a cada una, o por terminal `git push origin --delete <rama>`. Se pueden
-  borrar todas las `claude/*` y `dependabot/*` cuyo PR esté fusionado o cerrado. Conserva `main`, `datos-modelo` (son los
-  datos) y `calidad` (informes de calidad).
+- **Ramas fusionadas**: el repositorio tiene activado *Settings → General → Pull Requests → «Automatically delete head branches»*
+  (desde el 29/10/2026), así que GitHub borra la rama de cada PR al fusionarlo. Las sesiones de Claude no pueden borrar ramas
+  (el sistema de permisos lo deniega): si queda alguna antigua o de una exploración que no se fusionó, se borra a mano en
+  la pestaña **Branches** (papelera junto a cada una). Conserva `main`, `datos-modelo` (son los datos) y `calidad` (informes de calidad).
 - Revisar y fusionar las propuestas automáticas de Dependabot (actualizaciones mensuales de librerías). Sin adoptar:
   DuckDB 2.0 (versión mayor) y Playwright 1.64.
 - *Decidido (26/10/2026)*: `Datos_INE` y este repositorio son proyectos distintos y mantienen cada uno su propia carga.
