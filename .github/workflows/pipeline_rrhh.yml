@@ -215,6 +215,21 @@ jobs:
           git add -A
           git commit -q -m "Datos de la app (run ${{ github.run_id }})"
           git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:datos-modelo
+      - name: Copia mensual de los datos publicados (etiqueta datos-AAAA-MM)
+        # la rama datos-modelo se reescribe en cada carga: una etiqueta por mes conserva la publicación de ese mes (se guardan las 12 últimas)
+        # y permite saber qué mostraba un dashboard: https://raw.githubusercontent.com/<repo>/datos-AAAA-MM/modelo/<tabla>.parquet
+        if: needs.cargar.result == 'success' && github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          cd /tmp/app
+          url="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          etiqueta="datos-$(date -u +%Y-%m)"
+          if ! git ls-remote --exit-code --tags "$url" "refs/tags/$etiqueta" > /dev/null; then
+            git tag "$etiqueta" && git push -q "$url" "refs/tags/$etiqueta"
+          fi
+          for e in $(git ls-remote --tags "$url" 'refs/tags/datos-*' | awk '{print $2}' | sed 's#refs/tags/##' | sort | head -n -12); do
+            git push -q "$url" ":refs/tags/$e" || true
+          done
       - name: Guardar el informe de calidad (rama calidad, nunca en main)
         # también cuando el control de calidad no se supera, para poder ver por qué
         if: github.ref == 'refs/heads/main' && needs.cargar.outputs.subido == 'success' && (needs.cargar.result == 'success' || needs.cargar.outputs.control == 'failure')
