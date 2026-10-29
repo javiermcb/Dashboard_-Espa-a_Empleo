@@ -7,7 +7,8 @@ r.estilo()
 st.title("Formación bonificada y ecosistema FUNDAE")
 st.caption("Formación programada por las empresas y bonificada a través de FUNDAE (Fundación Estatal para la Formación en el "
            "Empleo). Fuente: series estadísticas de FUNDAE, años naturales. «Participantes» son los participantes formados "
-           "que cuenta FUNDAE.")
+           "que cuenta FUNDAE: cada curso cuenta, así que una persona que hace varios suma varias veces (no es el número de personas distintas). "
+           "Los últimos años pueden revisarse cuando FUNDAE cierre sus datos.")
 
 if not datos.hay("fact_fundae"):
     st.info("Esta carga no incluye todavía los datos de FUNDAE (su web falla a menudo y las series se completan en cargas "
@@ -81,7 +82,7 @@ jov = reparto("01", "Participantes", ["De 16 a 25"]).set_index("anyo").pct
 if ultimo in jov.index:
     puntos.append(f"Los participantes de 16 a 25 años son el {g.pct(jov[ultimo])} del total"
                   + (f" (en {BASE}, el {g.pct(jov[BASE])})." if BASE in jov.index and ultimo != BASE else "."))
-r.respuesta(f"La formación bonificada llegó a {millones(part[ultimo])} de participantes en {ultimo}", puntos)
+r.respuesta(f"La formación bonificada sumó {millones(part[ultimo])} de participaciones en cursos en {ultimo}", puntos)
 
 # --- cifras clave con su evolución ------------------------------------------------------------------------------
 tarjetas = []
@@ -141,7 +142,7 @@ op = (datos.q("""SELECT o.fecha, o.territorio_id, t.nombre, o.demandantes, o.dem
                  FROM mart_oportunidad_ccaa o LEFT JOIN dim_territorio t USING (territorio_id)""")
       if datos.hay("mart_oportunidad_ccaa") else pd.DataFrame())
 if not op.empty:
-    st.subheader("Dónde puede haber oportunidades")
+    st.subheader("Demandantes, contratos y formación por comunidad")
     op["fecha"] = pd.to_datetime(op.fecha)
     ult_op = op.fecha.max()
     ventana = op[op.fecha > ult_op - pd.DateOffset(months=12)]
@@ -155,16 +156,16 @@ if not op.empty:
     total = pd.DataFrame([{"Territorio": "España", C1: dem.demandantes_menores_25.sum(), C2: dem.demandantes_menores_25.sum() / dem.demandantes.sum() * 100,
                            C3: contr.sum() / dem.demandantes.sum(), C4: form.reindex(dem.index).sum(min_count=1)}])
     tabla_op = pd.concat([total, ccaa_op.sort_values(C1, ascending=False)], ignore_index=True)
-    st.dataframe(g.tabla_semaforo(tabla_op, "Territorio", "España", bajo_es_bueno=(C2,), sin_calor=(C1, C4),
+    st.dataframe(g.tabla_semaforo(tabla_op, "Territorio", "España", sin_calor=(C1, C2, C3, C4),
                                   formatos={C1: lambda v: g.es(v), C3: lambda v: g.es(v, 2), C4: lambda v: g.es(v)}),
                  hide_index=True, width="stretch", height=min(35 * (len(tabla_op) + 1) + 3, 780))
-    mejor, peor = ccaa_op.dropna(subset=[C3]).sort_values(C3).iloc[[-1, 0]].Territorio.tolist()
-    st.caption(f"En gris, el total de España. En verde, mejor que ese total; en rojo, peor, y más intenso cuanto más se aleja. Menos jóvenes entre los demandantes "
-               f"y más contratos por demandante se leen como más oportunidad. Hoy, {mejor} es la comunidad con más contratos por demandante y {peor} la que menos. "
-               f"Demandantes: SEPE, {ult_op.strftime('%m/%Y')}; contratos: suma de los últimos 12 meses del SEPE. Participantes: FUNDAE, comunidad del participante. "
-               "Los demandantes menores de 25 son los de la estadística del SEPE por municipio, que no da el nivel de estudios. Las series de FUNDAE que usamos "
-               "son de formación bonificada y permisos: no hemos cargado la formación subvencionada para desempleados, así que la columna de formación no mide "
-               "lo que reciben los demandantes. Los valores que el SEPE oculta por secreto estadístico (menos de 5) no se suman.")
+    st.caption("En gris, el total de España. Son cifras para comparar territorios, no una clasificación de «oportunidad»: los contratos son "
+               "episodios, no personas (una persona puede firmar varios, y en comunidades con mucha estacionalidad hay muchos contratos cortos), y los "
+               "demandantes incluyen a quien ya trabaja y busca cambiar. "
+               f"Demandantes: SEPE, {ult_op.strftime('%m/%Y')}; contratos: suma de los últimos 12 meses del SEPE; participantes: FUNDAE {anyo}, comunidad del participante "
+               "(no son los mismos periodos). Los demandantes menores de 25 son los de la estadística del SEPE por municipio, que no da el nivel de estudios. "
+               "Las series de FUNDAE que usamos son de formación bonificada y permisos: no hemos cargado la formación subvencionada para desempleados, "
+               "así que la columna de formación no mide lo que reciben los demandantes. Los valores que el SEPE oculta por secreto estadístico (menos de 5) no se suman.")
 
 # --- nivel de estudios de los parados registrados (SEPE, nacional) --------------------------------------------------
 nf = (datos.q("SELECT fecha, nivel, hombres, mujeres, total FROM fact_sepe_demandantes_nivel WHERE nivel NOT ILIKE 'total%'")
@@ -184,7 +185,9 @@ if not nf.empty:
     st.caption(f"Parados registrados en el SEPE, {mes_nf.strftime('%m/%Y')} ({g.es(ult_nf.total.sum())} personas): el {g.pct(basico)} tiene como máximo la ESO y "
                f"el {g.pct(univ)}, estudios universitarios. Cada barra es el % sobre el total de su sexo. Es el conjunto de las personas paradas registradas, "
                "a nivel nacional: el SEPE no publica este dato por edad ni por comunidad (para los jóvenes, ver el paro por estudios del Dashboard 2). "
-               "No se muestra el grupo «Indeterminado» (menos del 0,1 %).")
+               "No se muestra el grupo «Indeterminado» (menos del 0,1 %). Es paro registrado en el SEPE (personas inscritas como demandantes parados), "
+               "que no coincide con el paro de la EPA del Dashboard 2, una encuesta con otra definición: no se pueden comparar cifras entre ambos."
+               + (" Solo hay un mes cargado: es una foto, no una tendencia." if nf.fecha.nunique() == 1 else ""))
 
 # --- contratos frente a parados, por nivel de estudios (SEPE, nacional) ----------------------------------------
 cn = (datos.q("SELECT fecha, nivel, indefinidos, temporales, total FROM fact_sepe_contratos_nivel WHERE nivel NOT ILIKE 'total%'")
@@ -209,7 +212,7 @@ if not nf.empty and not cn.empty:
         alto_, bajo_ = cruce.sort_values("por_100").iloc[[-1, 0]].nivel.tolist()
         st.caption(f"SEPE, {mes_c.strftime('%m/%Y')}, a nivel nacional. Compara los contratos registrados en el mes con los parados registrados ese mes, "
                    f"por nivel de estudios: {alto_} es el nivel con más contratos por parado y {bajo_} el que menos. Un contrato no es una persona "
-                   "(una persona puede firmar varios), y el SEPE no publica este cruce por edad ni por comunidad. No se muestra el grupo «Indeterminado».")
+                   "(una persona puede firmar varios), y el SEPE no publica este cruce por edad ni por comunidad. Es un solo mes y los contratos tienen estacionalidad: no se lee como tendencia. No se muestra el grupo «Indeterminado».")
 
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
 st.subheader("Cómo se forma: presencial, teleformación y mixta")

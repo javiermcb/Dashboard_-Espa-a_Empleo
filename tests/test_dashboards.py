@@ -67,8 +67,8 @@ def test_barra_lateral_minima(dashboard):
     at = _abrir(dashboard)
     _sin_errores(at, dashboard)
     lateral = " ".join(m.value for m in at.sidebar.markdown)
-    assert "bl-fecha" in lateral and "Datos" in lateral
+    assert "bl-fecha" in lateral and "Carga" in lateral
     assert not at.sidebar.radio and not at.sidebar.caption, f"{dashboard}: la barra lateral lleva más que la fecha"
     pie = [m.value for m in at.markdown if m.value.startswith("<div class='rr-pie'>")]
-    assert len(pie) == 1 and "Datos actualizados el" in pie[0] and "UTC" in pie[0], f"{dashboard}: el pie debe decir solo cuándo se actualizó"
+    assert len(pie) == 1 and "Última carga de datos" in pie[0] and "UTC" in pie[0], f"{dashboard}: el pie debe decir cuándo fue la última carga"
     assert not at.get("page_link"), f"{dashboard}: no debe haber enlaces de navegación"
