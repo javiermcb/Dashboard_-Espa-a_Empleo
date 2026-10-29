@@ -1,8 +1,8 @@
 tabla;estado;filas;desde;hasta;detalle;tiempo
 sepe_paro_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_paro_registrado, paro_hombre_edad_25, paro_hombre_edad_25_45, paro_hombre_edad_45, paro_mujer_edad_25, paro_mujer_edad_25_45, paro_mujer_edad_45, paro_agricultura, paro_industria, paro_construccion, paro_servicios, paro_sin_empleo_anterior";26s
-sepe_contratos_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_contratos, contratos_iniciales_indefinidos_hombres, contratos_iniciales_temporales_hombres, contratos_convertidos_en_indefinidos_hombres, contratos_iniciales_indefinidos_mujeres, contratos_iniciales_temporales_mujeres, contratos_convertidos_en_indefinidos_mujeres, contratos_agricultura, contratos_industria, contratos_construccion, contratos_servicios";25s
-sepe_demandantes_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_dtes_empleo, dtes_empleo_hombre_edad_25, dtes_empleo_hombre_edad_25_45, dtes_empleo_hombre_edad_45, dtes_empleo_mujer_edad_25, dtes_empleo_mujer_edad_25_45, dtes_empleo_mujer_edad_45, dtes_empleoagricultura, dtes_empleo_industria, dtes_empleo_construccion, dtes_empleo_servicios, dtes_empleo_sin_empleo_anterior";25s
-sepe_demandantes_nivel;OK;21;2026-04;2026-06;3 meses (3 descargados ahora);32s
+sepe_contratos_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_contratos, contratos_iniciales_indefinidos_hombres, contratos_iniciales_temporales_hombres, contratos_convertidos_en_indefinidos_hombres, contratos_iniciales_indefinidos_mujeres, contratos_iniciales_temporales_mujeres, contratos_convertidos_en_indefinidos_mujeres, contratos_agricultura, contratos_industria, contratos_construccion, contratos_servicios";23s
+sepe_demandantes_municipio;OK;748237;2019-01-01;2026-09-01;"años [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]; columnas: total_dtes_empleo, dtes_empleo_hombre_edad_25, dtes_empleo_hombre_edad_25_45, dtes_empleo_hombre_edad_45, dtes_empleo_mujer_edad_25, dtes_empleo_mujer_edad_25_45, dtes_empleo_mujer_edad_45, dtes_empleoagricultura, dtes_empleo_industria, dtes_empleo_construccion, dtes_empleo_servicios, dtes_empleo_sin_empleo_anterior";26s
+sepe_demandantes_nivel;OK;21;2026-04;2026-06;3 meses (3 descargados ahora);31s
 sepe_contratos_nivel;OK;21;2026-04;2026-06;3 meses (3 descargados ahora) · sin fichero: 2026-03 (HTTP 404), 2026-07 (HTTP 404), 2026-08 (HTTP 404), 2026-09 (HTTP 404), 2026-10 (HTTP 404);30s
 ss_afiliacion:afil_medios_prov_cnae09_regimen;OK;713592;200901;202512;66 columnas, nivel Provincia;14s
 ss_afiliacion:afil_ultimo_dia_prov_cnae;OK;713592;200901;202512;66 columnas, nivel Provincia;14s
@@ -19,6 +19,6 @@ mites_ett_actividad;OK;184;2026-07-01;2026-07-01;https://www.mites.gob.es/estadi
 mites_ett_resumen;OK;72;2026-06-01;2026-07-01;https://www.mites.gob.es/estadisticas/Ett/ett26JulAv/ETT_07_2026.xlsx;0s
 mites_convenios_detalle;OK;1444;2023;2026;https://www.mites.gob.es/estadisticas/cct/cct26sepav/CCT_09_2026.xls;0s
 mites_accidentes_detalle;OK;2774;2026-01-01;2026-08-01;https://www.mites.gob.es/estadisticas/eat/eat26_08/ATR_08_2026.xlsx;0s
-mites_regulacion_empleo;OK;19060;2025-11-01;2026-08-01;10 meses;39s
-fundae_formacion;OK;21076;2004;2025;8 series actualizadas hoy, 11 de cargas anteriores · notas de fecha de los Excel: ninguna;449s
-eurostat_indicadores;OK;389;2015;2025;series completas;4s
+mites_regulacion_empleo;OK;19060;2025-11-01;2026-08-01;10 meses;3s
+fundae_formacion;OK;21076;2004;2025;19 series actualizadas hoy, 0 de cargas anteriores · notas de fecha de los Excel: ninguna;153s
+eurostat_indicadores;OK;389;2015;2025;series completas;3s
