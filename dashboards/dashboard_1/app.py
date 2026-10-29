@@ -23,6 +23,7 @@ base.arrancar(
             st.Page(str(AQUI / "paginas" / "inicio.py"), title="Inicio", icon=":material/home:", default=True),
         ],
         "Datos": [
+            base.comun("como_leer", "Cómo leer estos datos", ":material/menu_book:"),
             base.comun("estado", "Estado de los datos", ":material/fact_check:"),
             base.comun("datos_descarga", "Datos y descargas", ":material/download:"),
         ],

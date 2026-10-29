@@ -11,7 +11,7 @@ from streamlit.testing.v1 import AppTest
 RAIZ = Path(__file__).resolve().parent.parent
 os.environ.setdefault("RRHH_DATOS", str(RAIZ / "resultados" / "dev_modelo"))
 DASHBOARDS = sorted(p.name for p in (RAIZ / "dashboards").glob("dashboard_*") if (p / "app.py").exists())
-COMUNES = ["estado.py", "datos_descarga.py"]
+COMUNES = ["estado.py", "datos_descarga.py", "como_leer.py"]
 
 
 def _abrir(dashboard):
