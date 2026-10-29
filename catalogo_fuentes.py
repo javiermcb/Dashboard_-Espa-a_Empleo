@@ -77,9 +77,56 @@ PUBLICADORES = re.compile(r"Servicio P[úu]blico de Empleo|SEPE|Seguridad Social
 _CTX = {}
 
 
+RAICES_FIJADAS = Path(__file__).resolve().parent / "raices_fijadas.txt"
+
+
+def raices_fijadas():
+    """Huellas SHA-256 (hex) de raíces que se aceptan aunque el sistema no las traiga. Una por línea; «#» comenta."""
+    try:
+        return {l.split("#")[0].strip().lower().replace(":", "") for l in RAICES_FIJADAS.read_text().splitlines() if l.split("#")[0].strip()}
+    except OSError:
+        return set()
+
+
+def huellas(cert):
+    """(SHA-256, SHA-1) en hexadecimal del certificado: sirven para compararlas con las que publica la entidad."""
+    import hashlib
+    from cryptography.hazmat.primitives.serialization import Encoding
+    der = cert.public_bytes(Encoding.DER)
+    return hashlib.sha256(der).hexdigest(), hashlib.sha1(der).hexdigest()
+
+
+def cadena_confiable(intermedios, raices, fijadas=frozenset()):
+    """True si `intermedios` (de abajo arriba: el emisor del certificado del servidor, su emisor…) forman una cadena firmada
+    y la última la firma una raíz de `raices`, es una de ellas, o tiene una huella de `fijadas`. Un certificado descargado por
+    HTTP no se acepta por sí solo."""
+    if not intermedios:
+        return False
+    try:
+        for hijo, padre in zip(intermedios, intermedios[1:]):
+            hijo.verify_directly_issued_by(padre)
+        ultimo = intermedios[-1]
+        if huellas(ultimo)[0] in fijadas:
+            return True
+        for raiz in raices:
+            if raiz == ultimo:
+                return True
+            try:
+                ultimo.verify_directly_issued_by(raiz)
+                return True
+            except Exception:
+                continue
+    except Exception:
+        return False
+    return False
+
+
 def contexto(host):
-    """Contexto TLS verificado. Si el servidor no envía su certificado intermedio (le pasa a mites.gob.es),
-    se descarga desde la URL 'CA Issuers' (AIA) del propio certificado y se añade. La verificación sigue activa."""
+    """Contexto TLS verificado. Si el servidor no envía su certificado intermedio (le pasa a mites.gob.es y a fundae.es),
+    se descarga desde la URL 'CA Issuers' (AIA) del propio certificado. Se confía en esa cadena si termina en una raíz del
+    sistema o con huella fijada en raices_fijadas.txt. Si termina en una raíz que no está en ninguno de los dos sitios (hoy,
+    la raíz de servidores seguros de la FNMT), se sigue aceptando como hasta ahora PERO con un aviso y sus huellas en el log,
+    para compararlas con las que publica la FNMT y fijarlas."""
     if host in _CTX:
         return _CTX[host]
     ctx = ssl.create_default_context()
@@ -91,22 +138,35 @@ def contexto(host):
             from cryptography import x509
             from cryptography.hazmat.primitives.serialization import Encoding
             from cryptography.x509.oid import AuthorityInformationAccessOID, ExtensionOID
+            raices = []
+            for c in ctx.get_ca_certs(binary_form=True):
+                try:
+                    raices.append(x509.load_der_x509_certificate(c))
+                except Exception:
+                    continue
+            fijadas = raices_fijadas()
             cert = x509.load_pem_x509_certificate(ssl.get_server_certificate((host, 443)).encode())
-            for _ in range(3):  # sube hasta 3 niveles de intermedios
+            intermedios = []
+            for _ in range(4):  # sube hasta 4 niveles
+                if cert.issuer == cert.subject:
+                    break
                 aia = cert.extensions.get_extension_for_oid(ExtensionOID.AUTHORITY_INFORMATION_ACCESS).value
                 url = next(d.access_location.value for d in aia if d.access_method == AuthorityInformationAccessOID.CA_ISSUERS)
                 with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as r:
                     datos = r.read()
                 cert = x509.load_der_x509_certificate(datos) if not datos.startswith(b"-----") else x509.load_pem_x509_certificate(datos)
-                ctx.load_verify_locations(cadata=cert.public_bytes(Encoding.PEM).decode())
-                print(f"  {host}: añadido intermedio {cert.subject.rfc4514_string()} ({url})")
-                if cert.issuer == cert.subject:
+                intermedios.append(cert)
+                if cadena_confiable(intermedios, raices, fijadas):
                     break
-                try:
-                    with ssl.create_connection((host, 443), timeout=20) as sock, ctx.wrap_socket(sock, server_hostname=host):
-                        break
-                except ssl.SSLCertVerificationError:
-                    continue
+            if intermedios:
+                if not cadena_confiable(intermedios, raices, fijadas):
+                    s256, s1 = huellas(intermedios[-1])
+                    print(f"::warning::{host}: la cadena termina en una raíz que no está en el sistema ni fijada "
+                          f"({intermedios[-1].subject.rfc4514_string()}; SHA-256 {s256}; SHA-1 {s1}). Se acepta como hasta ahora: "
+                          "compara la huella con la que publica la entidad y añádela a raices_fijadas.txt")
+                for c in intermedios:
+                    ctx.load_verify_locations(cadata=c.public_bytes(Encoding.PEM).decode())
+                    print(f"  {host}: añadido intermedio {c.subject.rfc4514_string()}")
         except Exception as e:
             print(f"  {host}: no se pudo completar la cadena TLS: {type(e).__name__}: {e}")
     except Exception:
