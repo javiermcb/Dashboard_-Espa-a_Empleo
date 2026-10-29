@@ -62,9 +62,9 @@ def var(a, b):
 
 puntos = []
 if (ultimo - 1) in part.index:
-    puntos.append(f"Participantes: {var(part[ultimo], part[ultimo - 1])} frente a {ultimo - 1} ({millones(part[ultimo - 1])}).")
+    puntos.append(f"Participaciones: {var(part[ultimo], part[ultimo - 1])} frente a {ultimo - 1} ({millones(part[ultimo - 1])}).")
 if BASE in part.index and ultimo != BASE:
-    partes = [f"participantes {var(part[ultimo], part[BASE])}"]
+    partes = [f"participaciones {var(part[ultimo], part[BASE])}"]
     if BASE in horas.index and ultimo in horas.index:
         partes.append(f"horas {var(horas[ultimo], horas[BASE])}")
     if BASE in credito.index and ultimo in credito.index:
@@ -76,17 +76,17 @@ if ultimo in credito.index and ultimo in part38.index:
 mod = reparto("10", "Participantes", ["Presencial", "Teleformación", "Mixta", "A distancia"])
 tele = mod[mod.categoria == "Teleformación"].set_index("anyo").pct
 if ultimo in tele.index:
-    puntos.append(f"La teleformación concentra el {g.pct(tele[ultimo])} de los participantes"
+    puntos.append(f"La teleformación concentra el {g.pct(tele[ultimo])} de las participaciones"
                   + (f" (en {BASE}, el {g.pct(tele[BASE])})." if BASE in tele.index and ultimo != BASE else "."))
 jov = reparto("01", "Participantes", ["De 16 a 25"]).set_index("anyo").pct
 if ultimo in jov.index:
-    puntos.append(f"Los participantes de 16 a 25 años son el {g.pct(jov[ultimo])} del total"
+    puntos.append(f"Las participaciones de personas de 16 a 25 años son el {g.pct(jov[ultimo])} del total"
                   + (f" (en {BASE}, el {g.pct(jov[BASE])})." if BASE in jov.index and ultimo != BASE else "."))
 r.respuesta(f"La formación bonificada sumó {millones(part[ultimo])} de participaciones en cursos en {ultimo}", puntos)
 
 # --- cifras clave con su evolución ------------------------------------------------------------------------------
 tarjetas = []
-for titulo, s, fmt in (("Participantes formados", part, millones), ("Crédito dispuesto", credito, lambda v: millones(v) + "€"),
+for titulo, s, fmt in (("Participaciones en cursos", part, millones), ("Crédito dispuesto", credito, lambda v: millones(v) + "€"),
                        ("Horas de formación", horas, millones), ("Empresas formadoras", empresas, lambda v: g.es(v, 0))):
     if ultimo in s.index:
         p = s.get(ultimo - 1)
@@ -109,14 +109,14 @@ if tot.empty or fam.empty:
     st.info("Sin datos de familias profesionales para este año.")
 else:
     fam["pct"] = fam.valor / tot.iloc[0] * 100
-    g.barras(g.top(fam[["categoria", "pct"]], "pct", 10, "fam")[["categoria", "pct"]], "categoria", "pct", fmt=",.1f", titulo_val="% de los participantes")
+    g.barras(g.top(fam[["categoria", "pct"]], "pct", 10, "fam")[["categoria", "pct"]], "categoria", "pct", fmt=",.1f", titulo_val="% de las participaciones")
 
 # --- contenidos formativos más frecuentes (serie 13 de FUNDAE, bonificada) -------------------------------------------
 con = datos.q("SELECT categoria, valor FROM fact_fundae WHERE serie = '13' AND medida = 'Participantes' AND anyo = ? AND categoria <> 'Total'", [anyo])
 if not con.empty:
     st.subheader("En qué se forman: contenidos más frecuentes")
-    g.barras(g.top(con[["categoria", "valor"]], "valor", 10, "contenidos")[["categoria", "valor"]], "categoria", "valor", fmt=",.0f", titulo_val="Participantes formados")
-    st.caption("Contenido formativo de la acción, en número de participantes (formación bonificada). No se expresa en % porque no se ha comprobado si un "
+    g.barras(g.top(con[["categoria", "valor"]], "valor", 10, "contenidos")[["categoria", "valor"]], "categoria", "valor", fmt=",.0f", titulo_val="Participaciones en cursos")
+    st.caption("Contenido formativo de la acción, en número de participaciones (formación bonificada). No se expresa en % porque no se ha comprobado si un "
                "participante cuenta en más de un contenido. La formación subvencionada para desempleados no está en estas series.")
 
 # --- 02 distribución por comunidad autónoma ---------------------------------------------------------------------
@@ -132,10 +132,10 @@ else:
     cc["nombre"] = cc.nombre.map(g.corto)
     izq, der = st.columns([3, 2])
     with izq:
-        g.mapa_ccaa(cc, "pct", fmt=",.1f", titulo="% de los participantes", escala=g.ESCALA)
+        g.mapa_ccaa(cc, "pct", fmt=",.1f", titulo="% de las participaciones", escala=g.ESCALA)
     with der:
-        g.barras(g.top(cc[["nombre", "pct"]], "pct", 10, "cc")[["nombre", "pct"]], "nombre", "pct", fmt=",.1f", titulo_val="% de los participantes", alto_fila=24)
-    st.caption("Comunidad autónoma del participante. Cada comunidad en % del total nacional de participantes; no está "
+        g.barras(g.top(cc[["nombre", "pct"]], "pct", 10, "cc")[["nombre", "pct"]], "nombre", "pct", fmt=",.1f", titulo_val="% de las participaciones", alto_fila=24)
+    st.caption("Comunidad autónoma del participante. Cada comunidad en % del total nacional de participaciones; no está "
                "corregido por población ni por número de trabajadores.")
 # --- dónde puede haber oportunidades: demandantes jóvenes, contratos y formación, por comunidad ----------------------
 op = (datos.q("""SELECT o.fecha, o.territorio_id, t.nombre, o.demandantes, o.demandantes_menores_25, o.contratos
@@ -162,7 +162,7 @@ if not op.empty:
     st.caption("En gris, el total de España. Son cifras para comparar territorios, no una clasificación de «oportunidad»: los contratos son "
                "episodios, no personas (una persona puede firmar varios, y en comunidades con mucha estacionalidad hay muchos contratos cortos), y los "
                "demandantes incluyen a quien ya trabaja y busca cambiar. "
-               f"Demandantes: SEPE, {ult_op.strftime('%m/%Y')}; contratos: suma de los últimos 12 meses del SEPE; participantes: FUNDAE {anyo}, comunidad del participante "
+               f"Demandantes: SEPE, {ult_op.strftime('%m/%Y')}; contratos: suma de los últimos 12 meses del SEPE; participaciones: FUNDAE {anyo}, comunidad del participante "
                "(no son los mismos periodos). Los demandantes menores de 25 son los de la estadística del SEPE por municipio, que no da el nivel de estudios. "
                "Las series de FUNDAE que usamos son de formación bonificada y permisos: no hemos cargado la formación subvencionada para desempleados, "
                "así que la columna de formación no mide lo que reciben los demandantes. Los valores que el SEPE oculta por secreto estadístico (menos de 5) no se suman.")
@@ -188,6 +188,12 @@ if not nf.empty:
                "No se muestra el grupo «Indeterminado» (menos del 0,1 %). Es paro registrado en el SEPE (personas inscritas como demandantes parados), "
                "que no coincide con el paro de la EPA del Dashboard 2, una encuesta con otra definición: no se pueden comparar cifras entre ambos."
                + (" Solo hay un mes cargado: es una foto, no una tendencia." if nf.fecha.nunique() == 1 else ""))
+    if nf.fecha.nunique() >= 2:
+        evo_nf = nf[nf.nivel != "Indeterminado"][["fecha", "nivel", "total"]]
+        st.markdown("**Parados registrados por nivel de estudios, mes a mes**")
+        g.lineas(evo_nf, "fecha", "total", serie="nivel", fmt=",.0f", titulo_y="personas paradas")
+        st.caption(f"Solo hay {nf.fecha.nunique()} meses cargados ({nf.fecha.min().strftime('%m/%Y')} a {nf.fecha.max().strftime('%m/%Y')}): es una tendencia muy corta, "
+                   "con la estacionalidad del paro registrado.")
 
 # --- contratos frente a parados, por nivel de estudios (SEPE, nacional) ----------------------------------------
 cn = (datos.q("SELECT fecha, nivel, indefinidos, temporales, total FROM fact_sepe_contratos_nivel WHERE nivel NOT ILIKE 'total%'")
@@ -209,10 +215,16 @@ if not nf.empty and not cn.empty:
         with der:
             st.markdown("**% de contratos indefinidos**")
             g.barras(cruce, "nivel", "indef", fmt=",.0f", orden_cat=niv, titulo_val="% indefinidos", alto_fila=32)
+        meses_c = sorted(set(nf.fecha) & set(cn.fecha))
+        if len(meses_c) >= 2:
+            evo_c = pd.DataFrame([{"fecha": m, "nivel": n, "por_100": cn[(cn.fecha == m) & (cn.nivel == n)].total.sum() / nf[(nf.fecha == m) & (nf.nivel == n)].total.sum() * 100}
+                                  for m in meses_c for n in niv if nf[(nf.fecha == m) & (nf.nivel == n)].total.sum() > 0])
+            st.markdown("**Contratos del mes por cada 100 parados, mes a mes**")
+            g.lineas(evo_c, "fecha", "por_100", serie="nivel", fmt=",.0f", titulo_y="contratos / 100 parados")
         alto_, bajo_ = cruce.sort_values("por_100").iloc[[-1, 0]].nivel.tolist()
         st.caption(f"SEPE, {mes_c.strftime('%m/%Y')}, a nivel nacional. Compara los contratos registrados en el mes con los parados registrados ese mes, "
                    f"por nivel de estudios: {alto_} es el nivel con más contratos por parado y {bajo_} el que menos. Un contrato no es una persona "
-                   "(una persona puede firmar varios), y el SEPE no publica este cruce por edad ni por comunidad. Es un solo mes y los contratos tienen estacionalidad: no se lee como tendencia. No se muestra el grupo «Indeterminado».")
+                   "(una persona puede firmar varios), y el SEPE no publica este cruce por edad ni por comunidad. Las barras son del último mes; hay pocos meses y los contratos tienen estacionalidad: no se lee como tendencia. No se muestra el grupo «Indeterminado».")
 
 # --- 03 modalidad a lo largo del tiempo -------------------------------------------------------------------------
 st.subheader("Cómo se forma: presencial, teleformación y mixta")
@@ -220,12 +232,12 @@ if not mod.empty:
     izq, der = st.columns([3, 2])
     with izq:
         im.apiladas(fecha(mod[mod.valor > 0].assign(serie=lambda x: x.categoria)), "fecha", "serie", "valor", orden_series=["Presencial", "Teleformación", "Mixta", "A distancia"],
-                    titulo_y="% de los participantes", alto=260, cols_leyenda=4)
+                    titulo_y="% de las participaciones", alto=260, cols_leyenda=4)
     with der:
         ult = mod[mod.anyo == ultimo]
-        im.rosco(ult, "categoria", "valor", orden=["Presencial", "Teleformación", "Mixta", "A distancia"], centro=str(ultimo), sub="participantes")
-    st.caption("Reparto de los participantes por modalidad de impartición, año a año (cada año suma el 100 %). Ojo con 2016: «A distancia» "
-               "solo tiene participantes hasta 2015 y «Mixta» cae de 430.154 a 71.221 entre 2015 y 2016, a la vez que suben «Presencial» y "
+        im.rosco(ult, "categoria", "valor", orden=["Presencial", "Teleformación", "Mixta", "A distancia"], centro=str(ultimo), sub="participaciones")
+    st.caption("Reparto de las participaciones por modalidad de impartición, año a año (cada año suma el 100 %). Ojo con 2016: «A distancia» "
+               "solo tiene participaciones hasta 2015 y «Mixta» cae de 430.154 a 71.221 entre 2015 y 2016, a la vez que suben «Presencial» y "
                "«Teleformación»; parece un cambio de clasificación de FUNDAE (no se ha investigado), así que conviene no comparar antes y "
                "después de 2016 sin comprobarlo.")
 
@@ -249,17 +261,17 @@ with izq:
     cats = ["De 16 a 25", "De 26 a 35", "De 36 a 45", "De 46 a 55", "Mayores de 55"]
     ed = reparto("01", "Participantes", cats)
     if not ed.empty:
-        im.apiladas(fecha(ed.assign(serie=ed.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=g.RAMPA, titulo_y="% de los participantes", alto=300, cols_leyenda=2, paso_x=4)
+        im.apiladas(fecha(ed.assign(serie=ed.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=g.RAMPA, titulo_y="% de las participaciones", alto=300, cols_leyenda=2, paso_x=4)
 with der:
     st.markdown("**Por nivel de estudios**")
     cats = ["Estudios primarios", "Estudios secundarios", "Estudios terciarios", "Otras titulaciones"]
     es_ = reparto("04", "Participantes", cats)
     if not es_.empty:
         im.apiladas(fecha(es_.assign(serie=es_.categoria)), "fecha", "serie", "valor", orden_series=cats, colores=[g.RAMPA[0], g.RAMPA[2], g.RAMPA[4], g.ORO_PALIDO],
-                    titulo_y="% de los participantes", alto=300, cols_leyenda=2, paso_x=4)
+                    titulo_y="% de las participaciones", alto=300, cols_leyenda=2, paso_x=4)
 if not jov.empty:
     st.markdown("**Participantes de 16 a 25 años, en % del total**")
-    im.area_gradiente(fecha(jov.rename("valor").reset_index()), "fecha", "valor", fmt=".1f", titulo_y="% de los participantes", color=g.C2, alto=200)
+    im.area_gradiente(fecha(jov.rename("valor").reset_index()), "fecha", "valor", fmt=".1f", titulo_y="% de las participaciones", color=g.C2, alto=200)
     st.caption("Es el único grupo de edad joven que publica FUNDAE (de 16 a 25): no hay un corte 16-29.")
 
 # --- empresas: pymes frente a grandes ---------------------------------------------------------------------------
