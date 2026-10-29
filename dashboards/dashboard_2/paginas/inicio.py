@@ -242,8 +242,3 @@ if not sec.empty and sec.variacion.notna().any():
                f"no una previsión: {m.sector.lower()} suma {g.es(m.variacion)} afiliados ({g.pct(m.variacion_pct)} más). La afiliación por sector no se publica por edad, "
                "así que son todas las edades, no solo los jóvenes (para los jóvenes, ver «Dónde trabajan los jóvenes»). Fuente: Seguridad Social, "
                "afiliados medios por sección de actividad (CNAE 2009), último año completo.")
-
-# --- paneles sin fuente -----------------------------------------------------------------------------------------
-st.subheader("Pendiente de fuente")
-st.info("**Competencias más demandadas.** No hay fuente abierta con porcentajes por competencia: el SEPE publica "
-        "informes de competencias y necesidades formativas, no una serie de datos.")
