@@ -161,7 +161,7 @@ Repite el bloque entero **tres veces**, una por dashboard (cambia el fichero pri
 ### 5.3 Qué debes ver
 1. Se abre la app con el título de su dashboard y una barra lateral estrecha (unos 2 cm) que solo lleva la fecha de los datos.
 2. **Dashboard 1**: el título «Mapa país: jóvenes NEET en España», tres cifras, un mapa y barras por comunidad.
-3. **Dashboard 2**: «Empleo, actividad y sectores con más oportunidad», selector de edad y tabla comparativa.
+3. **Dashboard 2**: «Empleo, actividad y paro joven por comunidad y sector», selector de edad y tabla comparativa.
 4. **Dashboard 3**: «Formación bonificada y ecosistema FUNDAE», cifras y mapa.
 5. En la barra lateral debe poner «Carga» con una fecha reciente (día/mes/año y hora UTC). En el pie de la página, «Última carga de datos: … a las … UTC». Las páginas «Estado de los datos» y «Datos y descargas» ya no tienen enlace visible: se abren por su dirección (`…/estado` y `…/datos_descarga`).
 

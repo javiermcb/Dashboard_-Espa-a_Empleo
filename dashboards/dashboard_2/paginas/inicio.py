@@ -6,7 +6,7 @@ import streamlit as st
 from comun import datos, graficos as g, impacto as im, relato as r
 
 r.estilo()
-st.title("Empleo, actividad y sectores con más oportunidad")
+st.title("Empleo, actividad y paro joven por comunidad y sector")
 st.caption("Tasas de actividad, empleo y paro de la población joven por comunidad autónoma. Fuente: INE, Encuesta de Población "
            "Activa (medias anuales). La EPA no publica el grupo 16-29: se usan sus grupos de edad más jóvenes. "
            "Es una encuesta: su paro no coincide con el paro registrado del SEPE (Dashboard 3), que cuenta a los inscritos como demandantes.")
