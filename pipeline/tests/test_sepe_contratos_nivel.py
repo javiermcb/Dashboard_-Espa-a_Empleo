@@ -47,3 +47,31 @@ def test_un_mes_que_falla_no_borra_los_ya_guardados(tmp_path, monkeypatch):
     assert meses == ["2026-04-01", "2026-05-01"]  # abril se conserva y mayo se añade
     assert res[0][3:5] == ["2026-04", "2026-05"]
     assert "sin fichero" in res[0][5] and "(HTTP 404)" in res[0][5]  # se anota qué meses recientes fallan y por qué
+
+
+def test_la_fila_total_no_es_un_nivel_en_contratos():
+    h = sum(f[2] for f in fuentes.parsear_contratos_nivel(CSV, "2026-04-01"))
+    m = sum(f[3] for f in fuentes.parsear_contratos_nivel(CSV, "2026-04-01"))
+    con_total = CSV + f'"Total";;"{h}";"{m}";"1";"1";"1";"1";"1";"1";"1"\n'
+    filas = fuentes.parsear_contratos_nivel(con_total, "2026-04-01")
+    assert len(filas) == 7 and not any(f[1].lower().startswith("total") for f in filas)
+    with pytest.raises(ValueError, match="suman"):
+        fuentes.parsear_contratos_nivel(CSV + '"Total";;"1";"2";"1";"1";"1";"1";"1";"1";"1"\n', "2026-04-01")
+
+
+def test_las_filas_total_de_cargas_viejas_no_se_conservan(tmp_path, monkeypatch):
+    import urllib.error
+    monkeypatch.setattr(fuentes, "NORM", tmp_path)
+    cab = ["fecha", "nivel", "hombres", "mujeres", "indefinidos", "temporales", "total"]
+    viejo = fuentes.parsear_contratos_nivel(CSV, "2026-03-01") + [["2026-03-01", "Total", 1, 1, 1, 1, 2]]
+    fuentes.escribir("sepe_contratos_nivel", cab, viejo)  # una carga anterior que guardó la fila «Total»
+
+    def descargar(url, *a, **k):
+        if "202605" in url:
+            return CSV.encode("utf-8")
+        raise urllib.error.HTTPError(url, 404, "no encontrado", {}, None)
+    monkeypatch.setattr(fuentes, "descargar", descargar)
+    fuentes.sepe_contratos_nivel(desde=2026)
+    with open(tmp_path / "sepe_contratos_nivel.csv", encoding="utf-8") as fh:
+        niveles = {l.split(",")[1] for l in fh.read().splitlines()[1:]}
+    assert not any(n.lower().startswith("total") for n in niveles)

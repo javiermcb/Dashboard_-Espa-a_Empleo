@@ -5,7 +5,8 @@ Comprueba relaciones que tienen que cumplirse entre columnas o tablas del propio
   - EPA: las tasas están entre 0 y 100 y la tasa de empleo = actividad × (1 − paro/100) (tolerancia 0,3 puntos).
   - NEET: porcentajes entre 0 y 100.
   - FUNDAE: en las series por edad, tamaño de empresa, estudios y por comunidad, las partes suman el total (tolerancia 1 %).
-  - SEPE por nivel formativo: españoles + extranjeros = total de parados; indefinidos + temporales = total de contratos.
+  - SEPE por nivel formativo: españoles + extranjeros = total de parados; indefinidos + temporales = total de contratos;
+    ninguna fila «Total» (los ficheros del SEPE la traen y no es un nivel: duplicaría todas las sumas).
   - Eurostat: los porcentajes están entre 0 y 100 y la población total = hombres + mujeres.
   - Oportunidad por comunidad: los demandantes menores de 25 no superan el total de demandantes.
 Las tablas que no están se saltan (muchas son opcionales). Devuelve la lista de problemas (vacía = coherente).
@@ -65,6 +66,12 @@ def revisar_modelo(carpeta):
         if r[0]:
             problemas.append(f"`fact_fundae` serie 30: en {r[0]} casos las comunidades no suman el total (hasta {r[1]:.1%})")
 
+    for tabla in ("fact_sepe_demandantes_nivel", "fact_sepe_contratos_nivel"):
+        ruta = _t(carpeta, tabla)
+        if ruta:
+            n = _consulta(f"SELECT count(*) FROM {ruta} WHERE nivel ILIKE 'total%'")[0][0]
+            if n:
+                problemas.append(f"`{tabla}`: {n} filas «Total» entre los niveles (duplican las sumas)")
     t = _t(carpeta, "fact_sepe_demandantes_nivel")
     if t:
         n = _consulta(f"SELECT count(*) FROM {t} WHERE espanoles + extranjeros <> total")[0][0]

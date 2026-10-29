@@ -167,7 +167,7 @@ if not op.empty:
                "lo que reciben los demandantes. Los valores que el SEPE oculta por secreto estadístico (menos de 5) no se suman.")
 
 # --- nivel de estudios de los parados registrados (SEPE, nacional) --------------------------------------------------
-nf = (datos.q("SELECT fecha, nivel, hombres, mujeres, total FROM fact_sepe_demandantes_nivel")
+nf = (datos.q("SELECT fecha, nivel, hombres, mujeres, total FROM fact_sepe_demandantes_nivel WHERE nivel NOT ILIKE 'total%'")
       if datos.hay("fact_sepe_demandantes_nivel") else pd.DataFrame())
 if not nf.empty:
     st.subheader("Nivel de estudios de las personas paradas")
@@ -187,7 +187,7 @@ if not nf.empty:
                "No se muestra el grupo «Indeterminado» (menos del 0,1 %).")
 
 # --- contratos frente a parados, por nivel de estudios (SEPE, nacional) ----------------------------------------
-cn = (datos.q("SELECT fecha, nivel, indefinidos, temporales, total FROM fact_sepe_contratos_nivel")
+cn = (datos.q("SELECT fecha, nivel, indefinidos, temporales, total FROM fact_sepe_contratos_nivel WHERE nivel NOT ILIKE 'total%'")
       if datos.hay("fact_sepe_contratos_nivel") else pd.DataFrame())
 if not nf.empty and not cn.empty:
     cn["fecha"] = pd.to_datetime(cn.fecha)
