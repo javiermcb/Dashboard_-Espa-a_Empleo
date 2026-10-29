@@ -21,20 +21,30 @@ on:
       - "pipeline/**"
       - ".github/workflows/pipeline_rrhh.yml"
 
+# Dos trabajos con permisos distintos: «cargar» descarga y lee ficheros de terceros (SEPE, FUNDAE, INE…) y solo puede LEER el repositorio;
+# «publicar» no abre ninguno de esos ficheros y es el único con permiso de escritura. Si un fichero malicioso aprovechara un fallo de un lector
+# (openpyxl, xlrd…), no encontraría un token con el que escribir en el repositorio.
 permissions:
-  contents: write
-  issues: write
+  contents: read
 
 concurrency:
   group: pipeline-rrhh
   cancel-in-progress: false
 
+
 jobs:
-  pipeline:
+  cargar:
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    permissions:
+      contents: read
+    outputs:
+      control: ${{ steps.control.outcome }}
+      subido: ${{ steps.subir.outcome }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false   # el token no queda guardado en .git: el código que lee ficheros de terceros no lo encuentra
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
@@ -53,8 +63,11 @@ jobs:
           restore-keys: datos-rrhh-
       - name: Informes de la carga anterior (rama calidad)
         # alertas.py y notificar.py comparan con la carga anterior para avisar solo de lo nuevo
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch -q --depth 1 origin calidad && git checkout -q FETCH_HEAD -- resultados/pipeline || echo "::warning::sin informes previos"
+          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0); echo "::add-mask::$AUTH"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" fetch -q --depth 1 origin calidad && git checkout -q FETCH_HEAD -- resultados/pipeline || echo "::warning::sin informes previos"
       - name: Ingesta INE
         run: python pipeline/ine.py
       - name: Fuentes fase 2 (SEPE, Seguridad Social, Ministerio de Trabajo)
@@ -79,9 +92,70 @@ jobs:
         run: python pipeline/alertas.py || echo "::warning::alertas.py terminó con error"
       - name: Datos del informe de muestra (prototipo visual)
         run: python pipeline/visual_datos.py || echo "::warning::visual_datos.py terminó con error"
+      - name: Preparar publicación (README, diccionario, metadatos)
+        run: python pipeline/publicacion.py --repo "${{ vars.RRHH_PUBLICO_REPO || 'USUARIO/REPOSITORIO' }}"
+      - name: Control de calidad antes de publicar
+        # si falla (falta una tabla de la app, una tabla vacía o que pierde más de la mitad de sus filas, una tabla mensual de SEPE más de un 5 % o un último periodo que retrocede), no se publica:
+        # la app sigue con la última carga buena y el trabajo «publicar» abre la incidencia
+        id: control
+        env:
+          CAIDA_MAX: ${{ inputs.caida_max || '0.5' }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0); echo "::add-mask::$AUTH"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" fetch -q --depth 1 origin datos-modelo && git show FETCH_HEAD:modelo/metadatos.json > datos/qa/metadatos_previos.json \
+            || { rm -f datos/qa/metadatos_previos.json; echo "::warning::sin carga publicada con la que comparar"; }
+          python pipeline/control_publicacion.py --caida-max "$CAIDA_MAX"
+      - name: Guardar la carga para el trabajo de publicación (3 días)
+        id: subir
+        # también si el control falla (el informe de calidad debe poder publicarse para ver por qué)
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: carga
+          path: |
+            datos/publicar
+            datos/qa
+            datos/modelo/dim_tabla.csv
+            datos/visual/datos_visual.json
+          if-no-files-found: ignore
+          retention-days: 3
+
+  publicar:
+    needs: cargar
+    # también si «cargar» falla (para abrir la incidencia); en ramas distintas de main solo comprueba que la carga se transfiere bien
+    if: always() && needs.cargar.result != 'cancelled'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write   # rama datos-modelo y rama calidad
+      issues: write     # avisos
+      actions: read     # descargar la carga del trabajo anterior
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - name: Recibir la carga del trabajo anterior
+        if: needs.cargar.outputs.subido == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download "$GITHUB_RUN_ID" --name carga --dir datos
+          test -d datos/qa || { echo "::error::la carga recibida no trae datos/qa"; exit 1; }
+          ls -R datos | head -40
+      - name: Informes de la carga anterior (rama calidad)
+        if: needs.cargar.outputs.subido == 'success' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0); echo "::add-mask::$AUTH"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $AUTH" fetch -q --depth 1 origin calidad && git checkout -q FETCH_HEAD -- resultados/pipeline || echo "::warning::sin informes previos"
       - name: Notificar (issues de GitHub, que llegan por correo)
         # solo lo nuevo frente a la carga anterior: fallos de carga, avisos nuevos y datos nuevos
-        if: github.ref == 'refs/heads/main'
+        if: needs.cargar.outputs.subido == 'success' && github.ref == 'refs/heads/main'
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -105,30 +179,26 @@ jobs:
               gh issue close "$n" --comment "Resuelto: la carga de hoy ha terminado sin fallos ($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)."
             done
           fi
-      - name: Preparar publicación (README, diccionario, metadatos)
-        run: python pipeline/publicacion.py --repo "${{ vars.RRHH_PUBLICO_REPO || 'USUARIO/REPOSITORIO' }}"
-      - name: Guardar la publicación como artefacto (3 días)
-        # copia de seguridad: si la cuota de almacenamiento de GitHub está llena, no debe impedir la publicación
+      - name: Avisar si el modelo no cuadra con cifras oficiales
+        # la comprobación está en el control de calidad y no bloquea; aquí se convierte en una issue (una sola mientras dure) que se cierra sola
+        if: needs.cargar.result == 'success' && github.ref == 'refs/heads/main'
         continue-on-error: true
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: modelo-rrhh
-          path: datos/publicar/
-          retention-days: 3
-      - name: Control de calidad antes de publicar
-        # si falla (falta una tabla de la app, una tabla vacía o que pierde más de la mitad de sus filas, una tabla mensual de SEPE más de un 5 % o un último periodo que retrocede), no se publica:
-        # la app sigue con la última carga buena y el paso «Avisar si la carga se ha roto» abre la incidencia
-        id: control
         env:
-          CAIDA_MAX: ${{ inputs.caida_max || '0.5' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git fetch -q --depth 1 origin datos-modelo && git show FETCH_HEAD:modelo/metadatos.json > datos/qa/metadatos_previos.json \
-            || { rm -f datos/qa/metadatos_previos.json; echo "::warning::sin carga publicada con la que comparar"; }
-          python pipeline/control_publicacion.py --caida-max "$CAIDA_MAX"
+          url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          gh label create cifras-oficiales --force --color fbca04 > /dev/null
+          n=$(gh issue list --label cifras-oficiales --state open --json number --jq '.[0].number')
+          if [ -f datos/qa/notificacion_cifras.md ]; then
+            printf '\nEjecución: %s\n' "$url" >> datos/qa/notificacion_cifras.md
+            [ -n "$n" ] || gh issue create --title "Cifras del modelo que no cuadran con las oficiales" --label cifras-oficiales --body-file datos/qa/notificacion_cifras.md
+          elif [ -n "$n" ]; then
+            gh issue close "$n" --comment "Resuelto: las cifras vuelven a coincidir con las oficiales ($url)."
+          fi
       - name: Publicar los datos de la app en la rama datos-modelo
         # Rama huérfana con un único commit (se reescribe en cada carga, así no crece el historial): Parquet, alertas, metadatos e informes de calidad.
         # La app Streamlit los lee con RRHH_DATOS = https://raw.githubusercontent.com/<este repo>/datos-modelo/modelo/
-        if: github.ref == 'refs/heads/main'
+        if: needs.cargar.result == 'success' && github.ref == 'refs/heads/main'
         run: |
           rm -rf /tmp/app && mkdir -p /tmp/app/modelo
           cd datos/publicar/modelo
@@ -147,7 +217,7 @@ jobs:
           git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" HEAD:datos-modelo
       - name: Guardar el informe de calidad (rama calidad, nunca en main)
         # también cuando el control de calidad no se supera, para poder ver por qué
-        if: github.ref == 'refs/heads/main' && (success() || steps.control.outcome == 'failure')
+        if: github.ref == 'refs/heads/main' && needs.cargar.outputs.subido == 'success' && (needs.cargar.result == 'success' || needs.cargar.outputs.control == 'failure')
         run: |
           mkdir -p /tmp/qa
           cp datos/qa/*.csv datos/qa/*.md /tmp/qa/ 2>/dev/null || cp datos/qa/*.csv /tmp/qa/
@@ -165,12 +235,12 @@ jobs:
           git diff --cached --quiet || { git commit -q -m "Informe de calidad (run ${{ github.run_id }})"; git push -q origin HEAD:calidad; }
       - name: Avisar si la carga se ha roto
         # si un paso falla antes de «Notificar», no se abre ninguna issue: este paso avisa igualmente (llega por correo)
-        if: failure() && github.ref == 'refs/heads/main'
+        if: always() && github.ref == 'refs/heads/main' && (needs.cargar.result == 'failure' || failure())
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-          if [ "${{ steps.control.outcome }}" = "failure" ]; then
+          if [ "${{ needs.cargar.outputs.control }}" = "failure" ] && [ -f datos/qa/control_publicacion.md ]; then
             { cat datos/qa/control_publicacion.md; printf '\nEjecución: %s\n' "$url"; } > /tmp/fallo.md
           else
             printf '### La carga del pipeline RRHH se ha interrumpido\n\nLa app sigue mostrando los datos de la última carga correcta.\n\nEjecución: %s\n' "$url" > /tmp/fallo.md

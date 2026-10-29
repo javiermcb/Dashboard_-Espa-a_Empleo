@@ -54,9 +54,9 @@ La carga empezó sola al fusionar los PRs. Hay que confirmar que termina bien y 
    otras fuentes entre 10 y 15).
 4. Abre la más reciente y mira el resultado:
    - **Verde**: bien. Pasa al punto 6.
-   - **Roja**: abre el job `pipeline` y busca el paso en rojo. Los casos conocidos:
-     - *«Guardar la publicación como artefacto»* en rojo pero el job continúa: es la cuota de almacenamiento (ver
-       sección 3). **No impide publicar.**
+   - **Roja**: abre el job `cargar` (o `publicar`) y busca el paso en rojo. Los casos conocidos:
+     - *«Guardar la carga para el trabajo de publicación»* en rojo: es la cuota de almacenamiento (ver sección 3).
+       **Desde que la carga se reparte en dos trabajos, el artefacto es imprescindible: sin él no se publica.** Borra artefactos antiguos y relanza.
      - *«Control de calidad antes de publicar»* en rojo con el texto «falta `fact_regulacion_empleo`» (u otra tabla):
        una descarga del Ministerio ha fallado de forma transitoria. **Reintenta una vez**: en la parte superior
        derecha de la ejecución pulsa «Re-run jobs» → «Re-run failed jobs». Reutiliza lo ya descargado y solo
@@ -75,7 +75,7 @@ pipeline RRHH» (y te llega por correo). Se cierra sola cuando una carga termina
 ## 3. La cuota de almacenamiento de Actions (artefactos)
 
 > **Estado a 23/10/2026: resuelto.** Se borraron 51 de los 56 artefactos de `Datos_INE` (quedan 5, 246 MB: los del 12 al
-> 16/10), la retención es de **3 días** en los dos repositorios y el paso del artefacto **no bloquea** la publicación.
+> 16/10), la retención es de **3 días** en los dos repositorios (Desde la separación en dos trabajos, el artefacto `carga` sí es imprescindible para publicar.)
 
 **Qué pasaba**: cada carga guarda una copia de seguridad (un «artefacto») de unos 49 MB. Con 30 días de retención y una
 carga por cada push de desarrollo, se acumularon 56 (1,86 GB) y la cuota de la cuenta se llenó. El paso fallaba y, al
