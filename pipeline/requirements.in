@@ -1,0 +1,7 @@
+# Dependencias directas del pipeline (GitHub Actions), con versión exacta.
+# requirements.txt se genera desde aquí con sus hashes:
+#   uv pip compile pipeline/requirements.in --python-version 3.11 --generate-hashes -o pipeline/requirements.txt
+duckdb==1.5.6
+openpyxl==3.1.5
+xlrd==2.0.2
+cryptography==50.0.2

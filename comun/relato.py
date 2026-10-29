@@ -11,8 +11,6 @@ CSS = """<style>
 .rr-resp h3{margin:0 0 0.5rem 0;font-size:1.35rem;line-height:1.35;color:#00145A}
 .rr-resp ul{margin:0.2rem 0 0 1.1rem;padding:0}
 .rr-resp li{margin:0.2rem 0;line-height:1.45}
-.rr-impl{border:1px solid #d9ab42;background:#fbf6e9;border-radius:10px;padding:0.8rem 1.1rem;margin:0.6rem 0 1.2rem 0}
-.rr-impl b{color:#00145A}
 .rr-nota{color:#4a5585;font-size:0.85rem}
 .rr-resumen{border-left:4px solid #00145A;background:#f5f6fb;border-radius:8px;padding:0.6rem 1rem;margin:0.2rem 0 1rem 0}
 .rr-resumen ul{margin:0.1rem 0 0 1.1rem;padding:0}
@@ -31,11 +29,6 @@ def respuesta(frase, puntos):
     """La respuesta a la pregunta en una frase (título que afirma) y los 2-4 datos que la sostienen."""
     lis = "".join(f"<li>{escape(p)}</li>" for p in puntos if p)
     st.markdown(f"<div class='rr-resp'><h3>{escape(frase)}</h3><ul>{lis}</ul></div>", unsafe_allow_html=True)
-
-
-def implicacion(texto):
-    """Qué significa para una ETT (recuadro dorado)."""
-    st.markdown(f"<div class='rr-impl'><b>Qué significa para la ETT.</b> {escape(texto)}</div>", unsafe_allow_html=True)
 
 
 def nota(texto):
