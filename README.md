@@ -90,7 +90,9 @@ de sus derivados y de los neutros.
 
 ## Versiones fijadas y cómo actualizar
 
-`requirements.txt` (apps) y `pipeline/requirements.txt` (pipeline) fijan versiones exactas. Para actualizar: cambiar la
+`requirements.txt` (apps) fija versiones exactas. `pipeline/requirements.txt` (pipeline) las fija **con hashes** y se genera
+desde `pipeline/requirements.in` (`uv pip compile pipeline/requirements.in --python-version 3.11 --generate-hashes -o pipeline/requirements.txt`);
+las apps no llevan hashes porque Streamlit Community Cloud instala sus dependencias por su cuenta. Para actualizar: cambiar la
 versión, ejecutar `python -m pytest -q` y subir; GitHub vuelve a probar todas las páginas y, si cambia el pipeline,
 ejecuta una carga completa en la rama. Estado a 26/10/2026: Streamlit 1.66.1, pandas 3.1.0, pyarrow 26.0.0, altair 6.3.0,
 DuckDB **1.5.6**. DuckDB 2.0.0 (versión mayor) no se ha adoptado: el SQL de `pipeline/marts.sql` ya es compatible con

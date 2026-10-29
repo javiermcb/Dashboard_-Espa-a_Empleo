@@ -6,7 +6,8 @@ from comun import datos
 st.title("Datos y descargas")
 st.caption("Las tablas del modelo que usa este dashboard, con filtros y descarga en CSV (separador ';' para abrirlo en Excel en español).")
 st.caption("Al reutilizar estos datos hay que citar la fuente («Elaboración propia con datos extraídos del sitio web del "
-           "INE (www.ine.es), del SEPE, de la Seguridad Social y del Ministerio de Trabajo y Economía Social»), no "
+           "INE (www.ine.es), del SEPE, de la Seguridad Social, del Ministerio de Trabajo y Economía Social, de FUNDAE "
+           "(www.fundae.es) y de Eurostat (ec.europa.eu/eurostat)», según la fuente de cada tabla), no "
            "desvirtuar su sentido, indicar su fecha de actualización (en «Estado de los datos») y no dar a entender que "
            "estos organismos participan en el uso que se haga.")
 
@@ -27,10 +28,33 @@ DESCR = {
     "fact_accidentes": "Accidentes · por CCAA y provincia",
     "fact_accidentes_detalle": "Accidentes · detalle (gravedad, sector, sexo y edad…)",
     "fact_regulacion_empleo": "ERE y ERTE · últimos 10 meses",
+    "fact_fundae": "FUNDAE · formación bonificada por año natural",
+    "fact_eurostat": "Eurostat · empleo, paro y NEET, España y UE-27",
+    "mart_neet": "INE · jóvenes NEET (15-29) por territorio",
+    "mart_tasas_epa": "INE · EPA: tasas de actividad, empleo y paro",
+    "mart_sectores_empleo": "Seguridad Social · afiliados por sector (CNAE)",
+    "mart_oportunidad_ccaa": "SEPE · demandantes y contratos por comunidad",
+    "fact_sepe_demandantes_nivel": "SEPE · parados registrados por nivel formativo",
+    "fact_sepe_contratos_nivel": "SEPE · contratos por nivel formativo",
 }
+# Qué mide cada tabla y qué no (el detalle está en «Cómo leer estos datos»)
+NOTAS = {
+    "fact_fundae": "«Participantes» son participaciones en cursos: una persona que hace varios suma varias veces. Formación bonificada y permisos; "
+                   "no incluye la subvencionada para desempleados. Crédito «dispuesto» (utilizado), no asignado. Los últimos años pueden revisarse.",
+    "fact_eurostat": "Indicadores de la Encuesta de Población Activa europea (muestra): pueden tener error muestral. Algunos NEET por nivel son cálculos propios.",
+    "mart_neet": "Jóvenes de 15 a 29 años que ni estudian ni trabajan, en % de su población. No existe una cifra oficial de 16 a 29.",
+    "mart_tasas_epa": "EPA (encuesta a hogares), medias anuales. No coincide con el paro registrado del SEPE. En comunidades pequeñas y grupos de edad estrechos el error muestral puede ser grande.",
+    "mart_sectores_empleo": "Afiliados medios, todas las edades, años completos y variación anual. Muestra dónde ha crecido el empleo; no es una previsión ni mide la oportunidad para jóvenes.",
+    "mart_oportunidad_ccaa": "Los contratos son episodios, no personas; los demandantes incluyen a quien ya trabaja y busca cambiar. Sirve para comparar territorios, no para medir oportunidad.",
+    "fact_sepe_demandantes_nivel": "Paro registrado (inscritos como demandantes parados), nacional y mensual, sin la fila «Total». No comparable con el paro de la EPA.",
+    "fact_sepe_contratos_nivel": "Contratos registrados (episodios, no personas), nacional y mensual, sin la fila «Total». Tienen estacionalidad.",
+}
+for _t in ("fact_sepe_paro_municipio", "fact_sepe_demandantes_municipio", "fact_sepe_contratos_municipio"):
+    NOTAS[_t] = "SEPE por municipio y mes. Los valores inferiores a 5 los oculta el SEPE por secreto estadístico y no se suman."
 tablas = sorted([t for t in disponibles if t not in ("dim_tiempo", "alertas")], key=lambda t: (t.startswith("dim_"), t))
 nombre = st.selectbox("Tabla", tablas, format_func=lambda t: f"{t} — {DESCR.get(t, '')}".rstrip(" —"))
 assert nombre in tablas  # el nombre de tabla no puede ir como parámetro: solo se admiten los de la lista
+st.caption(NOTAS.get(nombre, "Definiciones y límites de las cifras: página «Cómo leer estos datos».") + " Más en «Cómo leer estos datos».")
 cols = datos.q(f"SELECT * FROM {nombre} LIMIT 0").columns.tolist()
 n_total = int(datos.q(f"SELECT count(*) AS n FROM {nombre}").n.iloc[0])
 

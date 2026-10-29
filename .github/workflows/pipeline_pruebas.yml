@@ -32,6 +32,7 @@ jobs:
           cache: pip
           cache-dependency-path: pipeline/requirements.txt
       - name: Dependencias
-        run: pip install -r pipeline/requirements.txt pytest
+        # con hashes: solo se instalan los ficheros exactos de requirements.txt (pytest va aparte: es solo para las pruebas)
+        run: pip install --require-hashes -r pipeline/requirements.txt && pip install pytest
       - name: Pruebas
         run: python -m pytest pipeline/tests -q
