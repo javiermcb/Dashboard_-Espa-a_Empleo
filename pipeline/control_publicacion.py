@@ -12,7 +12,8 @@ Comprueba, con datos/publicar/modelo/metadatos.json (publicacion.py) y el de la 
   5. El último periodo de una tabla con fecha no retrocede frente a la carga publicada (si esa carga ya lo registra).
   6. Las cifras son coherentes entre sí (pipeline/coherencia.py): las partes suman el total, las tasas cuadran, los porcentajes están en 0-100.
 Además se comparan con cifras oficiales publicadas (pipeline/referencias.py): si alguna no cuadra, sale un AVISO que NO bloquea la publicación.
-Salida: datos/qa/control_publicacion.md · código 1 si no se debe publicar.
+Salida: datos/qa/control_publicacion.md · código 1 si no se debe publicar · datos/qa/notificacion_cifras.md solo si hay cifras que no cuadran
+(el workflow abre con él una issue «cifras-oficiales»).
 Uso:    python pipeline/control_publicacion.py [--caida-max 0.5]
 """
 import argparse, ast, json, sys
@@ -25,6 +26,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 NUEVO = RAIZ / "datos" / "publicar" / "modelo" / "metadatos.json"
 PREVIO = RAIZ / "datos" / "qa" / "metadatos_previos.json"
 SALIDA = RAIZ / "datos" / "qa" / "control_publicacion.md"
+SALIDA_CIFRAS = RAIZ / "datos" / "qa" / "notificacion_cifras.md"
 APP = RAIZ / "comun" / "datos.py"
 MENSUALES_SEPE = ("fact_sepe_paro_municipio", "fact_sepe_contratos_municipio", "fact_sepe_demandantes_municipio")
 CAIDA_MAX_SEPE = 0.05
@@ -96,6 +98,14 @@ def main():
     if avisos:
         texto += ["", "### Cifras que no cuadran con las oficiales (aviso: no bloquea la publicación)", "", *[f"- {a}" for a in avisos]]
     SALIDA.write_text("\n".join(texto) + "\n", encoding="utf-8")
+    if avisos:
+        SALIDA_CIFRAS.write_text("\n".join(["### Cifras del modelo que no cuadran con las oficiales", "",
+                                            *[f"- {a}" for a in avisos], "",
+                                            "No se ha bloqueado la publicación. Revisar si es un error de carga o si la cifra oficial ha cambiado "
+                                            "(`pipeline/referencias_oficiales.csv`). Esta issue se cierra sola cuando vuelven a coincidir."]) + "\n",
+                                 encoding="utf-8")
+    else:
+        SALIDA_CIFRAS.unlink(missing_ok=True)
     print("\n".join(texto))
     return 1 if problemas else 0
 

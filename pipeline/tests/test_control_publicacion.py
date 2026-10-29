@@ -48,3 +48,27 @@ def test_el_ultimo_periodo_no_retrocede():
     assert cp.revisar(m("2026-01-01"), m("2026-09-01"), []) == ["`fact_x`: el último periodo retrocede de 2026-09-01 a 2026-01-01"]
     assert cp.revisar(m("2026-09-01"), m("2026-09-01"), []) == []
     assert cp.revisar(m("2026-09-01"), meta(fact_x=10), []) == []  # la carga previa aún no registraba periodos
+
+
+def _ejecutar(monkeypatch, tmp_path, avisos):
+    (tmp_path / "metadatos.json").write_text('{"ficheros": {}}', encoding="utf-8")
+    monkeypatch.setattr(cp, "NUEVO", tmp_path / "metadatos.json")
+    monkeypatch.setattr(cp, "PREVIO", tmp_path / "no_existe.json")
+    monkeypatch.setattr(cp, "SALIDA", tmp_path / "control.md")
+    monkeypatch.setattr(cp, "SALIDA_CIFRAS", tmp_path / "cifras.md")
+    monkeypatch.setattr(cp, "tablas_app", lambda: [])
+    monkeypatch.setattr(cp, "revisar_modelo", lambda carpeta: [])
+    monkeypatch.setattr(cp, "revisar_referencias", lambda carpeta: avisos)
+    monkeypatch.setattr("sys.argv", ["control_publicacion.py"])
+    return cp.main()
+
+
+def test_cifras_que_no_cuadran_generan_el_texto_de_la_issue_sin_bloquear(monkeypatch, tmp_path):
+    assert _ejecutar(monkeypatch, tmp_path, ["D3-01: 5 frente a 6"]) == 0
+    assert "D3-01: 5 frente a 6" in (tmp_path / "cifras.md").read_text(encoding="utf-8")
+
+
+def test_sin_avisos_no_queda_texto_de_cifras(monkeypatch, tmp_path):
+    (tmp_path / "cifras.md").write_text("viejo", encoding="utf-8")
+    assert _ejecutar(monkeypatch, tmp_path, []) == 0
+    assert not (tmp_path / "cifras.md").exists()
