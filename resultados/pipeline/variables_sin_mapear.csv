@@ -1,21 +1,21 @@
 variable;n_tablas;tablas;valores_ejemplo
-Agrupaciones regionales (NUTS 1);4;82000,80109,82001,81998;Extra-Regio
-SITUACIÓN PROFESIONAL;4;79304,65805,65809,65212;Asalariados | Total | Otra situación | Trabajador por cuenta propia | Asalariados : Total
-Condición jurídica;3;13915,13913,39374;Sociedades anónimas | Total | Mercantiles | Sociedades de responsabilidad limitada | S. Comanditarias y S. Colectivas
+SITUACIÓN PROFESIONAL;4;65805,65809,65212,79304;Asalariados | Total | Otra situación | Asalariados : Total | Trabajador por cuenta propia
+Agrupaciones regionales (NUTS 1);4;80109,82001,82000,81998;Extra-Regio
+Condición jurídica;3;39374,13913,13915;Mercantiles | Sociedades de responsabilidad limitada | S. Comanditarias y S. Colectivas | Sociedades anónimas | Total
 Grupos ECOICOP;2;76134,76140;Índice general
-Precios_SEC;2;80109,81998;Precios corrientes
+Precios_SEC;2;81998,80109;Precios corrientes
+Fuente;2;10891,10888;Eurostat
 Indicadores de Desarrollo Sostenible (ODS);2;10891,10888;Brecha salarial de género no ajustada a las características individuales
-Agregados de empleo;2;82000,82001;Empleo
-Fuente;2;10888,10891;Eurostat
-SALDOS CONTABLES;1;80109;Producto interior bruto a precios de mercado
-Antigüedad en el empleo;1;36861;De 4 a 10 años | De 21 a 29 años | De 1 a 3 años | De 11 a 20 años | Total | Menos de 1 año | 30 y más años
-Clase de disolución;1;13915;Por fusión | Voluntaria | Otras | Total
-Motivo de tener un contrato o relación laboral temporal;1;65809;No querer un empleo de duración indefinida | Otras razones | No sabe | No poder encontrar un empleo de duración indefinida | Este trabajo solo está disponible con duración temporal | Total
-Tipo de contrato o relación laboral;1;36858;Total | Indefinido | Temporal
+Agregados de empleo;2;82001,82000;Empleo
 Contratado a través de una empresa de trabajo temporal;1;65805;Sí | No sabe | Total | No
-Realizan o no, horas extraordinarias;1;65212;Realizan horas extra: Ambos tipos | Realizan horas extra: Total | Realizan horas extra: Sólo no pagadas | Realizan horas extra: Sólo pagadas | Total | No realizan horas extra
 Agrupaciones EPA;1;65809;Con contrato o relación laboral temporal
-Tiempo de búsqueda de empleo;1;66061;De 1 mes a menos de 3 meses | Ya ha encontrado empleo | De 6 meses a menos de 1 año | De 1 año a menos de 2 años | 2 años o más | De 3 meses a menos de 6 meses | Total | Menos de 1 mes
-OPERACIONES DE DISTRIBUCIÓN;1;81998;Remuneración de los asalariados (miles de euros)
+Realizan o no, horas extraordinarias;1;65212;Total | No realizan horas extra | Realizan horas extra: Ambos tipos | Realizan horas extra: Sólo pagadas | Realizan horas extra: Total | Realizan horas extra: Sólo no pagadas
+SALDOS CONTABLES;1;80109;Producto interior bruto a precios de mercado
+Motivo de tener un contrato o relación laboral temporal;1;65809;Total | No poder encontrar un empleo de duración indefinida | Este trabajo solo está disponible con duración temporal | No querer un empleo de duración indefinida | Otras razones | No sabe
+Antigüedad en el empleo;1;36861;Total | Menos de 1 año | 30 y más años | De 4 a 10 años | De 21 a 29 años | De 1 a 3 años | De 11 a 20 años
+Clase de disolución;1;13915;Total | Por fusión | Voluntaria | Otras
+Tipo de contrato o relación laboral;1;36858;Total | Indefinido | Temporal
 Indicadores HVD;1;67567;HVD
-Días trabajados en el domicilio particular;1;65776;No sabe | Ocasionalmente | Ningún día | Total | Más de la mitad de los días que trabajó
+OPERACIONES DE DISTRIBUCIÓN;1;81998;Remuneración de los asalariados (miles de euros)
+Días trabajados en el domicilio particular;1;65776;Total | Más de la mitad de los días que trabajó | No sabe | Ocasionalmente | Ningún día
+Tiempo de búsqueda de empleo;1;66061;De 3 meses a menos de 6 meses | Total | Menos de 1 mes | De 1 mes a menos de 3 meses | Ya ha encontrado empleo | De 1 año a menos de 2 años | 2 años o más | De 6 meses a menos de 1 año
