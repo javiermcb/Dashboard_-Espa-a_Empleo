@@ -21,6 +21,14 @@ PREVIA = RAIZ / "resultados" / "pipeline" / "alertas.csv"
 SALIDA = RAIZ / "datos" / "qa"
 
 
+def limpio(texto, largo=400):
+    """Texto que puede venir de ficheros de terceros (notas de FUNDAE, nombres de archivo…) listo para una issue pública:
+    sin @menciones que notifiquen a alguien, sin HTML ni enlaces con formato, en una sola línea y con longitud limitada."""
+    s = " ".join(str(texto).split())
+    s = s.replace("@", "@\u200b").replace("<", "‹").replace(">", "›").replace("](", "] (").replace("![", "! [")
+    return s if len(s) <= largo else s[:largo - 1] + "…"
+
+
 def leer(p):
     if not p.exists():
         return []
@@ -52,7 +60,7 @@ def main():
 
     if fallos_nuevos:
         lineas = [f"### Incidencias de carga · {ahora}", ""]
-        lineas += [f"- **{a['indicador']}** · {a['mensaje']}" for a in fallos_nuevos]
+        lineas += [f"- **{limpio(a['indicador'])}** · {limpio(a['mensaje'])}" for a in fallos_nuevos]
         if len(fallos) > len(fallos_nuevos):
             lineas += ["", f"_Además siguen abiertas {len(fallos) - len(fallos_nuevos)} incidencias ya avisadas._"]
         lineas += ["", "Las tablas marcadas como «No actualizada» se publican con su última versión buena."]
@@ -61,9 +69,9 @@ def main():
     if novedades or avisos_nuevos:
         lineas = [f"### Alertas RRHH 360 · {ahora}", ""]
         if avisos_nuevos:
-            lineas += ["**Avisos nuevos**", ""] + [f"- **{a['indicador']}** · {a['mensaje']}" for a in avisos_nuevos] + [""]
+            lineas += ["**Avisos nuevos**", ""] + [f"- **{limpio(a['indicador'])}** · {limpio(a['mensaje'])}" for a in avisos_nuevos] + [""]
         if novedades:
-            lineas += ["**Datos nuevos**", ""] + [f"- `{a['indicador']}` · {a['mensaje']}" for a in novedades] + [""]
+            lineas += ["**Datos nuevos**", ""] + [f"- `{limpio(a['indicador']).replace(chr(96), chr(39))}` · {limpio(a['mensaje'])}" for a in novedades] + [""]
         lineas += ["Detalle completo: `resultados/pipeline/alertas.md` (rama `calidad`) · tabla `modelo/alertas.csv` en el repositorio público."]
         (SALIDA / "notificacion_alertas.md").write_text("\n".join(lineas) + ejecucion, encoding="utf-8")
 

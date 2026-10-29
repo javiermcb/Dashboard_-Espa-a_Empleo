@@ -40,3 +40,20 @@ def test_dato_nuevo_va_a_alertas(tmp_path, monkeypatch):
     nov = ["novedad", "ine:6042", "", "2026T2", "", "", "Nuevo periodo", "novedad"]
     fallos, alertas = preparar(tmp_path, monkeypatch, [nov], [])
     assert not fallos.exists() and "ine:6042" in alertas.read_text(encoding="utf-8")
+
+
+def test_texto_externo_no_menciona_ni_enlaza_ni_mete_html():
+    s = notificar.limpio("Hola @alguien <img src=x onerror=1> [clic](http://malo.example)\nsegunda línea")
+    assert "@alguien" not in s and "@​alguien" in s
+    assert "<" not in s and ">" not in s and "](" not in s and "\n" not in s
+
+
+def test_texto_externo_largo_se_recorta():
+    assert len(notificar.limpio("x" * 5000)) == 400
+
+
+def test_la_issue_lleva_el_texto_limpio(tmp_path, monkeypatch):
+    fallo = ["carga", "fact_x", "", "", "", "", "No actualizada: nota «avisar a @quien» <b>x</b>", "aviso"]
+    fallos, _ = preparar(tmp_path, monkeypatch, [fallo], [])
+    texto = fallos.read_text(encoding="utf-8")
+    assert "@quien" not in texto and "<b>" not in texto

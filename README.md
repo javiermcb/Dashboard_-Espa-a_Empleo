@@ -30,7 +30,7 @@ flowchart LR
 
 | Workflow | Cuándo | Qué hace |
 |---|---|---|
-| `pipeline_rrhh.yml` | días laborables 06:17 UTC, cambios en `pipeline/` | dos trabajos: `cargar` (descarga y lee ficheros de terceros, modelo y control de calidad; solo puede leer el repositorio) y `publicar` (único con permiso de escritura: publica en `datos-modelo` desde `main` y abre las issues de fallo, de alertas y de cifras oficiales que no cuadran) |
+| `pipeline_rrhh.yml` | días laborables 06:17 UTC, cambios en `pipeline/` | dos trabajos: `cargar` (descarga y lee ficheros de terceros, modelo y control de calidad; solo puede leer el repositorio) y `publicar` (único con permiso de escritura: publica en `datos-modelo` desde `main`, guarda una copia mensual (etiqueta `datos-AAAA-MM`, las 12 últimas) y abre las issues de fallo, de alertas y de cifras oficiales que no cuadran) |
 | `pipeline_pruebas.yml` | cambios en `pipeline/` y PRs | pruebas sin red del pipeline |
 | `apps_pruebas.yml` | cambios en `dashboards/`, `comun/` | abre todas las páginas de todos los dashboards |
 | `mantener_apps_activas.yml` | cada 4 horas | job `visitar`: abre con un navegador y despierta si duerme; visita las URLs `APP_URL_1`…`APP_URL_3` (variables del repositorio). Job `frescura`: abre una issue `datos-viejos` si la carga publicada en `datos-modelo` tiene más de 96 h (el pipeline dejó de publicar sin fallar) y la cierra cuando vuelve a estar al día |
@@ -42,6 +42,7 @@ Todos los workflows usan `ubuntu-24.04` (no `ubuntu-latest`) y las acciones fija
 ## Puesta en marcha
 
 Guía paso a paso (datos, Streamlit, avisos, cuota de Actions): [`docs/guia_puesta_en_marcha.md`](docs/guia_puesta_en_marcha.md).
+Responsables, migración a una organización y pendientes de terceros: [`docs/gobierno_y_propiedad.md`](docs/gobierno_y_propiedad.md). Seguridad: [`SECURITY.md`](SECURITY.md).
 
 ## Añadir un dashboard o una página
 
