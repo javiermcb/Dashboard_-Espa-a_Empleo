@@ -11,6 +11,7 @@ Comprueba, con datos/publicar/modelo/metadatos.json (publicacion.py) y el de la 
   4. Las tablas mensuales de SEPE (que solo crecen) no pierden más del 5 % de sus filas: un CSV anual cortado quitaba meses sin llegar al 50 %.
   5. El último periodo de una tabla con fecha no retrocede frente a la carga publicada (si esa carga ya lo registra).
   6. Las cifras son coherentes entre sí (pipeline/coherencia.py): las partes suman el total, las tasas cuadran, los porcentajes están en 0-100.
+Además se comparan con cifras oficiales publicadas (pipeline/referencias.py): si alguna no cuadra, sale un AVISO que NO bloquea la publicación.
 Salida: datos/qa/control_publicacion.md · código 1 si no se debe publicar.
 Uso:    python pipeline/control_publicacion.py [--caida-max 0.5]
 """
@@ -18,6 +19,7 @@ import argparse, ast, json, sys
 from pathlib import Path
 
 from coherencia import revisar_modelo
+from referencias import revisar as revisar_referencias
 
 RAIZ = Path(__file__).resolve().parent.parent
 NUEVO = RAIZ / "datos" / "publicar" / "modelo" / "metadatos.json"
@@ -82,12 +84,17 @@ def main():
         problemas = revisar(json.loads(NUEVO.read_text(encoding="utf-8")), previo, tablas_app(), a.caida_max)
         problemas += revisar_modelo(NUEVO.parent)
     SALIDA.parent.mkdir(parents=True, exist_ok=True)
+    avisos = revisar_referencias(NUEVO.parent) if NUEVO.exists() else []
+    for a in avisos:
+        print(f"::warning::Cifra oficial: {a}")
     if problemas:
         texto = ["### No se han publicado los datos de hoy: no superan el control de calidad", "",
                  *[f"- {x}" for x in problemas], "",
                  "La app sigue mostrando la última carga buena."]
     else:
         texto = ["Control de publicación superado" + ("" if previo else " (sin carga previa con la que comparar)")]
+    if avisos:
+        texto += ["", "### Cifras que no cuadran con las oficiales (aviso: no bloquea la publicación)", "", *[f"- {a}" for a in avisos]]
     SALIDA.write_text("\n".join(texto) + "\n", encoding="utf-8")
     print("\n".join(texto))
     return 1 if problemas else 0

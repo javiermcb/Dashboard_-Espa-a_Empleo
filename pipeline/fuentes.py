@@ -19,7 +19,7 @@ def _sepe_mensual(nombre, url_patron, parsear, cab, desde):
                     print(f"  SEPE {nombre} {a}-{m:02d}: se omite ({type(e).__name__}: {e})")
     if not filas:
         raise ValueError(f"SEPE {nombre}: ningún mes descargado")
-    filas = con_historial(nombre, cab, filas)
+    filas = [f for f in con_historial(nombre, cab, filas) if not str(f[1]).lower().startswith("total")]  # las de cargas viejas podían traer «Total»
     escribir(nombre, cab, filas)
     guardados = sorted({f[0][:7] for f in filas})
     detalle = f"{len(guardados)} meses ({len(meses)} descargados ahora)"
@@ -309,15 +309,19 @@ def parsear_contratos_nivel(t, fecha):
     idx = {k: next((i for i, c in enumerate(cab) if k in c), None) for k in ("hombres", "mujeres", "indefinidos", "temporales")}
     if None in idx.values():
         raise ValueError(f"faltan columnas esperadas: {cab}")
-    filas = []
+    filas, total = [], None
     for l in lineas[1:]:
         c = [x.strip().strip('"') for x in l.split(";")]
         h, m, i, tm = (n(c[idx[k]]) for k in ("hombres", "mujeres", "indefinidos", "temporales"))
         if not c[0] or None in (h, m, i, tm):
             continue
+        if c[0].lower().startswith("total"):  # fila «Total» del fichero: se usa para comprobar que los niveles suman
+            total = (h, m)
+            continue
         filas.append([fecha, c[0], h, m, i, tm, h + m])
     if len(filas) < 5:
         raise ValueError(f"solo {len(filas)} niveles")
+    _comprobar_total(filas, total, (2, 3))
     return filas
 
 
@@ -331,6 +335,15 @@ def sepe_contratos_nivel(desde=2019):
 # la sección es el primer "X. TEXTO EN MAYÚSCULAS" de la cabecera (el régimen puede empezar por letra y punto: "R. General")
 RX_SECCION = re.compile(r"^(.*?)\s*((?:\b[A-V]\.\s[A-ZÁÉÍÓÚÑ\"]{2}.*)|TODAS LAS SECCIONES)$")  # el nombre de la sección puede llevar puntos ("E. … SANEAMIENTO. GESTIÓN …")
 RX_SEXO = re.compile(r"^(.*?)\s+(Total Sexo|Mujer|Mujeres|Varón|Varones|Hombres)$", re.I)
+
+
+def _comprobar_total(filas, total, columnas):
+    """Si el fichero trae fila «Total», los niveles tienen que sumarla (hombres y mujeres); si no, el fichero no es el esperado."""
+    if total is None:
+        return
+    suma = tuple(sum(f[c] for f in filas) for c in columnas)
+    if suma != tuple(total):
+        raise ValueError(f"los niveles suman {suma} y la fila Total dice {tuple(total)}")
 
 
 def parsear_nivel_formativo(t, fecha):
@@ -347,15 +360,19 @@ def parsear_nivel_formativo(t, fecha):
     idx = {k: next((i for i, c in enumerate(cab) if k in c), None) for k in ("hombres", "mujeres", "españoles", "extranjeros")}
     if None in idx.values():
         raise ValueError(f"faltan columnas esperadas: {cab}")
-    filas = []
+    filas, total = [], None
     for l in lineas[1:]:
         c = [x.strip().strip('"') for x in l.split(";")]
         h, m = n(c[idx["hombres"]]), n(c[idx["mujeres"]])
         if not c[0] or h is None or m is None:
             continue
+        if c[0].lower().startswith("total"):  # el fichero trae una fila «Total»: no es un nivel, se usa para comprobar que los niveles suman
+            total = (h, m)
+            continue
         filas.append([fecha, c[0], h, m, n(c[idx["españoles"]]), n(c[idx["extranjeros"]]), h + m])
     if len(filas) < 5:
         raise ValueError(f"solo {len(filas)} niveles")
+    _comprobar_total(filas, total, (2, 3))
     return filas
 
 

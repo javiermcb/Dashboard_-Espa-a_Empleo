@@ -40,6 +40,7 @@ def test_una_carpeta_sin_tablas_no_da_problemas(tmp_path):
     ("marts/mart_neet", ["porcentaje = -1"], "true", "mart_neet"),
     ("fact_sepe_demandantes_nivel", ["total = total + 1"], "true", "españoles + extranjeros"),
     ("marts/mart_oportunidad_ccaa", ["demandantes_menores_25 = demandantes * 2"], "true", "mart_oportunidad_ccaa"),
+    ("fact_sepe_demandantes_nivel", ["nivel = 'Total'"], "nivel = 'Universitario'", "filas «Total»"),
     ("fact_fundae", ["valor = valor * 3"], "serie = '01' AND categoria = 'Total' AND medida = 'Participantes'", "serie 01"),
 ])
 def test_se_detecta_cada_incoherencia(tmp_path, rel, cambio, donde, texto):

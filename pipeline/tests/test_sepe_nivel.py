@@ -26,3 +26,19 @@ def test_rechaza_un_fichero_que_no_es_el_esperado():
         fuentes.parsear_nivel_formativo("<html>no encontrado</html>", "2026-04-01")
     with pytest.raises(ValueError):
         fuentes.parsear_nivel_formativo(CSV.splitlines()[0] + "\n" + CSV.splitlines()[1], "2026-04-01")
+
+
+# Los ficheros reales traen además una fila «Total» (que coincide con el paro registrado oficial de abril de 2026: 932.618 + 1.424.426 = 2.357.044)
+CSV_CON_TOTAL = CSV + '"Total";;"932.618";"1.424.426";"1.616.456";"740.588";"1";"1";"1"\n'
+
+
+def test_la_fila_total_no_es_un_nivel():
+    filas = fuentes.parsear_nivel_formativo(CSV_CON_TOTAL, "2026-04-01")
+    assert len(filas) == 7 and not any(f[1].lower().startswith("total") for f in filas)
+    assert sum(f[6] for f in filas) == 2357044  # el paro registrado oficial de abril de 2026
+
+
+def test_rechaza_un_fichero_cuyos_niveles_no_suman_el_total():
+    malo = CSV + '"Total";;"932.618";"1.424.000";"1";"1";"1";"1";"1"\n'
+    with pytest.raises(ValueError, match="suman"):
+        fuentes.parsear_nivel_formativo(malo, "2026-04-01")
