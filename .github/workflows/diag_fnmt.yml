@@ -1,0 +1,50 @@
+name: Diagnóstico FNMT (temporal)
+
+# Descarga los certificados de la cadena de FUNDAE desde la FNMT y escribe sus huellas, para compararlas con las de la sede.
+# Temporal: se borra tras el diagnóstico.
+on:
+  push:
+    branches: ["claude/diag-fnmt"]
+    paths: [".github/workflows/diag_fnmt.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  huellas:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+      - run: pip install cryptography==50.0.2
+      - name: Huellas
+        run: |
+          python - <<'PY'
+          import hashlib, ssl, urllib.request
+          from cryptography import x509
+          from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
+          URLS = ["http://www.cert.fnmt.es/certs/ACRAIZSERVIDORESSEGUROSFNMTG2R.crt", "http://www.cert.fnmt.es/certs/ACSS2G2R.crt"]
+          # el certificado que envía el propio servidor de FUNDAE
+          hoja = x509.load_pem_x509_certificate(ssl.get_server_certificate(("www.fundae.es", 443)).encode())
+          print("HOJA fundae.es:", hoja.subject.rfc4514_string(), "| emisor:", hoja.issuer.rfc4514_string())
+          for u in URLS:
+              try:
+                  b = urllib.request.urlopen(urllib.request.Request(u, headers={"User-Agent": "Mozilla/5.0"}), timeout=30).read()
+              except Exception as e:
+                  print(u, "ERROR", e); continue
+              formato = "PEM" if b.startswith(b"-----") else "DER"
+              c = x509.load_pem_x509_certificate(b) if formato == "PEM" else x509.load_der_x509_certificate(b)
+              der = c.public_bytes(Encoding.DER)
+              spki = c.public_key().public_bytes(Encoding.DER, PublicFormat.SubjectPublicKeyInfo)
+              print("==", u)
+              print("formato del fichero:", formato, "| bytes:", len(b))
+              print("SHA-256 del FICHERO :", hashlib.sha256(b).hexdigest())
+              print("SHA-256 del certificado (DER):", hashlib.sha256(der).hexdigest())
+              print("SHA-1   del certificado (DER):", hashlib.sha1(der).hexdigest())
+              print("SHA-256 de la clave pública  :", hashlib.sha256(spki).hexdigest())
+              print("sujeto:", c.subject.rfc4514_string())
+              print("emisor:", c.issuer.rfc4514_string())
+              print("serie :", hex(c.serial_number), "| válido:", c.not_valid_before_utc, "->", c.not_valid_after_utc)
+          PY
