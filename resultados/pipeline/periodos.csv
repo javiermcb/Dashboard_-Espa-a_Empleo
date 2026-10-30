@@ -1,7 +1,7 @@
 tabla;ultimo_periodo
 fact_accidentes;2026-08-01
 fact_convenios;2026-09-01
-fact_cpd_actividad;2026-07-01
+fact_cpd_actividad;2026-08-01
 fact_sepe_contratos_municipio;2026-09-01
 fact_sepe_paro_municipio;2026-09-01
 fact_ss_afiliacion;2026-09-01
@@ -53,8 +53,8 @@ ine:66252;2024-01-01
 ine:66266;2026-07-01
 ine:67567;2025-01-01
 ine:70688;2018-01-01
-ine:76134;2026-09-01
-ine:76140;2026-09-01
+ine:76134;2026-10-01
+ine:76140;2026-10-01
 ine:79285;2026-07-01
 ine:79304;2026-07-01
 ine:79659;2026-04-01

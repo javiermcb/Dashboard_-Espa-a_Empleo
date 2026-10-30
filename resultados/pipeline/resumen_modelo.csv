@@ -47,8 +47,8 @@ tabla_id;tema;datos;series;fecha_min;fecha_max;periodicidad;niveles_territorio;p
 66266;EFPA: flujos entre empleo, paro e inactividad por CCAA;34400;400;2005-04-01;2026-07-01;Trimestral;C,N;7.1;false
 67567;EPA: tasa de paro por nivel de formación y CCAA;398;80;2021-01-01;2025-01-01;Anual;C,N;0.0;false
 70688;EES 2018: salario por sexo y gran grupo de ocupación (CNO-11);3762;3762;2018-01-01;2018-01-01;Puntual;N,C;22.8;false
-76134;IPC: tasa de variación del índice general nacional;2342;3;1970-02-01;2026-09-01;Mensual;N;0.0;false
-76140;IPC: tasa de variación del índice general por CCAA;33545;60;1978-01-01;2026-09-01;Mensual;N,C;0.0;false
+76134;IPC: tasa de variación del índice general nacional;2344;3;1970-02-01;2026-10-01;Mensual;N;0.0;false
+76140;IPC: tasa de variación del índice general por CCAA;33547;60;1978-01-01;2026-10-01;Mensual;N,C;0.0;false
 79285;EPA: ocupados por nacionalidad, sexo y sector;360;120;2026-01-01;2026-07-01;Trimestral;N;0.3;false
 79304;EPA: ocupados subempleados por situación profesional, sexo y sector;180;60;2026-01-01;2026-07-01;Trimestral;N;19.4;false
 79659;ETCL: tiempo de trabajo por trabajador y mes por CCAA, tipo de jornada y sector (tabla nueva: se comprueba si trae horas no trabajadas por IT);79920;1080;2008-01-01;2026-04-01;Trimestral;N,C;0.0;false

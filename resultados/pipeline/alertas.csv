@@ -1,5 +1,8 @@
 tipo;indicador;territorio;periodo;valor;referencia;mensaje;nivel
-indicador;Convenios vs IPC;N00;convenios 2026 hasta mes 9 · IPC 2026-09-01;3.05;4.9;Subida pactada 3,05 % frente a IPC interanual 4,90 % (-1,85 puntos);aviso
+novedad;fact_cpd_actividad;;2026-08-01;;;Nuevo periodo 2026-08-01 (antes: 2026-07-01);novedad
+novedad;ine:76134;;2026-10-01;;;Nuevo periodo 2026-10-01 (antes: 2026-09-01);novedad
+novedad;ine:76140;;2026-10-01;;;Nuevo periodo 2026-10-01 (antes: 2026-09-01);novedad
+indicador;Convenios vs IPC;N00;convenios 2026 hasta mes 9 · IPC 2026-10-01;3.05;4.9;Subida pactada 3,05 % frente a IPC interanual 4,90 % (-1,85 puntos);aviso
 indicador;Coste laboral por trabajador (interanual) vs IPC;N00;2026-04-01;4.04;3.2;Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %);info
 indicador;Paro EPA: subida interanual;P21 Huelva;2026-07-01;34.35;29.4;"Huelva: 39,5 mil parados, +34,4 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
 indicador;Paro EPA: subida interanual;P31 Navarra;2026-07-01;31.58;24.7;"Navarra: 32,5 mil parados, +31,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)";aviso
@@ -16,5 +19,5 @@ indicador;Índice de incidencia de accidentes;P19 Guadalajara;2026-08-01;294.82;
 indicador;Índice de incidencia de accidentes;P44 Teruel;2026-08-01;292.71;;Teruel: índice de incidencia 292,7 (acumulado enero-2026-08);info
 indicador;Índice de incidencia de accidentes;P42 Soria;2026-08-01;278.49;;Soria: índice de incidencia 278,5 (acumulado enero-2026-08);info
 indicador;Índice de incidencia de accidentes;P09 Burgos;2026-08-01;276.05;;Burgos: índice de incidencia 276,0 (acumulado enero-2026-08);info
-indicador;CPD acumulados del año;N00;2026 enero-mes 7;2732469.0;2551192.0;2.732.469 contratos de puesta a disposición, +7,1 % frente al mismo periodo de 2025;info
+indicador;CPD acumulados del año;N00;2026 enero-mes 8;3087963.0;2861604.0;3.087.963 contratos de puesta a disposición, +7,9 % frente al mismo periodo de 2025;info
 indicador;Vacantes;N00;2026-04-01;151736.0;149739.0;151.736 vacantes, +1,3 % interanual;info

@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-10-29 19:36 UTC
+# Alertas RRHH 360 · 2026-10-30 13:21 UTC
 
 ## Avisos
 
@@ -14,9 +14,15 @@
 - **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 
+## Datos nuevos
+
+- **fact_cpd_actividad** · Nuevo periodo 2026-08-01 (antes: 2026-07-01)
+- **ine:76134** · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
+- **ine:76140** · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
+
 ## Seguimiento
 
-- **CPD acumulados del año** · 2.732.469 contratos de puesta a disposición, +7,1 % frente al mismo periodo de 2025
+- **CPD acumulados del año** · 3.087.963 contratos de puesta a disposición, +7,9 % frente al mismo periodo de 2025
 - **Coste laboral por trabajador (interanual) vs IPC** · Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %)
 - **Vacantes** · 151.736 vacantes, +1,3 % interanual
 - **Índice de incidencia de accidentes** · Huesca: índice de incidencia 308,9 (acumulado enero-2026-08)

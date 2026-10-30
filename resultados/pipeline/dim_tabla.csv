@@ -18,8 +18,8 @@ tabla_id;punto;punto_nombre;tema;nota;operacion_cod;operacion;tabla_nombre;organ
 66266;3;Mercado de talento;EFPA: flujos entre empleo, paro e inactividad por CCAA;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66266;OK;2005-04-01;2026-07-01
 37630;4;Revisión salarial;IPT: índices por CCAA;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/37630;OK;2008-01-01;2024-01-01
 37624;4;Revisión salarial;IPT: índices por ocupación;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/37624;OK;2008-01-01;2024-01-01
-76134;4;Revisión salarial;IPC: tasa de variación del índice general nacional;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76134;OK;;2026-09-01
-76140;4;Revisión salarial;IPC: tasa de variación del índice general por CCAA;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76140;OK;1978-01-01;2026-09-01
+76134;4;Revisión salarial;IPC: tasa de variación del índice general nacional;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76134;OK;;2026-10-01
+76140;4;Revisión salarial;IPC: tasa de variación del índice general por CCAA;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/76140;OK;1978-01-01;2026-10-01
 10888;5;Igualdad y diversidad;MYH: brecha salarial de género por edad;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/10888;OK;2009-01-01;2023-01-01
 10891;5;Igualdad y diversidad;MYH: brecha salarial de género por tipo de jornada;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/10891;OK;2009-01-01;2023-01-01
 39374;6;Contexto de mercado;DIRCE: empresas por provincia y estrato de asalariados;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/39374;OK;2020-01-01;2025-01-01
