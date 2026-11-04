@@ -1,45 +1,7 @@
-### Incidencias de carga · 2026-10-28 09:48 UTC
+### Incidencias de carga · 2026-11-04 14:53 UTC
 
-- **ine:37624** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:76134** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:76140** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:10888** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:10891** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:39374** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:6043** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:6032** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:6048** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65805** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65809** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65212** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65304** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65776** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:36858** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:36861** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:49508** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:59513** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:59514** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:62285** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:66023** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:66028** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:66036** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:66057** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:66061** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:79659** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:6042** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:13913** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:13915** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:80109** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:82000** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:81998** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:82001** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65309** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:79285** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:67567** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:79304** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65135** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
-- **ine:65343** · No actualizada en esta carga: HTTPError: HTTP Error 503: Service Temporarily Unavailable · se usa la última carga buena (2026-10-28 08:51 UTC)
+- **sepe_paro_municipio** · No actualizada en esta carga: StopIteration: · se usa la última carga buena (2026-11-03 14:39 UTC)
 
 Las tablas marcadas como «No actualizada» se publican con su última versión buena.
 
-Ejecución: https://github.com/javiermcb/Dashboard_-Espa-a_Empleo/actions/runs/40664202756
+Ejecución: https://github.com/javiermcb/Dashboard_-Espa-a_Empleo/actions/runs/41849823895

@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-11-03 14:39 UTC
+# Alertas RRHH 360 · 2026-11-04 14:52 UTC
 
 ## Avisos
 
@@ -13,6 +13,11 @@
 - **Paro EPA: subida interanual** · Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+- **sepe_paro_municipio** · No actualizada en esta carga: StopIteration:  · se usa la última carga buena (2026-11-03 14:39 UTC)
+
+## Datos nuevos
+
+- **fact_ss_afiliacion** · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
 
 ## Seguimiento
 
