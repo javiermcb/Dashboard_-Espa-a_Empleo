@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-11-10 15:14 UTC
+# Alertas RRHH 360 · 2026-11-11 14:43 UTC
 
 ## Avisos
 
@@ -13,11 +13,6 @@
 - **Paro EPA: subida interanual** · Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-- **sepe_contratos_municipio** · No actualizada en esta carga: ValueError: SEPE Contratos 2020: columnas distintas a las de años anteriores: ['total_contratos', 'contratos_iniciales_indefinidos_hombres', 'contratos_iniciales_temporales_hombres', 'contratos_convertidos_en_indefinidos_hombres', 'contratos_iniciales_indefinidos_mujeres', 'contratos_iniciales_tempo · se usa la última carga buena (2026-11-09 16:49 UTC)
-
-## Datos nuevos
-
-- **fact_convenios** · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
 
 ## Seguimiento
 
