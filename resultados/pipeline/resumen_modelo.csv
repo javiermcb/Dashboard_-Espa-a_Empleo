@@ -1,8 +1,8 @@
 tabla_id;tema;datos;series;fecha_min;fecha_max;periodicidad;niveles_territorio;pct_valor_nulo;hay_territorio_sin_resolver
 10888;MYH: brecha salarial de género por edad;90;6;2009-01-01;2023-01-01;Anual;N;1.1;false
 10891;MYH: brecha salarial de género por tipo de jornada;30;2;2009-01-01;2023-01-01;Anual;N;0.0;false
-13913;Sociedades mercantiles constituidas por CCAA y provincia;37088;160;1995-01-01;2026-08-01;Mensual;C,N;0.0;false
-13915;Sociedades mercantiles disueltas por CCAA y provincia;18544;80;1995-01-01;2026-08-01;Mensual;C,N;0.0;false
+13913;Sociedades mercantiles constituidas por CCAA y provincia;37248;160;1995-01-01;2026-09-01;Mensual;C,N;0.0;false
+13915;Sociedades mercantiles disueltas por CCAA y provincia;18624;80;1995-01-01;2026-09-01;Mensual;C,N;0.0;false
 28191;EAES: medias y percentiles por sexo y CCAA;5508;324;2008-01-01;2024-01-01;Anual;N,C;0.0;false
 36846;EES 2022: salario por sexo y gran grupo de ocupación (CNO-11);3762;3762;2022-01-01;2022-01-01;Puntual;N,C;21.4;false
 36858;EES 2022: salario medio por CCAA, sexo, sector y tipo de contrato;684;684;2022-01-01;2022-01-01;Puntual;C,N;16.4;false

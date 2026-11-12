@@ -3,12 +3,12 @@ fact_accidentes;2026-08-01
 fact_convenios;2026-10-01
 fact_cpd_actividad;2026-08-01
 fact_sepe_contratos_municipio;2026-09-01
-fact_sepe_paro_municipio;2026-09-01
+fact_sepe_paro_municipio;2026-10-01
 fact_ss_afiliacion;2026-10-01
 ine:10888;2023-01-01
 ine:10891;2023-01-01
-ine:13913;2026-08-01
-ine:13915;2026-08-01
+ine:13913;2026-09-01
+ine:13915;2026-09-01
 ine:28191;2024-01-01
 ine:36846;2022-01-01
 ine:36858;2022-01-01

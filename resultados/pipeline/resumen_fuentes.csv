@@ -1,7 +1,7 @@
 tabla;filas;desde;hasta;sin_territorio
-fact_sepe_paro_municipio;748237;2019-01-01;2026-09-01;0
+fact_sepe_paro_municipio;756372;2019-01-01;2026-10-01;0
 fact_sepe_contratos_municipio;748237;2019-01-01;2026-09-01;0
-fact_sepe_demandantes_municipio;748237;2019-01-01;2026-09-01;0
+fact_sepe_demandantes_municipio;756372;2019-01-01;2026-10-01;0
 fact_ss_afiliacion;1713192;2009-01-01;2026-10-01;0
 fact_cpd_actividad;420;2025-01-01;2026-08-01;0
 fact_convenios;35;2013;2026;0
@@ -18,4 +18,4 @@ fact_it_detalle;29709;2025;2026;0
 fact_fundae;21076;2004;2025;0
 fact_eurostat;389;2015;2025;0
 fact_sepe_demandantes_nivel;21;2026-04-01;2026-06-01;0
-fact_sepe_contratos_nivel;21;2026-04-01;2026-06-01;0
+fact_sepe_contratos_nivel;28;2026-04-01;2026-08-01;0
