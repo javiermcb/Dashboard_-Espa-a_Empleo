@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-11-12 15:41 UTC
+# Alertas RRHH 360 · 2026-11-13 15:00 UTC
 
 ## Avisos
 
@@ -17,17 +17,15 @@
 
 ## Datos nuevos
 
-- **fact_sepe_paro_municipio** · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
-- **ine:13913** · Nuevo periodo 2026-09-01 (antes: 2026-08-01)
-- **ine:13915** · Nuevo periodo 2026-09-01 (antes: 2026-08-01)
+- **fact_accidentes** · Nuevo periodo 2026-09-01 (antes: 2026-08-01)
 
 ## Seguimiento
 
 - **CPD acumulados del año** · 3.087.963 contratos de puesta a disposición, +7,9 % frente al mismo periodo de 2025
 - **Coste laboral por trabajador (interanual) vs IPC** · Coste laboral total por trabajador 3.388 €/mes, +4,0 % interanual (IPC 3,2 %)
 - **Vacantes** · 151.736 vacantes, +1,3 % interanual
-- **Índice de incidencia de accidentes** · Huesca: índice de incidencia 308,9 (acumulado enero-2026-08)
-- **Índice de incidencia de accidentes** · Guadalajara: índice de incidencia 294,8 (acumulado enero-2026-08)
-- **Índice de incidencia de accidentes** · Teruel: índice de incidencia 292,7 (acumulado enero-2026-08)
-- **Índice de incidencia de accidentes** · Soria: índice de incidencia 278,5 (acumulado enero-2026-08)
-- **Índice de incidencia de accidentes** · Burgos: índice de incidencia 276,0 (acumulado enero-2026-08)
+- **Índice de incidencia de accidentes** · Huesca: índice de incidencia 313,4 (acumulado enero-2026-09)
+- **Índice de incidencia de accidentes** · Guadalajara: índice de incidencia 297,4 (acumulado enero-2026-09)
+- **Índice de incidencia de accidentes** · Teruel: índice de incidencia 294,8 (acumulado enero-2026-09)
+- **Índice de incidencia de accidentes** · Soria: índice de incidencia 284,2 (acumulado enero-2026-09)
+- **Índice de incidencia de accidentes** · Burgos: índice de incidencia 282,0 (acumulado enero-2026-09)
