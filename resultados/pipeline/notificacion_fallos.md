@@ -1,7 +1,13 @@
-### Incidencias de carga · 2026-11-12 15:41 UTC
+### Incidencias de carga · 2026-11-16 16:20 UTC
 
-- **sepe_contratos_municipio** · No actualizada en esta carga: ValueError: SEPE Contratos 2020: columnas distintas a las de años anteriores: ['total_contratos', 'contratos_iniciales_indefinidos_hombres', 'contratos_iniciales_temporales_hombres', 'contratos_convertidos_en_indefinidos_hombres', 'contratos_iniciales_indefinidos_mujeres', 'contratos_iniciales_tempo · se usa la última carga buena (2026-11-11 14:42 UTC)
+- **sepe_paro_municipio** · No actualizada en esta carga: URLError: ‹urlopen error timed out› · se usa la última carga buena (2026-11-13 15:00 UTC)
+- **sepe_contratos_municipio** · Desactualizada más de 3 días: última carga buena el 2026-11-11
+- **sepe_demandantes_municipio** · No actualizada en esta carga: TimeoutError: sede.sepe.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-11-13 15:00 UTC)
+- **sepe_demandantes_nivel** · No actualizada en esta carga: TimeoutError: sede.sepe.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-11-13 15:00 UTC)
+- **sepe_contratos_nivel** · No actualizada en esta carga: ValueError: SEPE sepe_contratos_nivel: ningún mes descargado · se usa la última carga buena (2026-11-13 15:00 UTC)
+
+_Además siguen abiertas 1 incidencias ya avisadas._
 
 Las tablas marcadas como «No actualizada» se publican con su última versión buena.
 
-Ejecución: https://github.com/javiermcb/Dashboard_-Espa-a_Empleo/actions/runs/43247156392
+Ejecución: https://github.com/javiermcb/Dashboard_-Espa-a_Empleo/actions/runs/43902156511
