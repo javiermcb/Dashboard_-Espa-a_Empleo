@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-11-16 16:20 UTC
+# Alertas RRHH 360 · 2026-11-17 16:30 UTC
 
 ## Avisos
 
@@ -13,12 +13,10 @@
 - **Paro EPA: subida interanual** · Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
-- **sepe_contratos_municipio** · No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-11-11 14:42 UTC)
-- **sepe_contratos_municipio** · Desactualizada más de 3 días: última carga buena el 2026-11-11
-- **sepe_contratos_nivel** · No actualizada en esta carga: ValueError: SEPE sepe_contratos_nivel: ningún mes descargado · se usa la última carga buena (2026-11-13 15:00 UTC)
-- **sepe_demandantes_municipio** · No actualizada en esta carga: TimeoutError: sede.sepe.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-11-13 15:00 UTC)
-- **sepe_demandantes_nivel** · No actualizada en esta carga: TimeoutError: sede.sepe.gob.es no responde en esta ejecución: no se reintenta · se usa la última carga buena (2026-11-13 15:00 UTC)
-- **sepe_paro_municipio** · No actualizada en esta carga: URLError: <urlopen error timed out> · se usa la última carga buena (2026-11-13 15:00 UTC)
+
+## Datos nuevos
+
+- **fact_sepe_contratos_municipio** · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
 
 ## Seguimiento
 
