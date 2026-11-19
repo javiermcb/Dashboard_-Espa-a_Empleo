@@ -1,4 +1,4 @@
-# Alertas RRHH 360 · 2026-11-18 16:04 UTC
+# Alertas RRHH 360 · 2026-11-19 16:16 UTC
 
 ## Avisos
 
