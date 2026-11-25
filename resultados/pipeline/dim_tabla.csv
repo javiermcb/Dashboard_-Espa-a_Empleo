@@ -5,7 +5,7 @@ tabla_id;punto;punto_nombre;tema;nota;operacion_cod;operacion;tabla_nombre;organ
 66238;1;Benchmark salarial;EPA decil: salarios medios por jornada, sexo y decil;sustituye a 66254 (solo llegaba a 2010);;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66238;OK;2006-01-01;2024-01-01
 66241;1;Benchmark salarial;EPA decil: salarios medios por jornada, CCAA y decil;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66241;OK;2006-01-01;2024-01-01
 66244;1;Benchmark salarial;EPA decil: salarios medios por jornada, ocupación y decil;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66244;OK;2011-01-01;2024-01-01
-66252;1;Benchmark salarial;EPA decil: salarios medios y límite inferior de cada decil;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66252;OK;2006-01-01;2024-01-01
+66252;1;Benchmark salarial;EPA decil: salarios medios y límite inferior de cada decil;;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/66252;OK;2006-01-01;2025-01-01
 6061;2;Coste laboral y absentismo;ETCL: coste laboral por trabajador, CCAA y sector;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6061;OK;2008-01-01;2026-04-01
 6062;2;Coste laboral y absentismo;ETCL: coste laboral por hora efectiva, CCAA y sector;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6062;OK;2008-01-01;2026-04-01
 6063;2;Coste laboral y absentismo;ETCL: tiempo de trabajo por trabajador y mes, CCAA;tenía un duplicado idéntico que se quitó;;;;INE;https://servicios.ine.es/wstempus/js/ES/DATOS_TABLA/6063;OK;2008-01-01;2026-04-01

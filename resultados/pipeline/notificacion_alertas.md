@@ -1,9 +1,9 @@
-### Alertas RRHH 360 · 2026-11-17 16:31 UTC
+### Alertas RRHH 360 · 2026-11-25 17:47 UTC
 
 **Datos nuevos**
 
-- `fact_sepe_contratos_municipio` · Nuevo periodo 2026-10-01 (antes: 2026-09-01)
+- `ine:66252` · Nuevo periodo 2025-01-01 (antes: 2024-01-01)
 
 Detalle completo: `resultados/pipeline/alertas.md` (rama `calidad`) · tabla `modelo/alertas.csv` en el repositorio público.
 
-Ejecución: https://github.com/javiermcb/Dashboard_-Espa-a_Empleo/actions/runs/44122455238
+Ejecución: https://github.com/javiermcb/Dashboard_-Espa-a_Empleo/actions/runs/45663614011

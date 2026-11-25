@@ -2900,26 +2900,26 @@ tabla_id;medida;estadistico;situacion;sexo;edad;jornada;tamano_empresa;actividad
 66244;Salario medio · Dato base;Total;;;;Total;;;Trabajadores de los servicios de restauración, personales, protección y vendedores;;;;Euros;;N;1;2011-01-01;2024-01-01
 66244;Salario medio · Dato base;Total;;;;Total;;;Técnicos y profesionales científicos e intelectuales;;;;Euros;;N;1;2011-01-01;2024-01-01
 66244;Salario medio · Dato base;Total;;;;Total;;;"Técnicos; profesionales de apoyo";;;;Euros;;N;1;2011-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;1;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;10;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;2;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;3;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;4;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;5;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;6;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;7;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;8;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Límite inferior;9;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;1;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;10;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;2;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;3;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;4;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;5;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;6;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;7;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;8;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
-66252;Salario bruto mensual del empleo principal · Media;9;;;;;;;;;;;Euros;;N;1;2006-01-01;2024-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;1;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;10;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;2;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;3;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;4;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;5;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;6;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;7;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;8;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Límite inferior;9;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;1;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;10;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;2;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;3;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;4;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;5;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;6;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;7;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;8;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
+66252;Salario bruto mensual del empleo principal · Media;9;;;;;;;;;;;Euros;;N;1;2006-01-01;2025-01-01
 66266;Personas;;Inactivos (trimestre actual) · Inactivos (trimestre anterior);Ambos sexos;De 16 y mas años (trimestre actual);;;;;;;;Personas;Miles;N,C;20;2005-04-01;2026-07-01
 66266;Personas;;Inactivos (trimestre actual) · No consta (trimestre anterior);Ambos sexos;De 16 y mas años (trimestre actual);;;;;;;;Personas;Miles;N,C;20;2005-04-01;2026-07-01
 66266;Personas;;Inactivos (trimestre actual) · Ocupados (trimestre anterior);Ambos sexos;De 16 y mas años (trimestre actual);;;;;;;;Personas;Miles;N,C;20;2005-04-01;2026-07-01
