@@ -1,8 +1,8 @@
-# Alertas RRHH 360 · 2026-11-26 17:26 UTC
+# Alertas RRHH 360 · 2026-11-27 16:57 UTC
 
 ## Avisos
 
-- **Convenios vs IPC** · Subida pactada 3,06 % frente a IPC interanual 4,90 % (-1,84 puntos)
+- **Convenios vs IPC** · Subida pactada 3,06 % frente a IPC interanual 4,10 % (-1,04 puntos)
 - **Horas no trabajadas / pactadas** · Castilla-La Mancha: 15,6 % de las horas pactadas no se trabajan (+1,56 puntos interanual)
 - **Horas no trabajadas / pactadas** · Comunitat Valenciana: 15,1 % de las horas pactadas no se trabajan (+1,28 puntos interanual)
 - **Horas no trabajadas / pactadas** · Galicia: 16,5 % de las horas pactadas no se trabajan (+1,09 puntos interanual)
@@ -13,6 +13,11 @@
 - **Paro EPA: subida interanual** · Girona: 33,4 mil parados, +25,6 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · Bizkaia: 51,2 mil parados, +25,2 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
 - **Paro EPA: subida interanual** · A Coruña: 43,8 mil parados, +19,7 % interanual (EPA: en una provincia la muestra es pequeña; confirmar con el paro registrado)
+
+## Datos nuevos
+
+- **ine:76134** · Nuevo periodo 2026-11-01 (antes: 2026-10-01)
+- **ine:76140** · Nuevo periodo 2026-11-01 (antes: 2026-10-01)
 
 ## Seguimiento
 
